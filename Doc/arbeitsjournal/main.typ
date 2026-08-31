@@ -1,23 +1,23 @@
-#import "../template/hslu-template.typ": project-doc, note, tip, warning, todo, journal-entry, badge
+#import "../template/basic-wipro.typ": basic-wipro
 
-#show: project-doc.with(
+#show: basic-wipro.with(
+  logo: image("../assets/hslu-logo.svg", width: 30%),
   title: "Arbeitsjournal",
-  subtitle: "WebLab Projekt -- Laufende Dokumentation, Aufwände und Meilensteine",
-  doc-type: "Arbeitsjournal",
-  authors: (
-    (name: "Vorname Nachname", email: "vorname.nachname@stud.hslu.ch", id: "XX-XXX-XXX"),
-  ),
-  module: "WebLab",
-  semester: "FS 2026",
-  supervisor: "Dozent Name",
-  version: "1.0",
-  abstract: [
-    Dieses Arbeitsjournal dokumentiert den kontinuierlichen Fortschritt, den zeitlichen Aufwand (Soll/Ist) sowie wichtige Zwischenentscheidungen und Erkenntnisse während der Durchführung des WebLab-Projekts.
-  ],
-  show-toc: true,
-  toc-depth: 2,
+  subtitle: "",
+  project-type: "WEBLAB",
+  students: ("Colin Felber",),
+  year: "2026",
+  supervisor: "Dominik Witschard",
+  show-declaration: false,
 )
 
-#include "01_uebersicht.typ"
-#include "02_eintraege.typ"
-#include "03_fazit_aufwand.typ"
+= Stunden
+
+#table(
+  columns: (auto, 1fr, auto, auto),
+  table.header([*Datum*], [*Tätigkeit*], [*Stunden  *]),
+  [2023-10-01], [Initialisierung & Setup], [15], [0],
+  [2023-10-08], [Architektur & Konzept], [20], [0],
+  [2023-10-15], [Entwicklung], [55], [0],
+  [2023-10-22], [Testing & Dokumentation], [30], [0],
+)

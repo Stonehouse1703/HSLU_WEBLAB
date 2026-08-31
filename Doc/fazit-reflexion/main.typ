@@ -1,25 +1,18 @@
-#import "../template/hslu-template.typ": project-doc, note, tip, warning, todo, badge
+#import "../template/basic-wipro.typ": basic-wipro
 
-#show: project-doc.with(
+#show: basic-wipro.with(
+  logo: image("../assets/hslu-logo.svg", width: 30%),
   title: "Fazit & Reflexion",
-  subtitle: "WebLab Projekt -- Projektanalyse, Lessons Learned und persönliche Reflexion",
-  doc-type: "Fazit & Reflexion",
-  authors: (
-    (name: "Vorname Nachname", email: "vorname.nachname@stud.hslu.ch", id: "XX-XXX-XXX"),
-  ),
-  module: "WebLab",
-  semester: "FS 2026",
-  supervisor: "Dozent Name",
-  version: "1.0",
-  abstract: [
-    Dieses Dokument fasst die Ergebnisse des WebLab-Projekts zusammen, vergleicht die Anforderungen mit dem erreichten Stand (Soll-Ist-Vergleich), reflektiert technische sowie methodische Erkenntnisse und gibt einen Ausblick auf mögliche zukünftige Erweiterungen.
-  ],
-  show-toc: true,
-  toc-depth: 2,
+  subtitle: "",
+  project-type: "WEBLAB",
+  students: ("Colin Felber",),
+  year: "2026",
+  supervisor: "Dominik Witschard",
+  show-declaration: false,
 )
 
-#include "01_zusammenfassung.typ"
-#include "02_zielerreichung.typ"
-#include "03_lessons_learned.typ"
-#include "04_persoenliche_reflexion.typ"
-#include "05_ausblick.typ"
+= Was ist gut gelaufen?
+
+= Wo lagen die Herausforderungen?
+
+= Was würden Sie das nächste Mal anders resp. besser machen?
