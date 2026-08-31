@@ -4,7 +4,7 @@ Repository für das Modul **WebLab** an der Hochschule Luzern (Departement Infor
 
 ## Dokumentationen
 
-- [Architekturdokumentation](file:///home/stonehouse1703/Github/HSLU_WEBLAB/Doc/architektur.typ)
-- [Fazit & Reflexion](file:///home/stonehouse1703/Github/HSLU_WEBLAB/Doc/fazit_reflexion.typ)
-- [Arbeitsjournal](file:///home/stonehouse1703/Github/HSLU_WEBLAB/Doc/arbeitsjournal.typ)
+- [Architekturdokumentation](Doc/architektur.pdf)
+- [Fazit & Reflexion](Doc/fazit_reflexion.pdf)
+- [Arbeitsjournal](/Doc/arbeitsjournal.pdf)
 
