@@ -1,3 +1,6 @@
+# VS Code specific
+.vscode/
+
 # Angular specific
 /dist/
 /out-tsc/
