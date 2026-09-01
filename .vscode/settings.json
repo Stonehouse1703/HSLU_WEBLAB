@@ -1,9 +1,0 @@
-{
-  "tinymist.exportPdf": "onType",
-  "tinymist.formatterMode": "typstyle",
-  "[typst]": {
-    "editor.defaultFormatter": "myriad-dreamit.tinymist",
-    "editor.formatOnSave": true,
-    "editor.wordWrap": "on"
-  }
-}
