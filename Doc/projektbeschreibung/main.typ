@@ -30,12 +30,9 @@ Eine einfache Webapplikation für die Organisation und Absicherung von Bergtoure
 
 #link("https://github.com/users/Stonehouse1703/projects/2/views/3?visibleFields=%5B%22Title%22%2C%22Status%22%2C%22Labels%22%2C406463020%2C406463021%2C406463019%2C406463022%2C406463023%5D")[Link zu den User-Stories]
 
-== Abgrenzungen (auch in den User-Stories ersichtlich)
-- Es wird kein Login via Drittanbieter (z.B. Google, Facebook) implementiert.
-- Ein automatischer E-Mail-Versand (z. B. für Passwort-Reset oder Benachrichtigungen) ist ausgeschlossen.
-- Es gibt keinen integrierten Live-Chat zwischen den Teilnehmenden; die Kommunikation erfolgt extern.
-- Automatische Abfragen oder Push-Warnungen bei Änderungen des Lawinenbulletins werden nicht umgesetzt.
+== Abgrenzungen
+Der Fokus des Projekts liegt primär auf einer sauberen Architektur und Strukturierung der Applikation sowie einem hohen Lerneffekt. Aufgrund des begrenzten Zeitrahmens gehört eine vollständige Authentifizierung und Autorisierung nicht zum Zielumfang.
 
 = Angedachter Technologie-Stack
 - Frontend: Angular
-- Backend: Node.js
+- Backend: Nest.js
