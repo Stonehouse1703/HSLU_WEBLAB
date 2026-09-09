@@ -5,8 +5,8 @@ export const PATHS: { [key: string]: NavigationItem } = {
     path: 'home',
     label: 'Home'
   },
-  USER_MANAGEMENT: {
-    path: 'user',
-    label: 'Benutzer'
+  TOUR_MANAGEMENT: {
+    path: 'tour-management',
+    label: 'Touren'
   },
 }

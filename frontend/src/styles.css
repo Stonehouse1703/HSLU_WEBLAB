@@ -1,1 +1,78 @@
-/* You can add global styles to this file, and also import other style files */
+/* Font and theme foundation */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;500&display=swap');
+
+:root {
+  font-family: 'Montserrat', sans-serif;
+  color: #25252d;
+  background: #f6f6fa;
+  font-synthesis: none;
+}
+
+/* CSS reset and document defaults */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+pre {
+  margin: 0.5rem 0 0;
+  overflow-x: auto;
+  color: #65636d;
+  font-size: 0.75rem;
+}
+
+
+/* Global Styles */
+h1,
+h2,
+h3,
+h4 {
+  margin-top: 0;
+  font-weight: 400;
+}
+
+h1 {
+  margin-bottom: 1.5rem;
+}
+
+h3,
+h4 {
+  margin-bottom: 1rem;
+}
+
+input,
+select {
+  font: inherit;
+}
+
+input:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgb(79 70 165 / 25%);
+  outline-offset: 2px;
+}
+
+label {
+  display: block;
+  font-size: 0.875rem;
+}
+
+input,
+select {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #c8c6d0;
+  border-radius: 8px;
+  color: inherit;
+  background: #fff;
+}
+
+input:focus,
+select:focus {
+  border-color: #4f46a5;
+}

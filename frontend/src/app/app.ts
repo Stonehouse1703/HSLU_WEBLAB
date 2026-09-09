@@ -16,7 +16,6 @@ import {PATHS} from './config/paths.config';
       <router-outlet></router-outlet>
     </div>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
   styles: `
     :host {
       display: flex;
