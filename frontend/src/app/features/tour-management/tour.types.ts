@@ -1,11 +1,11 @@
 export interface Tour {
-  id: number;
+  id: string;
   name: string;
   date: string;
   time: string;
   location: string;
   difficulty: string;
   altitude: string;
-  tour_manager: string[];
-  participants: string[];
+  tourManagerIds: string[];
+  participantIds: string[];
 }

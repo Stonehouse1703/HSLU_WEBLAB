@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { Tour } from '../../tour.types';
-import { Card } from '../../../../components/card/card';
 import { MatIconModule } from '@angular/material/icon';
+import { Card } from '../../../../components/card/card';
+import { Tour } from '../../tour.types';
 
 @Component({
-  selector: 'app-tour-preview',
+  selector: 'app-meeting-point',
   imports: [Card, MatIconModule],
   template: `
-    <app-card title="{{ tour().name }}">
-      <dl class="tour-preview">
-        <div class="tour-info">
+    <app-card title="Treffpunkt">
+      <dl class="tour-info">
+        <div class="info-item">
           <dt>
             <mat-icon aria-hidden="true">date_range</mat-icon>
             Datum
@@ -17,7 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
           <dd>{{ tour().date }}</dd>
         </div>
 
-        <div class="tour-info">
+        <div class="info-item">
           <dt>
             <mat-icon aria-hidden="true">access_time</mat-icon>
             Zeit
@@ -25,53 +25,28 @@ import { MatIconModule } from '@angular/material/icon';
           <dd>{{ tour().time }}</dd>
         </div>
 
-        <div class="tour-info">
+        <div class="info-item">
           <dt>
             <mat-icon aria-hidden="true">location_on</mat-icon>
-            Ort
+            Treffpunkt
           </dt>
           <dd>{{ tour().location }}</dd>
-        </div>
-
-        <div class="tour-info">
-          <dt>
-            <mat-icon aria-hidden="true">flag</mat-icon>
-            Schwierigkeit
-          </dt>
-          <dd>{{ tour().difficulty }}</dd>
-        </div>
-
-        <div class="tour-info">
-          <dt>
-            <mat-icon aria-hidden="true">terrain</mat-icon>
-            Höhe
-          </dt>
-          <dd>{{ tour().altitude }}</dd>
         </div>
       </dl>
     </app-card>
   `,
   styles: `
-    :host {
-      max-height: 100%;
-      overflow: auto;
-    }
-
-    app-card {
-      height: 100%;
-      overflow: auto;
-    }
-
-    .tour-preview {
+    .tour-info {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 1rem;
       margin: 0;
     }
 
-    .tour-info {
+    .info-item {
       display: grid;
       gap: 0.35rem;
+      min-width: 0;
     }
 
     dt {
@@ -80,35 +55,46 @@ import { MatIconModule } from '@angular/material/icon';
       gap: 0.5rem;
       color: #65636d;
       font-size: 0.875rem;
+      white-space: nowrap;
     }
 
     dd {
       margin: 0;
       font-weight: 500;
+      overflow-wrap: anywhere;
     }
 
     mat-icon {
-      font-size: 1.25rem;
       width: 1.25rem;
       height: 1.25rem;
       color: #4f46a5;
+      font-size: 1.25rem;
     }
 
-    @media (max-width: 700px) {
-      .tour-preview {
-        grid-template-columns: 1fr 1fr;
-      }
+    .info-item:nth-child(2) {
+      justify-items: center;
+      text-align: center;
     }
 
-    @media (max-width: 420px) {
-      .tour-preview {
+    .info-item:nth-child(3) {
+      justify-items: end;
+      text-align: right;
+    }
+
+    @media (max-width: 560px) {
+      .tour-info {
         grid-template-columns: 1fr;
+      }
+
+      .info-item:nth-child(2),
+      .info-item:nth-child(3) {
+        justify-items: start;
+        text-align: left;
       }
     }
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TourPreview {
+export class MeetingPoint {
   readonly tour = input.required<Tour>();
 }
-  

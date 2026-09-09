@@ -1,6 +1,7 @@
 import {Route} from '@angular/router';
 import {PATHS} from './paths.config';
 import {TourManagement} from '../features/tour-management/pages/tour-overview/tour-overview';
+import {TourDetail} from '../features/tour-management/pages/tour-detail/tour-detail';
 
 const { HOME, TOUR_MANAGEMENT } = PATHS;
 
@@ -15,7 +16,20 @@ export const routes: Route[] = [
     redirectTo: TOUR_MANAGEMENT.path,
   },
   {
-    path: TOUR_MANAGEMENT.path, 
-    component: TourManagement,
+    path: TOUR_MANAGEMENT.path,
+    children: [
+      {
+        path: '',
+        component: TourManagement,
+      },
+      {
+        path: ':id',
+        component: TourDetail,
+      },
+    ],
+  },
+  {
+    path: '**',
+    redirectTo: TOUR_MANAGEMENT.path,
   }
 ];

@@ -11,5 +11,9 @@ export class TourService {
   get tours(): Tour[] {
     return [...this.tour];
   }
+
+  findTourById(id: string): Tour | undefined {
+  return this.tour.find(tour => tour.id === id);
+  }
 }
   
