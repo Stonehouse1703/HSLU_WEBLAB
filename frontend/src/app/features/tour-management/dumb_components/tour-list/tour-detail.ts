@@ -1,14 +1,12 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Tour } from '../../tour.types';
 import { Card } from '../../../../components/card/card';
-import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-tour-preview',
   imports: [
     Card, 
-    MatIconModule,
     RouterLink  
   ],
   template: `
@@ -17,7 +15,7 @@ import { RouterLink } from '@angular/router';
         <dl class="tour-preview">
           <div class="tour-info">
             <dt>
-              <mat-icon aria-hidden="true">date_range</mat-icon>
+              <span class="material-icons" aria-hidden="true">date_range</span>
               Datum
             </dt>
             <dd>{{ tour().date }}</dd>
@@ -25,7 +23,7 @@ import { RouterLink } from '@angular/router';
 
           <div class="tour-info">
             <dt>
-              <mat-icon aria-hidden="true">access_time</mat-icon>
+              <span class="material-icons" aria-hidden="true">access_time</span>
               Zeit
             </dt>
             <dd>{{ tour().time }}</dd>
@@ -33,7 +31,7 @@ import { RouterLink } from '@angular/router';
 
           <div class="tour-info">
             <dt>
-              <mat-icon aria-hidden="true">location_on</mat-icon>
+              <span class="material-icons" aria-hidden="true">location_on</span>
               Ort
             </dt>
             <dd>{{ tour().location }}</dd>
@@ -41,7 +39,7 @@ import { RouterLink } from '@angular/router';
 
           <div class="tour-info">
             <dt>
-              <mat-icon aria-hidden="true">flag</mat-icon>
+              <span class="material-icons" aria-hidden="true">flag</span>
               Schwierigkeit
             </dt>
             <dd>{{ tour().difficulty }}</dd>
@@ -49,7 +47,7 @@ import { RouterLink } from '@angular/router';
 
           <div class="tour-info">
             <dt>
-              <mat-icon aria-hidden="true">terrain</mat-icon>
+              <span class="material-icons" aria-hidden="true">terrain</span>
               Höhe
             </dt>
             <dd>{{ tour().altitude }}</dd>
@@ -100,7 +98,7 @@ import { RouterLink } from '@angular/router';
       font-weight: 500;
     }
 
-    mat-icon {
+    .material-icons {
       font-size: 1.25rem;
       width: 1.25rem;
       height: 1.25rem;

@@ -2,6 +2,7 @@ import {Route} from '@angular/router';
 import {PATHS} from './paths.config';
 import {TourManagement} from '../features/tour-management/pages/tour-overview/tour-overview';
 import {TourDetail} from '../features/tour-management/pages/tour-detail/tour-detail';
+import {UserDetail} from '../features/user/pages/user-detail/user-detail';
 
 const { HOME, TOUR_MANAGEMENT } = PATHS;
 
@@ -27,6 +28,10 @@ export const routes: Route[] = [
         component: TourDetail,
       },
     ],
+  },
+  {
+    path: 'user/:id',
+    component: UserDetail,
   },
   {
     path: '**',

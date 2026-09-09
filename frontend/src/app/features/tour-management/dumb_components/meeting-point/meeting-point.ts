@@ -1,17 +1,16 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { Card } from '../../../../components/card/card';
 import { Tour } from '../../tour.types';
 
 @Component({
   selector: 'app-meeting-point',
-  imports: [Card, MatIconModule],
+  imports: [Card],
   template: `
     <app-card title="Treffpunkt">
       <dl class="tour-info">
         <div class="info-item">
           <dt>
-            <mat-icon aria-hidden="true">date_range</mat-icon>
+            <span class="material-icons" aria-hidden="true">date_range</span>
             Datum
           </dt>
           <dd>{{ tour().date }}</dd>
@@ -19,7 +18,7 @@ import { Tour } from '../../tour.types';
 
         <div class="info-item">
           <dt>
-            <mat-icon aria-hidden="true">access_time</mat-icon>
+            <span class="material-icons" aria-hidden="true">access_time</span>
             Zeit
           </dt>
           <dd>{{ tour().time }}</dd>
@@ -27,7 +26,7 @@ import { Tour } from '../../tour.types';
 
         <div class="info-item">
           <dt>
-            <mat-icon aria-hidden="true">location_on</mat-icon>
+            <span class="material-icons" aria-hidden="true">location_on</span>
             Treffpunkt
           </dt>
           <dd>{{ tour().location }}</dd>
@@ -64,7 +63,7 @@ import { Tour } from '../../tour.types';
       overflow-wrap: anywhere;
     }
 
-    mat-icon {
+    .material-icons {
       width: 1.25rem;
       height: 1.25rem;
       color: #4f46a5;

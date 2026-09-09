@@ -1,17 +1,16 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { Card } from '../../../../components/card/card';
 import { Tour } from '../../tour.types';
 
 @Component({
   selector: 'app-tour-information',
-  imports: [Card, MatIconModule],
+  imports: [Card],
   template: `
     <app-card title="Tourinformationen">
       <dl class="tour-info">
         <div class="info-item">
           <dt>
-            <mat-icon aria-hidden="true">flag</mat-icon>
+            <span class="material-icons" aria-hidden="true">flag</span>
             Schwierigkeit
           </dt>
           <dd>{{ tour().difficulty }}</dd>
@@ -19,7 +18,7 @@ import { Tour } from '../../tour.types';
 
         <div class="info-item">
           <dt>
-            <mat-icon aria-hidden="true">terrain</mat-icon>
+            <span class="material-icons" aria-hidden="true">terrain</span>
             Höhenmeter
           </dt>
           <dd>{{ tour().altitude }}</dd>
@@ -54,7 +53,7 @@ import { Tour } from '../../tour.types';
       overflow-wrap: anywhere;
     }
 
-    mat-icon {
+    .material-icons {
       width: 1.25rem;
       height: 1.25rem;
       color: #4f46a5;

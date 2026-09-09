@@ -28,6 +28,7 @@ import { ParticipantInformation } from '../../dumb_components/participant/partic
       <app-participant-information
         [participants]="participants()"
         [tourManagers]="tourManagers()"
+        (emergencyContactSelected)="openEmergencyContact($event)"
       />
     </div>
   } @else {
@@ -65,5 +66,9 @@ export class TourDetail {
 
   backToTours() {
     this.router.navigate(['/tour-management']);
+  }
+
+  openEmergencyContact(user: User) {
+    this.router.navigate(['/user', user.id]);
   }
 }
