@@ -1,28 +1,24 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Card } from '../../../../components/card/card';
+import { InfoItem } from '../../../../components/info-item/info-item';
 import { Tour } from '../../tour.types';
 
 @Component({
   selector: 'app-tour-information',
-  imports: [Card],
+  imports: [Card, InfoItem],
   template: `
     <app-card title="Tourinformationen">
       <dl class="tour-info">
-        <div class="info-item">
-          <dt>
-            <span class="material-icons" aria-hidden="true">flag</span>
-            Schwierigkeit
-          </dt>
-          <dd>{{ tour().difficulty }}</dd>
-        </div>
-
-        <div class="info-item">
-          <dt>
-            <span class="material-icons" aria-hidden="true">terrain</span>
-            Höhenmeter
-          </dt>
-          <dd>{{ tour().altitude }}</dd>
-        </div>
+        <app-info-item 
+          icon="flag" 
+          title="Schwierigkeit" 
+          [describtion]="tour().difficulty" 
+        />
+        <app-info-item 
+          icon="terrain" 
+          title="Höhenmeter" 
+          [describtion]="tour().altitude" 
+        />
 
       </dl>
     </app-card>
@@ -34,31 +30,6 @@ import { Tour } from '../../tour.types';
       margin: 0;
     }
 
-    .info-item {
-      display: grid;
-      gap: 0.35rem;
-    }
-
-    dt {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #65636d;
-      font-size: 0.875rem;
-    }
-
-    dd {
-      margin: 0;
-      font-weight: 500;
-      overflow-wrap: anywhere;
-    }
-
-    .material-icons {
-      width: 1.25rem;
-      height: 1.25rem;
-      color: #4f46a5;
-      font-size: 1.25rem;
-    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

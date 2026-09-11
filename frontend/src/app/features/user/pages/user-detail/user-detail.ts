@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/c
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Card } from '../../../../components/card/card';
+import { InfoItem } from '../../../../components/info-item/info-item';
 import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-user-detail',
-  imports: [Card],
+  imports: [Card, InfoItem],
   template: `
     @if (user(); as selectedUser) {
       <header class="page-header">
@@ -17,31 +18,20 @@ import { UserService } from '../../services/user.service';
       <div class="detail-grid">
         <app-card title="Persönliche Informationen">
           <dl class="info-list">
-            <div>
-              <dt><span class="material-icons" aria-hidden="true">cake</span>Geburtsdatum</dt>
-              <dd>{{ selectedUser.birthday }}</dd>
-            </div>
-            <div>
-              <dt><span class="material-icons" aria-hidden="true">phone</span>Telefonnummer</dt>
-              <dd>{{ selectedUser.phoneNumber }}</dd>
-            </div>
+            <app-info-item icon="cake" title="Geburtsdatum" [describtion]="selectedUser.birthday" />
+            <app-info-item icon="phone" title="Telefonnummer" [describtion]="selectedUser.phoneNumber" />
           </dl>
         </app-card>
 
         <app-card title="Notfallkontakt">
           <dl class="info-list">
-            <div>
-              <dt><span class="material-icons" aria-hidden="true">person</span>Name</dt>
-              <dd>{{ selectedUser.emergencyContact.firstName }} {{ selectedUser.emergencyContact.lastName }}</dd>
-            </div>
-            <div>
-              <dt><span class="material-icons" aria-hidden="true">phone_in_talk</span>Telefonnummer</dt>
-              <dd>{{ selectedUser.emergencyContact.phoneNumber }}</dd>
-            </div>
-            <div>
-              <dt><span class="material-icons" aria-hidden="true">family_restroom</span>Beziehung</dt>
-              <dd>{{ selectedUser.emergencyContact.relationship }}</dd>
-            </div>
+            <app-info-item
+              icon="person"
+              title="Name"
+              [describtion]="selectedUser.emergencyContact.firstName + ' ' + selectedUser.emergencyContact.lastName"
+            />
+            <app-info-item icon="phone_in_talk" title="Telefonnummer" [describtion]="selectedUser.emergencyContact.phoneNumber" />
+            <app-info-item icon="family_restroom" title="Beziehung" [describtion]="selectedUser.emergencyContact.relationship" />
           </dl>
         </app-card>
       </div>
@@ -85,27 +75,6 @@ import { UserService } from '../../services/user.service';
       display: grid;
       gap: 1rem;
       margin: 0;
-    }
-
-    dt {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #65636d;
-      font-size: 0.875rem;
-    }
-
-    dd {
-      margin: 0.35rem 0 0;
-      font-weight: 500;
-      overflow-wrap: anywhere;
-    }
-
-    .material-icons {
-      width: 1.25rem;
-      height: 1.25rem;
-      color: #4f46a5;
-      font-size: 1.25rem;
     }
 
     @media (max-width: 700px) {

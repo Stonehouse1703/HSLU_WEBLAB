@@ -1,74 +1,39 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Card } from '../../../../components/card/card';
 import { Tour } from '../../tour.types';
+import { InfoItem } from '../../../../components/info-item/info-item';
 
 @Component({
   selector: 'app-meeting-point',
-  imports: [Card],
+  imports: [
+    Card,
+    InfoItem
+  ],
   template: `
     <app-card title="Treffpunkt">
-      <dl class="tour-info">
-        <div class="info-item">
-          <dt>
-            <span class="material-icons" aria-hidden="true">date_range</span>
-            Datum
-          </dt>
-          <dd>{{ tour().date }}</dd>
-        </div>
+      <dl class="tour-info">   
+             
+        <app-info-item
+          icon="date_range"
+          title="Datum"
+          [describtion]="tour().date"
+        />
 
-        <div class="info-item">
-          <dt>
-            <span class="material-icons" aria-hidden="true">access_time</span>
-            Zeit
-          </dt>
-          <dd>{{ tour().time }}</dd>
-        </div>
+        <app-info-item
+          icon="access_time"
+          title="Zeit"
+          [describtion]="tour().time"
+        />
 
-        <div class="info-item">
-          <dt>
-            <span class="material-icons" aria-hidden="true">location_on</span>
-            Treffpunkt
-          </dt>
-          <dd>{{ tour().location }}</dd>
-        </div>
+        <app-info-item
+          icon="location_on"
+          title="Treffpunkt"
+          [describtion]="tour().location"
+        />
       </dl>
     </app-card>
   `,
-  styles: `
-    .tour-info {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
-      margin: 0;
-    }
-
-    .info-item {
-      display: grid;
-      gap: 0.35rem;
-      min-width: 0;
-    }
-
-    dt {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #65636d;
-      font-size: 0.875rem;
-      white-space: nowrap;
-    }
-
-    dd {
-      margin: 0;
-      font-weight: 500;
-      overflow-wrap: anywhere;
-    }
-
-    .material-icons {
-      width: 1.25rem;
-      height: 1.25rem;
-      color: #4f46a5;
-      font-size: 1.25rem;
-    }
+  styles: `  
 
     .info-item:nth-child(2) {
       justify-items: center;
