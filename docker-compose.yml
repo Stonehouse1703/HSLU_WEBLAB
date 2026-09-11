@@ -1,12 +1,36 @@
 services:
+  mongo:
+    image: mongo:8
+    container_name: hslu_weblab_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   backend:
     container_name: backend
     build:
       context: .
-      dockerfile: backend-js/Dockerfile
+      dockerfile: backend/Dockerfile
     # Documents the internal API Port of the container - does not publish it to the host
     expose:
       - "4566"
+    environment:
+      PORT: 4566
+      MONGO_URI: mongodb://mongo:27017/nest
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4566/api/users').then(response => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
     # Enable if needed: Exposes the containers internal Port 4566 to the host system through port 8080
     #ports:
     #  - "8080:4566" # if internal port needs to be mapped to a port on the host system
@@ -19,5 +43,21 @@ services:
     # Exposes the containers internal Port 80 (right) to the host system through port 80 (left)
     ports:
       - "80:80" # exposes port 80 to the host system
-    #depends_on:
-     # - backend
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  mongo-express:
+    image: mongo-express:1
+    container_name: hslu_weblab_mongo_express
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/
+      ME_CONFIG_BASICAUTH: "false"
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+volumes:
+  mongo-data:
