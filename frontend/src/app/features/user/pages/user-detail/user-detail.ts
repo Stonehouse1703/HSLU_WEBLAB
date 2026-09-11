@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Card } from '../../../../components/card/card';
-import { InfoItem } from '../../../../components/info-item/info-item';
 import { UserService } from '../../services/user.service';
+import { PersInformation } from '../../dumb_components/pers-information/pers-information';
+import { EmergInformation } from '../../dumb_components/emerg-information/emerg-information';
 
 @Component({
   selector: 'app-user-detail',
-  imports: [Card, InfoItem],
+  imports: [PersInformation, EmergInformation],
   template: `
     @if (user(); as selectedUser) {
       <header class="page-header">
@@ -16,24 +16,10 @@ import { UserService } from '../../services/user.service';
       </header>
 
       <div class="detail-grid">
-        <app-card title="Persönliche Informationen">
-          <dl class="info-list">
-            <app-info-item icon="cake" title="Geburtsdatum" [describtion]="selectedUser.birthday" />
-            <app-info-item icon="phone" title="Telefonnummer" [describtion]="selectedUser.phoneNumber" />
-          </dl>
-        </app-card>
+        
+        <app-pers-information [person]="selectedUser" />
+        <app-emerg-information [person]="selectedUser" />
 
-        <app-card title="Notfallkontakt">
-          <dl class="info-list">
-            <app-info-item
-              icon="person"
-              title="Name"
-              [describtion]="selectedUser.emergencyContact.firstName + ' ' + selectedUser.emergencyContact.lastName"
-            />
-            <app-info-item icon="phone_in_talk" title="Telefonnummer" [describtion]="selectedUser.emergencyContact.phoneNumber" />
-            <app-info-item icon="family_restroom" title="Beziehung" [describtion]="selectedUser.emergencyContact.relationship" />
-          </dl>
-        </app-card>
       </div>
     } @else {
       <p>Diese Person wurde nicht gefunden.</p>
@@ -69,12 +55,12 @@ import { UserService } from '../../services/user.service';
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 1rem;
+      align-items: stretch;
     }
 
-    .info-list {
+    app-pers-information,
+    app-emerg-information {
       display: grid;
-      gap: 1rem;
-      margin: 0;
     }
 
     @media (max-width: 700px) {
