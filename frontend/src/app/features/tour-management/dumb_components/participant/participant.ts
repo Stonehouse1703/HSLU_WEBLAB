@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { Card } from '../../../../components/card/card';
 import { User } from '../../../user/user.types';
-import { UserCard } from '../../../user/dumb_components/user-card/user-card';
+import { UserCard, UserRoleChange } from '../../../user/dumb_components/user-card/user-card';
 
 @Component({
   selector: 'app-participant-information',
@@ -15,6 +15,7 @@ import { UserCard } from '../../../user/dumb_components/user-card/user-card';
             [isTourManager]="true"
             (emergencyContactSelected)="emergencyContactSelected.emit($event)"
             (removeUser)="removeUser.emit($event)"
+            (setUserRole)="setUserRole.emit($event)"
            />
         }
         @for (user of participants(); track user.id) {
@@ -22,6 +23,7 @@ import { UserCard } from '../../../user/dumb_components/user-card/user-card';
           [user]="user"
           (emergencyContactSelected)="emergencyContactSelected.emit($event)"
           (removeUser)="removeUser.emit($event)"
+          (setUserRole)="setUserRole.emit($event)"
           />
         }
         @if (tourManagers().length === 0 && participants().length === 0) {
@@ -43,4 +45,5 @@ export class ParticipantInformation {
   readonly tourManagers = input.required<User[]>();
   readonly emergencyContactSelected = output<User>();
   readonly removeUser = output<User>();
+  readonly setUserRole = output<UserRoleChange>();
 }

@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { TourService } from '../../services/tour.api';
 import { UserService } from '../../../user/services/user.api';
 import { User } from '../../../user/user.types';
+import { UserRoleChange } from '../../../user/dumb_components/user-card/user-card';
 import { MeetingPoint } from '../../dumb_components/meeting-point/meeting-point';
 import { TourInformation } from '../../dumb_components/tour-information/tour-information';
 import { ParticipantInformation } from '../../dumb_components/participant/participant';
@@ -40,6 +41,7 @@ import { ParticipantInformation } from '../../dumb_components/participant/partic
         [tourManagers]="tourManagers()"
         (emergencyContactSelected)="openEmergencyContact($event)"
         (removeUser)="removeUser($event)"
+        (setUserRole)="setUserRole($event)"
       />
     </div>
   } @else {
@@ -106,5 +108,18 @@ export class TourDetail {
     } finally {
       this.isRemoving.set(false);
     }
+  }
+
+  async setUserRole(change: UserRoleChange): Promise<void> {
+    const tourId = this.routeParams().get("id");
+
+    if (!tourId) {
+      return;
+    }
+
+    await firstValueFrom(
+      this.tourService.setUserRole(tourId, change.user.id, change.role),
+    );
+    this.tourResource.reload();
   }
 }

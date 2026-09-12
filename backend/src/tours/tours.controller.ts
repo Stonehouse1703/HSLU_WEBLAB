@@ -2,6 +2,8 @@ import {
   Controller,
   Delete,
   Get,
+  Patch,
+  Body,
   NotFoundException,
   Param,
 } from '@nestjs/common';
@@ -33,6 +35,29 @@ export class ToursController {
     @Param('userId') userId: string,
   ) {
     const tour = await this.toursService.removeUser(tourId, userId);
+
+    if (!tour) {
+      throw new NotFoundException('Tour wurde nicht gefunden.');
+    }
+
+    return tour;
+  }
+
+  @Patch(':tourId/users/:userId/role')
+  async setUserRole(
+    @Param('tourId') tourId: string,
+    @Param('userId') userId: string,
+    @Body() body: { role?: 'admin' | 'participant' },
+  ) {
+    if (body.role !== 'admin' && body.role !== 'participant') {
+      throw new NotFoundException('Ungültige Benutzerrolle.');
+    }
+
+    const tour = await this.toursService.setUserRole(
+      tourId,
+      userId,
+      body.role,
+    );
 
     if (!tour) {
       throw new NotFoundException('Tour wurde nicht gefunden.');

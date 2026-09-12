@@ -82,4 +82,31 @@ export class ToursService implements OnModuleInit {
       .lean<Tour>()
       .exec();
   }
+
+  setUserRole(
+    tourId: string,
+    userId: string,
+    role: 'admin' | 'participant',
+  ): Promise<Tour | null> {
+    const update =
+      role === 'admin'
+        ? {
+            $pull: { participantIds: userId },
+            $addToSet: { tourManagerIds: userId },
+          }
+        : {
+            $pull: { tourManagerIds: userId },
+            $addToSet: { participantIds: userId },
+          };
+
+    return this.tourModel
+      .findOneAndUpdate(
+        { id: tourId },
+        update,
+        { new: true },
+      )
+      .select('-_id -__v')
+      .lean<Tour>()
+      .exec();
+  }
 }

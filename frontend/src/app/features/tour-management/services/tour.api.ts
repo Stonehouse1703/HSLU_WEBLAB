@@ -28,5 +28,16 @@ export class TourService {
       `${this.tourUrl}/${encodeURIComponent(tourId)}/users/${encodeURIComponent(userId)}`,
     );
   }
+
+  setUserRole(
+    tourId: string,
+    userId: string,
+    role: 'admin' | 'participant',
+  ) {
+    return this.http.patch<Tour>(
+      `${this.tourUrl}/${encodeURIComponent(tourId)}/users/${encodeURIComponent(userId)}/role`,
+      { role },
+    );
+  }
 }
   

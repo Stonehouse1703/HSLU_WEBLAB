@@ -2,6 +2,12 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { Button } from '../../../../components/button/button';
 import { User } from '../../user.types';
 
+export type UserRole = 'admin' | 'participant';
+export interface UserRoleChange {
+  user: User;
+  role: UserRole;
+}
+
 @Component({
   selector: 'app-user-card',
   imports: [Button],
@@ -28,6 +34,23 @@ import { User } from '../../user.types';
             [ariaLabel]="user().firstName + ' entfernen'"
             (clicked)="removeUser.emit(user())"
         />
+        @if (!isTourManager()) {
+          <app-button
+            class="preview-action"
+            text="Tourleiter ernennen"
+            variant="primary"
+            [ariaLabel]="user().firstName + ' zur Tourleitung ernennen'"
+            (clicked)="setUserRole.emit({ user: user(), role: 'admin' })"
+          />
+        } @else {
+          <app-button
+            class="preview-action"
+            text="Als Teilnehmer zurückstufen"
+            variant="secondary"
+            [ariaLabel]="user().firstName + ' als Teilnehmer zurückstufen'"
+            (clicked)="setUserRole.emit({ user: user(), role: 'participant' })"
+          />
+        }
     </div>
   `,
   styles: `
@@ -75,7 +98,7 @@ import { User } from '../../user.types';
       height: 1.25rem;
       color: #4f46a5;
       font-size: 1.25rem;
-    }
+    }   
 
     @media (max-width: 700px) {
       .user-summary {
@@ -95,4 +118,5 @@ export class UserCard {
   readonly isTourManager = input(false);
   readonly emergencyContactSelected = output<User>();
   readonly removeUser = output<User>();
+  readonly setUserRole = output<UserRoleChange>();
 }
