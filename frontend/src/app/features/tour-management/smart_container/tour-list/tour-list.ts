@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import {TourService} from '../../services/tour.service';
+import {TourService} from '../../services/tour.api';
 import { TourDetail } from "../../dumb_components/tour-list/tour-detail";
 
 @Component({
@@ -9,11 +9,19 @@ import { TourDetail } from "../../dumb_components/tour-list/tour-detail";
 
   <h2>Deine bevorstehenden Touren:</h2>
 
-  <div class="tour-list">
-    @for (tour of fetchTours(); track tour.id) {
-      <app-tour-preview [tour]="tour"/>
-    }
-  </div>
+  @if (toursResource.isLoading()) {
+    <p>Touren werden geladen ...</p>
+  } @else if (toursResource.error()) {
+    <p>Die Touren konnten nicht geladen werden.</p>
+  } @else if (toursResource.value().length === 0) {
+    <p>Keine Touren vorhanden.</p>
+  } @else {
+    <div class="tour-list">
+      @for (tour of toursResource.value(); track tour.id) {
+        <app-tour-preview [tour]="tour" />
+      }
+    </div>
+  }
 
   `,
   styles: `
@@ -26,9 +34,6 @@ import { TourDetail } from "../../dumb_components/tour-list/tour-detail";
   changeDetection: ChangeDetectionStrategy.Eager,
 })
 export class TourList {
-  private tourService = inject(TourService);
-
-  fetchTours() {
-    return this.tourService.tours;
-  }
+  private readonly tourService = inject(TourService);
+  readonly toursResource = this.tourService.getToursResource();
 }

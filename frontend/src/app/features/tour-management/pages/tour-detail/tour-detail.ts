@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { TourService } from '../../services/tour.service';
-import { UserService } from '../../../user/services/user.service';
+import { TourService } from '../../services/tour.api';
+import { UserService } from '../../../user/services/user.api';
 import { User } from '../../../user/user.types';
 import { MeetingPoint } from '../../dumb_components/meeting-point/meeting-point';
 import { TourInformation } from '../../dumb_components/tour-information/tour-information';
@@ -14,7 +14,11 @@ import { ParticipantInformation } from '../../dumb_components/participant/partic
   imports: [MeetingPoint, TourInformation, ParticipantInformation],
   template: `
     
-  @if (tour(); as selectedTour) {
+  @if (tourResource.isLoading()) {
+    <p>Tour wird geladen ...</p>
+  } @else if (tourResource.error()) {
+    <p>Die Tour konnte nicht geladen werden.</p>
+  } @else if (tourResource.value(); as selectedTour) {
     <header class="tour-header">
       <span class="eyebrow">Tourdetails</span>
       <h2>{{ selectedTour.name }}</h2>
@@ -49,18 +53,21 @@ export class TourDetail {
   private readonly tourService = inject(TourService);
   private readonly userService = inject(UserService);
   private readonly routeParams = toSignal(this.route.paramMap, {requireSync: true});
+  readonly tourResource = this.tourService.getTourByIdResource(
+    computed(() => this.routeParams().get('id')),
+  );
+  private readonly usersResource = this.userService.getUsersResource();
 
-  readonly tour = computed(() => {
-    const id = String(this.routeParams().get('id'));
-    return id ? this.tourService.findTourById(id) : undefined;
-  });
-
-  readonly participants = computed(() => this.findUsers(this.tour()?.participantIds ?? []));
-  readonly tourManagers = computed(() => this.findUsers(this.tour()?.tourManagerIds ?? []));
+  readonly participants = computed(() =>
+    this.findUsers(this.tourResource.value()?.participantIds ?? []),
+  );
+  readonly tourManagers = computed(() =>
+    this.findUsers(this.tourResource.value()?.tourManagerIds ?? []),
+  );
 
   private findUsers(ids: string[]): User[] {
     return ids
-      .map(id => this.userService.findUserById(id))
+      .map(id => this.usersResource.value().find(user => user.id === id))
       .filter((user): user is User => user !== undefined);
   }
 

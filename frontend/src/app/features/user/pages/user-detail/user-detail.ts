@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { UserService } from '../../services/user.service';
+import { UserService } from '../../services/user.api';
 import { PersInformation } from '../../dumb_components/pers-information/pers-information';
 import { EmergInformation } from '../../dumb_components/emerg-information/emerg-information';
 
@@ -9,7 +9,11 @@ import { EmergInformation } from '../../dumb_components/emerg-information/emerg-
   selector: 'app-user-detail',
   imports: [PersInformation, EmergInformation],
   template: `
-    @if (user(); as selectedUser) {
+    @if (userResource.isLoading()) {
+      <p>Person wird geladen ...</p>
+    } @else if (userResource.error()) {
+      <p>Die Person konnte nicht geladen werden.</p>
+    } @else if (userResource.value(); as selectedUser) {
       <header class="page-header">
         <span class="eyebrow">Personendetails</span>
         <h1>{{ selectedUser.firstName }} {{ selectedUser.lastName }}</h1>
@@ -75,9 +79,7 @@ export class UserDetail {
   private readonly route = inject(ActivatedRoute);
   private readonly userService = inject(UserService);
   private readonly routeParams = toSignal(this.route.paramMap, { requireSync: true });
+  private readonly userId = computed(() => this.routeParams().get('id'));
 
-  readonly user = computed(() => {
-    const id = this.routeParams().get('id');
-    return id ? this.userService.findUserById(id) : undefined;
-  });
+  readonly userResource = this.userService.getUserByIdResource(this.userId);
 }
