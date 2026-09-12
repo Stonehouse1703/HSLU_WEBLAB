@@ -14,12 +14,14 @@ import { UserCard } from '../../../user/dumb_components/user-card/user-card';
             [user]="user"
             [isTourManager]="true"
             (emergencyContactSelected)="emergencyContactSelected.emit($event)"
+            (removeUser)="removeUser.emit($event)"
            />
         }
         @for (user of participants(); track user.id) {
           <app-user-card 
           [user]="user"
           (emergencyContactSelected)="emergencyContactSelected.emit($event)"
+          (removeUser)="removeUser.emit($event)"
           />
         }
         @if (tourManagers().length === 0 && participants().length === 0) {
@@ -40,4 +42,5 @@ export class ParticipantInformation {
   readonly participants = input.required<User[]>();
   readonly tourManagers = input.required<User[]>();
   readonly emergencyContactSelected = output<User>();
+  readonly removeUser = output<User>();
 }

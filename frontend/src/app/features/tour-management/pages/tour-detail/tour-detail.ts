@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
 import { TourService } from '../../services/tour.api';
 import { UserService } from '../../../user/services/user.api';
 import { User } from '../../../user/user.types';
@@ -13,7 +14,12 @@ import { ParticipantInformation } from '../../dumb_components/participant/partic
   selector: 'app-tour-detail',
   imports: [MeetingPoint, TourInformation, ParticipantInformation],
   template: `
-    
+  @if (isRemoving()) {
+    <p role="status">Person wird aus der Tour entfernt ...</p>
+  } @else if (removeError()) {
+    <p role="alert">{{ removeError() }}</p>
+  }
+
   @if (tourResource.isLoading()) {
     <p>Tour wird geladen ...</p>
   } @else if (tourResource.error()) {
@@ -33,6 +39,7 @@ import { ParticipantInformation } from '../../dumb_components/participant/partic
         [participants]="participants()"
         [tourManagers]="tourManagers()"
         (emergencyContactSelected)="openEmergencyContact($event)"
+        (removeUser)="removeUser($event)"
       />
     </div>
   } @else {
@@ -57,6 +64,8 @@ export class TourDetail {
     computed(() => this.routeParams().get('id')),
   );
   private readonly usersResource = this.userService.getUsersResource();
+  readonly isRemoving = signal(false);
+  readonly removeError = signal<string | null>(null);
 
   readonly participants = computed(() =>
     this.findUsers(this.tourResource.value()?.participantIds ?? []),
@@ -77,5 +86,25 @@ export class TourDetail {
 
   openEmergencyContact(user: User) {
     this.router.navigate(['/user', user.id]);
+  }
+
+  async removeUser(user: User): Promise<void> {
+    const tourId = this.routeParams().get('id');
+
+    if (!tourId) {
+      return;
+    }
+
+    this.isRemoving.set(true);
+    this.removeError.set(null);
+
+    try {
+      await firstValueFrom(this.tourService.removeUser(tourId, user.id));
+      this.tourResource.reload();
+    } catch {
+      this.removeError.set('Die Person konnte nicht aus der Tour entfernt werden.');
+    } finally {
+      this.isRemoving.set(false);
+    }
   }
 }

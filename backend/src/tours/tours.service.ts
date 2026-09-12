@@ -65,4 +65,21 @@ export class ToursService implements OnModuleInit {
       .lean<Tour>()
       .exec();
   }
+
+  removeUser(tourId: string, userId: string): Promise<Tour | null> {
+    return this.tourModel
+      .findOneAndUpdate(
+        { id: tourId },
+        {
+          $pull: {
+            participantIds: userId,
+            tourManagerIds: userId,
+          },
+        },
+        { new: true },
+      )
+      .select('-_id -__v')
+      .lean<Tour>()
+      .exec();
+  }
 }

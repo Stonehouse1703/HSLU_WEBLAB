@@ -21,6 +21,13 @@ import { User } from '../../user.types';
             [ariaLabel]="'Notfallkontakt von ' + user().firstName"
             (clicked)="emergencyContactSelected.emit(user())"
         />
+        <app-button
+            class="preview-action"
+            text="X"
+            variant="danger"
+            [ariaLabel]="user().firstName + ' entfernen'"
+            (clicked)="removeUser.emit(user())"
+        />
     </div>
   `,
   styles: `
@@ -87,4 +94,5 @@ export class UserCard {
   readonly user = input.required<User>();
   readonly isTourManager = input(false);
   readonly emergencyContactSelected = output<User>();
+  readonly removeUser = output<User>();
 }
