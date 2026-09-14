@@ -4,6 +4,7 @@ import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { UsersModule } from './users/users.module.js';
 import { ToursModule } from './tours/tours.module.js';
+import { AuthModule } from './auth/auth.module.js';
 import { MongooseModule } from '@nestjs/mongoose';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
@@ -15,6 +16,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     ),
     UsersModule,
     ToursModule,
+    AuthModule,
     ObserveModule.forRoot({
       appKey: 'YOUR_APP_KEY',
       appSecret: 'YOUR_APP_SECRET',

@@ -55,14 +55,17 @@ export class ToursService implements OnModuleInit {
     );
   }
 
-  async create(data: {
-    name: string;
-    date: string;
-    time: string;
-    location: string;
-    difficulty: string;
-    altitude: string;
-  }): Promise<Tour> {
+  async create(
+    data: {
+      name: string;
+      date: string;
+      time: string;
+      location: string;
+      difficulty: string;
+      altitude: string;
+    },
+    creatorId?: string,
+  ): Promise<Tour> {
     const tour: Tour = {
       id: randomUUID(),
       name: data.name.trim(),
@@ -71,7 +74,7 @@ export class ToursService implements OnModuleInit {
       location: data.location.trim(),
       difficulty: data.difficulty,
       altitude: data.altitude,
-      tourManagerIds: [],
+      tourManagerIds: creatorId ? [creatorId] : [],
       participantIds: [],
     };
 

@@ -1,16 +1,18 @@
-import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {Navigation} from './components/navigation/navigation';
-import {PATHS} from './config/paths.config';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { Navigation } from './components/navigation/navigation';
+import { PATHS } from './config/paths.config';
+import { AuthService } from './features/auth/services/auth.service';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterOutlet,
-    Navigation
-  ],
+  imports: [RouterOutlet, Navigation],
   template: `
-    <app-navigation [links]="getAvailableLinks()"></app-navigation>
+    <app-navigation
+      [links]="getAvailableLinks()"
+      [currentUser]="authService.currentUser()"
+      (logout)="authService.logout()"
+    />
 
     <div>
       <router-outlet></router-outlet>
@@ -42,6 +44,8 @@ import {PATHS} from './config/paths.config';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
+  readonly authService = inject(AuthService);
+
   getAvailableLinks() {
     return Object.values(PATHS);
   }

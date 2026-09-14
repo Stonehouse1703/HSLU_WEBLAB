@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   NotFoundException,
   Param,
   Patch,
@@ -12,14 +13,22 @@ import {
 import { ToursService } from './tours.service.js';
 import { CreateTourDto } from './dto/create-tour.dto.js';
 import { SetUserRoleDto } from './dto/set-user-role.dto.js';
+import { AuthService } from '../auth/auth.service.js';
 
 @Controller('tours')
 export class ToursController {
-  constructor(private readonly toursService: ToursService) {}
+  constructor(
+    private readonly toursService: ToursService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post()
-  create(@Body() body: CreateTourDto) {
-    return this.toursService.create(body);
+  create(
+    @Body() body: CreateTourDto,
+    @Headers('authorization') authHeader?: string,
+  ) {
+    const user = this.authService.extractUserFromHeader(authHeader);
+    return this.toursService.create(body, user?.id);
   }
 
   @Get()

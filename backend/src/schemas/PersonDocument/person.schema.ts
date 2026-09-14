@@ -1,4 +1,3 @@
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 import { EmergencyContact, EmergencyContactSchema } from './emergencyContact.schema.js';
@@ -15,6 +14,12 @@ export class Person {
 
   @Prop()
   lastName: string;
+
+  @Prop({ unique: true, sparse: true })
+  email?: string;
+
+  @Prop()
+  passwordHash?: string;
 
   @Prop()
   birthday: string;

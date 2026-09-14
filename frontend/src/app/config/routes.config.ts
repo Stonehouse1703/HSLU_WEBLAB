@@ -5,8 +5,9 @@ import {TourDetail} from '../features/tour-management/pages/tour-detail/tour-det
 import {UserDetail} from '../features/user/pages/user-detail/user-detail';
 import {Home} from '../pages/home/home';
 import { TourEditor } from '../features/tour-editor/pages/tour-editor/tour-editor';
+import { LoginPage } from '../features/auth/pages/login/login'
 
-const { HOME, TOUR_MANAGEMENT } = PATHS;
+const { HOME, TOUR_MANAGEMENT, LOGIN } = PATHS;
 
 export const routes: Route[] = [
   {
@@ -38,6 +39,14 @@ export const routes: Route[] = [
   {
     path: 'tour-editor',
     component: TourEditor,
+  },
+  {
+    path: LOGIN.path,
+    component: LoginPage,
+  },
+  {
+    path: LOGIN.path,
+    component: LoginPage,
   },
   {
     path: '**',
