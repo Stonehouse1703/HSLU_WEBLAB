@@ -2,6 +2,15 @@ import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable, type Signal } from '@angular/core';
 import { Tour } from '../tour.types';
 
+export type CreateTourInput = {
+  name: string;
+  date: string;
+  time: string;
+  location: string;
+  difficulty: string;
+  altitude: string;
+};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -14,6 +23,10 @@ export class TourService {
       () => this.tourUrl,
       { defaultValue: [] },
     );
+  }
+
+  createTour(tour: CreateTourInput) {
+    return this.http.post<Tour>(this.tourUrl, tour);
   }
 
   getTourByIdResource(idSignal: Signal<string | null>) {

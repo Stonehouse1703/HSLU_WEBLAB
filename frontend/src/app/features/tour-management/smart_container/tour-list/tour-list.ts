@@ -1,13 +1,22 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {TourService} from '../../services/tour.api';
 import { TourDetail } from "../../dumb_components/tour-list/tour-detail";
+import { RouterLink } from '@angular/router';
+import { Button } from '../../../../components/button/button';
 
 @Component({
   selector: 'app-tour-list',
-  imports: [TourDetail],
+  imports: [TourDetail, RouterLink, Button],
   template: `
 
   <h2>Deine bevorstehenden Touren:</h2>
+
+  <a class="test" routerLink="/tour-editor">
+    <app-button
+      text="Tour erstellen"
+      variant="primary"
+    />
+  </a>
 
   @if (toursResource.isLoading()) {
     <p>Touren werden geladen ...</p>

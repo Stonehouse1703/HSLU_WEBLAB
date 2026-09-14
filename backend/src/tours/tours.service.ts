@@ -1,6 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { randomUUID } from 'node:crypto';
 import { Tour, TourDocument } from '../schemas/TourDocument/tour.schema.js';
 
 @Injectable()
@@ -52,6 +53,32 @@ export class ToursService implements OnModuleInit {
         },
       })),
     );
+  }
+
+  async create(data: {
+    name: string;
+    date: string;
+    time: string;
+    location: string;
+    difficulty: string;
+    altitude: string;
+  }): Promise<Tour> {
+    const tour: Tour = {
+      id: randomUUID(),
+      name: data.name.trim(),
+      date: data.date,
+      time: data.time,
+      location: data.location.trim(),
+      difficulty: data.difficulty,
+      altitude: data.altitude,
+      tourManagerIds: [],
+      participantIds: [],
+    };
+
+    const createdTour = await this.tourModel.create(tour);
+    const { _id, ...savedTour } = createdTour.toObject({ versionKey: false });
+
+    return savedTour as Tour;
   }
 
   findAll(): Promise<Tour[]> {

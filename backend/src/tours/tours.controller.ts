@@ -3,6 +3,7 @@ import {
   Delete,
   Get,
   Patch,
+  Post,
   Body,
   NotFoundException,
   Param,
@@ -12,6 +13,11 @@ import { ToursService } from './tours.service.js';
 @Controller('tours')
 export class ToursController {
   constructor(private readonly toursService: ToursService) {}
+
+  @Post()
+  create(@Body() body: { name: string; date: string; time: string; location: string; difficulty: string; altitude: string }) {
+    return this.toursService.create(body);
+  }
 
   @Get()
   findAll() {

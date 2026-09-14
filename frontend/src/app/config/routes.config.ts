@@ -4,6 +4,7 @@ import {TourManagement} from '../features/tour-management/pages/tour-overview/to
 import {TourDetail} from '../features/tour-management/pages/tour-detail/tour-detail';
 import {UserDetail} from '../features/user/pages/user-detail/user-detail';
 import {Home} from '../pages/home/home';
+import { TourEditor } from '../features/tour-editor/pages/tour-editor/tour-editor';
 
 const { HOME, TOUR_MANAGEMENT } = PATHS;
 
@@ -33,6 +34,10 @@ export const routes: Route[] = [
   {
     path: 'user/:id',
     component: UserDetail,
+  },
+  {
+    path: 'tour-editor',
+    component: TourEditor,
   },
   {
     path: '**',
