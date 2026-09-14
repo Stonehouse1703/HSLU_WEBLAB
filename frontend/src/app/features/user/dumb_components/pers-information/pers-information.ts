@@ -11,8 +11,8 @@ import { InfoItem } from '../../../../components/info-item/info-item';
   template: `
     <app-card title="Persönliche Informationen">
           <dl class="info-list">
-            <app-info-item icon="cake" title="Geburtsdatum" [describtion]="person().birthday" />
-            <app-info-item icon="phone" title="Telefonnummer" [describtion]="person().phoneNumber" />
+            <app-info-item icon="cake" title="Geburtsdatum" [description]="person().birthday" />
+            <app-info-item icon="phone" title="Telefonnummer" [description]="person().phoneNumber" />
           </dl>
         </app-card>
   `,

@@ -1,0 +1,8 @@
+export class CreateTourDto {
+  name: string;
+  date: string;
+  time: string;
+  location: string;
+  difficulty: string;
+  altitude: string;
+}

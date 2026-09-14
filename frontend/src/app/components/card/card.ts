@@ -6,7 +6,7 @@ import {ChangeDetectionStrategy, Component, input} from '@angular/core';
     <h3>{{ title() }}</h3>
     <ng-content/>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
       display: block;

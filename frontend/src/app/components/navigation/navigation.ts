@@ -15,7 +15,7 @@ import {RouterLink, RouterLinkActive} from '@angular/router';
       }
     </nav>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
       position: sticky;

@@ -15,11 +15,11 @@ import { RouterLink } from '@angular/router';
     <a [routerLink]="['/tour-management', tour().id]">
       <app-card title="{{ tour().name }}">
         <dl class="tour-preview">
-            <app-info-item icon="date_range" title="Datum" [describtion]="tour().date" />
-            <app-info-item icon="access_time" title="Zeit" [describtion]="tour().time" />
-            <app-info-item icon="location_on" title="Ort" [describtion]="tour().location" />
-            <app-info-item icon="flag" title="Schwierigkeit" [describtion]="tour().difficulty" />
-            <app-info-item icon="terrain" title="Höhe" [describtion]="tour().altitude" />
+            <app-info-item icon="date_range" title="Datum" [description]="tour().date" />
+            <app-info-item icon="access_time" title="Zeit" [description]="tour().time" />
+            <app-info-item icon="location_on" title="Ort" [description]="tour().location" />
+            <app-info-item icon="flag" title="Schwierigkeit" [description]="tour().difficulty" />
+            <app-info-item icon="terrain" title="Höhe" [description]="tour().altitude" />
         </dl>
       </app-card>
     </a>
@@ -60,9 +60,12 @@ import { RouterLink } from '@angular/router';
       }
     }
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TourDetail {
+export class TourPreview {
   readonly tour = input.required<Tour>();
 }
+
+// Alias for backwards compatibility
+export { TourPreview as TourDetail };
   

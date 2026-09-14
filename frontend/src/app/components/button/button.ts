@@ -16,7 +16,7 @@ export type ButtonType = 'button' | 'submit' | 'reset';
       {{ text() }}
     </button>
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     :host {
       display: inline-block;

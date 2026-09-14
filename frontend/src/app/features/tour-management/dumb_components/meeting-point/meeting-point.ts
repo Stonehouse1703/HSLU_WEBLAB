@@ -16,19 +16,19 @@ import { InfoItem } from '../../../../components/info-item/info-item';
         <app-info-item
           icon="date_range"
           title="Datum"
-          [describtion]="tour().date"
+          [description]="tour().date"
         />
 
         <app-info-item
           icon="access_time"
           title="Zeit"
-          [describtion]="tour().time"
+          [description]="tour().time"
         />
 
         <app-info-item
           icon="location_on"
           title="Treffpunkt"
-          [describtion]="tour().location"
+          [description]="tour().location"
         />
       </dl>
     </app-card>

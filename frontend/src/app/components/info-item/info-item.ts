@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       <span class="material-icons" aria-hidden="true">{{ icon() }}</span>
       {{ title() }}
     </dt>
-    <dd>{{ describtion() }}</dd>
+    <dd>{{ description() }}</dd>
   </div>
   `,
   styles: `
@@ -46,5 +46,5 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 export class InfoItem {
   readonly icon = input.required<string>();
   readonly title = input.required<string>();
-  readonly describtion = input.required<string>();
+  readonly description = input.required<string>();
 }

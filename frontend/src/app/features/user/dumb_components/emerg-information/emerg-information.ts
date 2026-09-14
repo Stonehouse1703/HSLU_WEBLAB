@@ -12,10 +12,10 @@ import { User } from '../../user.types';
       <app-info-item
         icon="person"
         title="Name"
-        [describtion]="person().emergencyContact.firstName + ' ' + person().emergencyContact.lastName"
+        [description]="person().emergencyContact.firstName + ' ' + person().emergencyContact.lastName"
       />
-      <app-info-item icon="phone_in_talk" title="Telefonnummer" [describtion]="person().emergencyContact.phoneNumber" />
-      <app-info-item icon="family_restroom" title="Beziehung" [describtion]="person().emergencyContact.relationship" />
+      <app-info-item icon="phone_in_talk" title="Telefonnummer" [description]="person().emergencyContact.phoneNumber" />
+      <app-info-item icon="family_restroom" title="Beziehung" [description]="person().emergencyContact.relationship" />
     </dl>
   </app-card>
   `,

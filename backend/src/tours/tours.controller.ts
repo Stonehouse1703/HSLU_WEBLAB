@@ -1,21 +1,24 @@
 import {
+  BadRequestException,
+  Body,
   Controller,
   Delete,
   Get,
-  Patch,
-  Post,
-  Body,
   NotFoundException,
   Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
 import { ToursService } from './tours.service.js';
+import { CreateTourDto } from './dto/create-tour.dto.js';
+import { SetUserRoleDto } from './dto/set-user-role.dto.js';
 
 @Controller('tours')
 export class ToursController {
   constructor(private readonly toursService: ToursService) {}
 
   @Post()
-  create(@Body() body: { name: string; date: string; time: string; location: string; difficulty: string; altitude: string }) {
+  create(@Body() body: CreateTourDto) {
     return this.toursService.create(body);
   }
 
@@ -53,10 +56,10 @@ export class ToursController {
   async setUserRole(
     @Param('tourId') tourId: string,
     @Param('userId') userId: string,
-    @Body() body: { role?: 'admin' | 'participant' },
+    @Body() body: SetUserRoleDto,
   ) {
     if (body.role !== 'admin' && body.role !== 'participant') {
-      throw new NotFoundException('Ungültige Benutzerrolle.');
+      throw new BadRequestException('Ungültige Benutzerrolle.');
     }
 
     const tour = await this.toursService.setUserRole(

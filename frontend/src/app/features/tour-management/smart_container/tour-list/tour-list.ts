@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {TourService} from '../../services/tour.api';
-import { TourDetail } from "../../dumb_components/tour-list/tour-detail";
+import { TourPreview } from "../../dumb_components/tour-list/tour-detail";
 import { RouterLink } from '@angular/router';
 import { Button } from '../../../../components/button/button';
 
 @Component({
   selector: 'app-tour-list',
-  imports: [TourDetail, RouterLink, Button],
+  imports: [TourPreview, RouterLink, Button],
   template: `
 
   <h2>Deine bevorstehenden Touren:</h2>
@@ -40,7 +40,7 @@ import { Button } from '../../../../components/button/button';
       gap: 0.5rem;
     }
   `,
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TourList {
   private readonly tourService = inject(TourService);

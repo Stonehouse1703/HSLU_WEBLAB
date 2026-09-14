@@ -38,7 +38,8 @@ import {PATHS} from './config/paths.config';
         padding: 1rem 0;
       }
     }
-  `
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
   getAvailableLinks() {

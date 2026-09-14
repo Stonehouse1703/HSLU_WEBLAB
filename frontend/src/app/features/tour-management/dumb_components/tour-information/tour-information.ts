@@ -12,12 +12,12 @@ import { Tour } from '../../tour.types';
         <app-info-item 
           icon="flag" 
           title="Schwierigkeit" 
-          [describtion]="tour().difficulty" 
+          [description]="tour().difficulty" 
         />
         <app-info-item 
           icon="terrain" 
           title="Höhenmeter" 
-          [describtion]="tour().altitude" 
+          [description]="tour().altitude" 
         />
 
       </dl>
