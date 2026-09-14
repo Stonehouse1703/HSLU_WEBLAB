@@ -18,13 +18,12 @@ export class TourService {
   private readonly tourUrl = '/api/tours';
   private readonly http = inject(HttpClient);
 
-  getToursResource() {
+  getMyTours() {
     return httpResource<Tour[]>(
-      () => this.tourUrl,
+      () => `${this.tourUrl}/my-tours`,
       { defaultValue: [] },
     );
   }
-
   createTour(tour: CreateTourInput) {
     return this.http.post<Tour>(this.tourUrl, tour);
   }

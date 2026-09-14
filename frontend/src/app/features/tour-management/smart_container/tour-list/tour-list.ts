@@ -44,5 +44,5 @@ import { Button } from '../../../../components/button/button';
 })
 export class TourList {
   private readonly tourService = inject(TourService);
-  readonly toursResource = this.tourService.getToursResource();
+  readonly toursResource = this.tourService.getMyTours();
 }

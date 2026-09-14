@@ -84,8 +84,17 @@ export class ToursService implements OnModuleInit {
     return savedTour as Tour;
   }
 
-  findAll(): Promise<Tour[]> {
-    return this.tourModel.find().select('-_id -__v').lean<Tour[]>().exec();
+  findUserTours(userId: string): Promise<Tour[]> {
+    return this.tourModel
+      .find({
+        $or: [
+          { tourManagerIds: userId },
+          { participantIds: userId },
+        ],
+      })
+      .select('-_id -__v')
+      .lean<Tour[]>()
+      .exec();
   }
 
   findById(id: string): Promise<Tour | null> {

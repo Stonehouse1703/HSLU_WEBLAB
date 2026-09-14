@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Post,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ToursService } from './tours.service.js';
 import { CreateTourDto } from './dto/create-tour.dto.js';
@@ -31,9 +32,13 @@ export class ToursController {
     return this.toursService.create(body, user?.id);
   }
 
-  @Get()
-  findAll() {
-    return this.toursService.findAll();
+  @Get('my-tours')
+  findUserTours(@Headers('authorization') authHeader?: string) {
+    const user = this.authService.extractUserFromHeader(authHeader);
+    if (!user) {
+      throw new UnauthorizedException('Nicht authentifiziert.');
+    }
+    return this.toursService.findUserTours(user.id);
   }
 
   @Get(':id')
