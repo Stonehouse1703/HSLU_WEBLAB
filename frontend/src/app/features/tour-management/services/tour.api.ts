@@ -35,6 +35,13 @@ export class TourService {
     });
   }
 
+  joinTour(tourId: string) {
+    return this.http.post<Tour>(
+      `${this.tourUrl}/${encodeURIComponent(tourId)}/join`,
+      {},
+    );
+  }
+
   removeUser(tourId: string, userId: string) {
     return this.http.delete<Tour>(
       `${this.tourUrl}/${encodeURIComponent(tourId)}/users/${encodeURIComponent(userId)}`,

@@ -55,6 +55,24 @@ export class ToursController {
     return tour;
   }
 
+  @Post(':tourId/join')
+  async joinTour(
+    @Param('tourId') tourId: string,
+    @Headers('authorization') authHeader?: string,
+  ) {
+    const user = this.authService.extractUserFromHeader(authHeader);
+    if (!user) {
+      throw new UnauthorizedException('Bitte zuerst anmelden.');
+    }
+
+    const tour = await this.toursService.joinTour(tourId, user.id);
+    if (!tour) {
+      throw new NotFoundException('Tour wurde nicht gefunden.');
+    }
+
+    return tour;
+  }
+
   @Get(':tourId/users/:userId/emergency-contact')
   async getEmergencyContact(
     @Param('tourId') tourId: string,

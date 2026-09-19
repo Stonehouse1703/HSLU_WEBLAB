@@ -105,6 +105,21 @@ export class ToursService implements OnModuleInit {
       .exec();
   }
 
+  joinTour(tourId: string, userId: string): Promise<Tour | null> {
+    return this.tourModel
+      .findOneAndUpdate(
+        { id: tourId },
+        {
+          $pull: { tourManagerIds: userId },
+          $addToSet: { participantIds: userId },
+        },
+        { new: true },
+      )
+      .select('-_id -__v')
+      .lean<Tour>()
+      .exec();
+  }
+
   async getUserRoleByTour(tourId: string, userId: string): Promise<boolean> {
     const tour = await this.tourModel
       .findOne({ id: tourId, tourManagerIds: userId })

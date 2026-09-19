@@ -9,15 +9,18 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { MeetingPoint } from '../../dumb_components/meeting-point/meeting-point';
 import { TourInformation } from '../../dumb_components/tour-information/tour-information';
 import { ParticipantInformation } from '../../dumb_components/participant/participant';
+import { Button } from '../../../../components/button/button';
 
 @Component({
   selector: 'app-tour-detail-container',
-  imports: [MeetingPoint, TourInformation, ParticipantInformation],
+  imports: [MeetingPoint, TourInformation, ParticipantInformation, Button],
   template: `
     @if (isRemoving()) {
       <p role="status">Person wird aus der Tour entfernt ...</p>
     } @else if (removeError()) {
       <p role="alert">{{ removeError() }}</p>
+    } @else if (joinError()) {
+      <p role="alert">{{ joinError() }}</p>
     }
 
     @if (tourResource.isLoading()) {
@@ -28,6 +31,16 @@ import { ParticipantInformation } from '../../dumb_components/participant/partic
       <header class="tour-header">
         <span class="eyebrow">Tourdetails</span>
         <h2>{{ selectedTour.name }}</h2>
+        @if (canJoinTour()) {
+          <app-button
+            text="Tour beitreten"
+            variant="primary"
+            [disabled]="isJoining()"
+            (clicked)="joinTour()"
+          />
+        } @else if (isJoining()) {
+          <p role="status">Tour wird beigetreten ...</p>
+        }
       </header>
 
       <div class="detail-grid">
@@ -96,6 +109,8 @@ export class TourDetailContainer {
 
   readonly isRemoving = signal(false);
   readonly removeError = signal<string | null>(null);
+  readonly isJoining = signal(false);
+  readonly joinError = signal<string | null>(null);
 
   readonly participants = computed(() =>
     this.findUsers(this.tourResource.value()?.participantIds ?? []),
@@ -109,6 +124,17 @@ export class TourDetailContainer {
 
     return !!currentUser && !!tour?.tourManagerIds.includes(currentUser.id);
   });
+  readonly canJoinTour = computed(() => {
+    const currentUser = this.authService.currentUser();
+    const tour = this.tourResource.value();
+
+    return (
+      !!currentUser &&
+      !!tour &&
+      !tour.tourManagerIds.includes(currentUser.id) &&
+      !tour.participantIds.includes(currentUser.id)
+    );
+  });
 
   private findUsers(ids: string[]): User[] {
     return ids
@@ -120,6 +146,23 @@ export class TourDetailContainer {
     this.router.navigate(['/user', user.id], {
       queryParams: { tourId: this.tourId() },
     });
+  }
+
+  async joinTour(): Promise<void> {
+    const id = this.tourId();
+    if (!id || this.isJoining() || !this.canJoinTour()) return;
+
+    this.isJoining.set(true);
+    this.joinError.set(null);
+
+    try {
+      await firstValueFrom(this.tourService.joinTour(id));
+      this.tourResource.reload();
+    } catch {
+      this.joinError.set('Der Tour konnte nicht beigetreten werden.');
+    } finally {
+      this.isJoining.set(false);
+    }
   }
 
   async removeUser(user: User): Promise<void> {
