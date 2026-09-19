@@ -75,12 +75,17 @@ export class ToursController {
       throw new UnauthorizedException('Bitte zuerst anmelden.');
     }
 
-    const tour = await this.toursService.joinTour(tourId, user.id);
-    if (!tour) {
+    const existingTour = await this.toursService.findById(tourId);
+    if (!existingTour) {
       throw new NotFoundException('Tour wurde nicht gefunden.');
     }
 
-    return tour;
+    if (existingTour.tourManagerIds.includes(user.id)) {
+      return existingTour;
+    }
+
+    const tour = await this.toursService.joinTour(tourId, user.id);
+    return tour ?? existingTour;
   }
 
   @Get(':tourId/users/:userId/emergency-contact')

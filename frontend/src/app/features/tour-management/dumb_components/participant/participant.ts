@@ -1,13 +1,26 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { Card } from '../../../../components/card/card';
+import { Button } from '../../../../components/button/button';
 import { User } from '../../../user/user.types';
 import { UserCard, UserRoleChange } from '../../../user/dumb_components/user-card/user-card';
 
 @Component({
   selector: 'app-participant-information',
-  imports: [Card, UserCard],
+  imports: [Card, UserCard, Button],
   template: `
     <app-card title="Personen">
+      <div class="participant-header">
+        <app-button
+          [text]="isLinkCopied() ? 'Link kopiert!' : '+ Benutzer hinzufügen'"
+          [variant]="isLinkCopied() ? 'primary' : 'secondary'"
+          ariaLabel="Einladungslink kopieren um Benutzer hinzuzufügen"
+          (clicked)="addUser.emit()"
+        />
+        @if (isLinkCopied()) {
+          <span class="copy-success" role="status">Einladungslink wurde in die Zwischenablage kopiert!</span>
+        }
+      </div>
+
       <div class="user-list">
         @for (user of tourManagers(); track user.id) {
           <app-user-card
@@ -41,6 +54,20 @@ import { UserCard, UserRoleChange } from '../../../user/dumb_components/user-car
     </app-card>
   `,
   styles: `
+    .participant-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .copy-success {
+      color: #166534;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
     .user-list {
       display: grid;
       gap: 0.75rem;
@@ -55,6 +82,8 @@ export class ParticipantInformation {
   readonly canChangeRoles = input(false);
   readonly canRemoveUsers = input(false);
   readonly canViewEmergencyContacts = input(false);
+  readonly isLinkCopied = input(false);
+  readonly addUser = output<void>();
   readonly emergencyContactSelected = output<User>();
   readonly removeUser = output<User>();
   readonly setUserRole = output<UserRoleChange>();

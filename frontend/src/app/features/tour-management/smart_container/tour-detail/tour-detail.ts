@@ -36,6 +36,17 @@ import { Button } from '../../../../components/button/button';
           </div>
 
           <div class="header-actions">
+            <button
+              type="button"
+              class="share-button"
+              (click)="copyInviteLink()"
+              [title]="isLinkCopied() ? 'Link kopiert!' : 'Benutzer hinzufügen (Link kopieren)'"
+              [attr.aria-label]="isLinkCopied() ? 'Link kopiert' : 'Benutzer hinzufügen'"
+            >
+              <span class="material-icons" aria-hidden="true">{{ isLinkCopied() ? 'check' : 'person_add' }}</span>
+              <span class="share-button-text">{{ isLinkCopied() ? 'Link kopiert!' : 'Benutzer hinzufügen' }}</span>
+            </button>
+
             @if (canChangeRoles()) {
               <button
                 type="button"
@@ -72,6 +83,8 @@ import { Button } from '../../../../components/button/button';
           [canChangeRoles]="canChangeRoles()"
           [canRemoveUsers]="canChangeRoles()"
           [canViewEmergencyContacts]="canChangeRoles()"
+          [isLinkCopied]="isLinkCopied()"
+          (addUser)="copyInviteLink()"
           (emergencyContactSelected)="openEmergencyContact($event)"
           (removeUser)="removeUser($event)"
           (setUserRole)="setUserRole($event)"
@@ -138,6 +151,50 @@ import { Button } from '../../../../components/button/button';
       font-size: 1.35rem;
     }
 
+    .share-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0 0.85rem;
+      height: 2.75rem;
+      border: 1px solid #c8c6d0;
+      border-radius: 8px;
+      background: #fff;
+      color: #4f46a5;
+      font: inherit;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease;
+    }
+
+    .share-button:hover {
+      background: #f4f3ff;
+      border-color: #4f46a5;
+      box-shadow: 0 2px 6px rgb(79 70 165 / 15%);
+      transform: translateY(-1px);
+    }
+
+    .share-button .material-icons {
+      font-size: 1.25rem;
+    }
+
+    @media (max-width: 500px) {
+      .share-button-text {
+        display: none;
+      }
+      .share-button {
+        padding: 0;
+        width: 2.75rem;
+        justify-content: center;
+      }
+    }
+
     .eyebrow {
       display: block;
       margin-bottom: 0.35rem;
@@ -179,6 +236,8 @@ export class TourDetailContainer {
   readonly removeError = signal<string | null>(null);
   readonly isJoining = signal(false);
   readonly joinError = signal<string | null>(null);
+  readonly isLinkCopied = signal(false);
+  private copyTimeout?: ReturnType<typeof setTimeout>;
 
   readonly participants = computed(() =>
     this.findUsers(this.tourResource.value()?.participantIds ?? []),
@@ -272,5 +331,50 @@ export class TourDetailContainer {
       this.tourService.setUserRole(id, change.user.id, change.role),
     );
     this.tourResource.reload();
+  }
+
+  async copyInviteLink(): Promise<void> {
+    const id = this.tourId();
+    if (!id) return;
+
+    const shareUrl = `${window.location.origin}/tour-management/${id}`;
+
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+      } else {
+        this.fallbackCopyText(shareUrl);
+      }
+      this.setCopiedFeedback();
+    } catch {
+      try {
+        this.fallbackCopyText(shareUrl);
+        this.setCopiedFeedback();
+      } catch (e) {
+        console.error('Kopieren fehlgeschlagen:', e);
+      }
+    }
+  }
+
+  private fallbackCopyText(text: string): void {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+  }
+
+  private setCopiedFeedback(): void {
+    this.isLinkCopied.set(true);
+    if (this.copyTimeout) {
+      clearTimeout(this.copyTimeout);
+    }
+    this.copyTimeout = setTimeout(() => {
+      this.isLinkCopied.set(false);
+    }, 2500);
   }
 }
