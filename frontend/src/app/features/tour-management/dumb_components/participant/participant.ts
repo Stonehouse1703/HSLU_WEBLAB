@@ -16,6 +16,7 @@ import { UserCard, UserRoleChange } from '../../../user/dumb_components/user-car
             [isTourManager]="true"
             [canChangeRole]="canChangeRoles()"
             [canRemoveUser]="canRemoveUsers()"
+            [canViewEmergencyContact]="canViewEmergencyContacts()"
             (emergencyContactSelected)="emergencyContactSelected.emit($event)"
             (removeUser)="removeUser.emit($event)"
             (setUserRole)="setUserRole.emit($event)"
@@ -27,6 +28,7 @@ import { UserCard, UserRoleChange } from '../../../user/dumb_components/user-car
           [user]="user"
           [canChangeRole]="canChangeRoles()"
           [canRemoveUser]="canRemoveUsers()"
+          [canViewEmergencyContact]="canViewEmergencyContacts()"
           (emergencyContactSelected)="emergencyContactSelected.emit($event)"
           (removeUser)="removeUser.emit($event)"
           (setUserRole)="setUserRole.emit($event)"
@@ -52,6 +54,7 @@ export class ParticipantInformation {
   readonly tourManagers = input.required<User[]>();
   readonly canChangeRoles = input(false);
   readonly canRemoveUsers = input(false);
+  readonly canViewEmergencyContacts = input(false);
   readonly emergencyContactSelected = output<User>();
   readonly removeUser = output<User>();
   readonly setUserRole = output<UserRoleChange>();

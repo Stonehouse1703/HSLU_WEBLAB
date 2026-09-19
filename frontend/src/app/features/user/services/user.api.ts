@@ -15,10 +15,16 @@ export class UserService {
     );
   }
 
-  getUserByIdResource(idSignal: Signal<string | null>) {
+  getUserByIdResource(
+    idSignal: Signal<string | null>,
+    tourIdSignal: Signal<string | null>,
+  ) {
     return httpResource<User>(() => {
       const id = idSignal();
-      return id ? `${this.usersUrl}/${encodeURIComponent(id)}` : undefined;
+      const tourId = tourIdSignal();
+      return id && tourId
+        ? `/api/tours/${encodeURIComponent(tourId)}/users/${encodeURIComponent(id)}/emergency-contact`
+        : undefined;
     });
   }
 }

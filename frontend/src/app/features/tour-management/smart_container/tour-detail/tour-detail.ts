@@ -38,6 +38,7 @@ import { ParticipantInformation } from '../../dumb_components/participant/partic
           [tourManagers]="tourManagers()"
             [canChangeRoles]="canChangeRoles()"
             [canRemoveUsers]="canChangeRoles()"
+            [canViewEmergencyContacts]="canChangeRoles()"
           (emergencyContactSelected)="openEmergencyContact($event)"
           (removeUser)="removeUser($event)"
           (setUserRole)="setUserRole($event)"
@@ -116,7 +117,9 @@ export class TourDetailContainer {
   }
 
   openEmergencyContact(user: User) {
-    this.router.navigate(['/user', user.id]);
+    this.router.navigate(['/user', user.id], {
+      queryParams: { tourId: this.tourId() },
+    });
   }
 
   async removeUser(user: User): Promise<void> {

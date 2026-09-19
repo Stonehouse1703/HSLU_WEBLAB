@@ -73,10 +73,12 @@ import { EmergInformation } from '../../dumb_components/emerg-information/emerg-
 })
 export class UserDetailContainer {
   readonly userId = input.required<string>();
+  readonly tourId = input<string | null>(null);
 
   private readonly userService = inject(UserService);
 
   readonly userResource = this.userService.getUserByIdResource(
     computed(() => this.userId()),
+    computed(() => this.tourId()),
   );
 }

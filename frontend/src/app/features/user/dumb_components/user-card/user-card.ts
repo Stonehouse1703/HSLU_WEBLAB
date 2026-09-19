@@ -20,13 +20,15 @@ export interface UserRoleChange {
         <span class="role">{{ isTourManager() ? 'Tourleitung' : '' }}</span>
         <span class="phone-number">{{ user().phoneNumber }}</span>
         <span class="birthday">{{ user().birthday }}</span>
-        <app-button
-            class="preview-action"
-            text="Notfallkontakt"
-            variant="danger"
-            [ariaLabel]="'Notfallkontakt von ' + user().firstName"
-            (clicked)="emergencyContactSelected.emit(user())"
-        />
+        @if (canViewEmergencyContact()) {
+          <app-button
+              class="preview-action"
+              text="Notfallkontakt"
+              variant="danger"
+              [ariaLabel]="'Notfallkontakt von ' + user().firstName"
+              (clicked)="emergencyContactSelected.emit(user())"
+          />
+        }
         @if (canRemoveUser()) {
           <app-button
               class="preview-action"
@@ -122,6 +124,7 @@ export class UserCard {
   readonly isTourManager = input(false);
   readonly canChangeRole = input(false);
   readonly canRemoveUser = input(false);
+  readonly canViewEmergencyContact = input(false);
   readonly emergencyContactSelected = output<User>();
   readonly removeUser = output<User>();
   readonly setUserRole = output<UserRoleChange>();

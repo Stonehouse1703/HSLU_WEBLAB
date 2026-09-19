@@ -132,10 +132,22 @@ export class UsersService implements OnModuleInit {
   }
 
   findAll(): Promise<User[]> {
-    return this.personModel.find().select('-_id -__v -passwordHash').lean<User[]>().exec();
+    return this.personModel
+      .find()
+      .select('-_id -__v -passwordHash -emergencyContact')
+      .lean<User[]>()
+      .exec();
   }
 
   findById(id: string): Promise<User | null> {
+    return this.personModel
+      .findOne({ id })
+      .select('-_id -__v -passwordHash -emergencyContact')
+      .lean<User>()
+      .exec();
+  }
+
+  findByIdWithEmergencyContact(id: string): Promise<User | null> {
     return this.personModel
       .findOne({ id })
       .select('-_id -__v -passwordHash')

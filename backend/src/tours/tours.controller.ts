@@ -16,12 +16,14 @@ import { ToursService } from './tours.service.js';
 import { CreateTourDto } from './dto/create-tour.dto.js';
 import { SetUserRoleDto } from './dto/set-user-role.dto.js';
 import { AuthService } from '../auth/auth.service.js';
+import { UsersService } from '../users/users.service.js';
 
 @Controller('tours')
 export class ToursController {
   constructor(
     private readonly toursService: ToursService,
     private readonly authService: AuthService,
+    private readonly usersService: UsersService,
   ) {}
 
   @Post()
@@ -51,6 +53,35 @@ export class ToursController {
     }
 
     return tour;
+  }
+
+  @Get(':tourId/users/:userId/emergency-contact')
+  async getEmergencyContact(
+    @Param('tourId') tourId: string,
+    @Param('userId') userId: string,
+    @Headers('authorization') authHeader?: string,
+  ) {
+    const user = this.authService.extractUserFromHeader(authHeader);
+    if (!user) {
+      throw new UnauthorizedException('Nicht authentifiziert.');
+    }
+
+    const isAdmin = await this.toursService.getUserRoleByTour(
+      tourId,
+      user.id,
+    );
+    if (!isAdmin) {
+      throw new ForbiddenException('Keine Administratorrechte.');
+    }
+
+    const targetUser = await this.usersService.findByIdWithEmergencyContact(
+      userId,
+    );
+    if (!targetUser) {
+      throw new NotFoundException('Person wurde nicht gefunden.');
+    }
+
+    return targetUser;
   }
 
   @Delete(':tourId/users/:userId')
