@@ -29,18 +29,37 @@ import { Button } from '../../../../components/button/button';
       <p>Die Tour konnte nicht geladen werden.</p>
     } @else if (tourResource.value(); as selectedTour) {
       <header class="tour-header">
-        <span class="eyebrow">Tourdetails</span>
-        <h2>{{ selectedTour.name }}</h2>
-        @if (canJoinTour()) {
-          <app-button
-            text="Tour beitreten"
-            variant="primary"
-            [disabled]="isJoining()"
-            (clicked)="joinTour()"
-          />
-        } @else if (isJoining()) {
-          <p role="status">Tour wird beigetreten ...</p>
-        }
+        <div class="tour-header-top">
+          <div class="header-titles">
+            <span class="eyebrow">Tourdetails</span>
+            <h2>{{ selectedTour.name }}</h2>
+          </div>
+
+          <div class="header-actions">
+            @if (canChangeRoles()) {
+              <button
+                type="button"
+                class="edit-button"
+                (click)="editTour()"
+                title="Tour bearbeiten"
+                aria-label="Tour bearbeiten"
+              >
+                <span class="material-icons" aria-hidden="true">edit</span>
+              </button>
+            }
+
+            @if (canJoinTour()) {
+              <app-button
+                text="Tour beitreten"
+                variant="primary"
+                [disabled]="isJoining()"
+                (clicked)="joinTour()"
+              />
+            } @else if (isJoining()) {
+              <p role="status">Tour wird beigetreten ...</p>
+            }
+          </div>
+        </div>
       </header>
 
       <div class="detail-grid">
@@ -49,9 +68,10 @@ import { Button } from '../../../../components/button/button';
         <app-participant-information
           [participants]="participants()"
           [tourManagers]="tourManagers()"
-            [canChangeRoles]="canChangeRoles()"
-            [canRemoveUsers]="canChangeRoles()"
-            [canViewEmergencyContacts]="canChangeRoles()"
+          [currentUserId]="currentUserId()"
+          [canChangeRoles]="canChangeRoles()"
+          [canRemoveUsers]="canChangeRoles()"
+          [canViewEmergencyContacts]="canChangeRoles()"
           (emergencyContactSelected)="openEmergencyContact($event)"
           (removeUser)="removeUser($event)"
           (setUserRole)="setUserRole($event)"
@@ -68,6 +88,54 @@ import { Button } from '../../../../components/button/button';
 
     .tour-header {
       margin-bottom: 1.5rem;
+    }
+
+    .tour-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .header-titles {
+      min-width: 0;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .edit-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      border: 1px solid #c8c6d0;
+      border-radius: 8px;
+      background: #fff;
+      color: #4f46a5;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease;
+    }
+
+    .edit-button:hover {
+      background: #f4f3ff;
+      border-color: #4f46a5;
+      box-shadow: 0 2px 6px rgb(79 70 165 / 15%);
+      transform: translateY(-1px);
+    }
+
+    .edit-button .material-icons {
+      font-size: 1.35rem;
     }
 
     .eyebrow {
@@ -118,6 +186,7 @@ export class TourDetailContainer {
   readonly tourManagers = computed(() =>
     this.findUsers(this.tourResource.value()?.tourManagerIds ?? []),
   );
+  readonly currentUserId = computed(() => this.authService.currentUser()?.id);
   readonly canChangeRoles = computed(() => {
     const currentUser = this.authService.currentUser();
     const tour = this.tourResource.value();
@@ -167,7 +236,7 @@ export class TourDetailContainer {
 
   async removeUser(user: User): Promise<void> {
     const id = this.tourId();
-    if (!id) return;
+    if (!id || user.id === this.currentUserId()) return;
 
     this.isRemoving.set(true);
     this.removeError.set(null);
@@ -182,9 +251,22 @@ export class TourDetailContainer {
     }
   }
 
+  editTour(): void {
+    const id = this.tourId();
+    if (id && this.canChangeRoles()) {
+      this.router.navigate(['/tour-editor', id]);
+    }
+  }
+
   async setUserRole(change: UserRoleChange): Promise<void> {
     const id = this.tourId();
-    if (!id) return;
+    if (
+      !id ||
+      (change.user.id === this.currentUserId() &&
+        change.role === 'participant')
+    ) {
+      return;
+    }
 
     await firstValueFrom(
       this.tourService.setUserRole(id, change.user.id, change.role),

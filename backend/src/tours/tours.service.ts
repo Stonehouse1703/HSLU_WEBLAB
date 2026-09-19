@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { randomUUID } from 'node:crypto';
 import { Tour, TourDocument } from '../schemas/TourDocument/tour.schema.js';
+import { UpdateTourDto } from './dto/update-tour.dto.js';
 
 @Injectable()
 export class ToursService implements OnModuleInit {
@@ -169,6 +170,27 @@ export class ToursService implements OnModuleInit {
       .findOneAndUpdate(
         { id: tourId },
         update,
+        { returnDocument: 'after' },
+      )
+      .select('-_id -__v')
+      .lean<Tour>()
+      .exec();
+  }
+
+  update(id: string, data: UpdateTourDto): Promise<Tour | null> {
+    const updatePayload: Record<string, any> = {};
+    if (data.name !== undefined) updatePayload.name = data.name.trim();
+    if (data.date !== undefined) updatePayload.date = data.date;
+    if (data.time !== undefined) updatePayload.time = data.time;
+    if (data.location !== undefined) updatePayload.location = data.location.trim();
+    if (data.difficulty !== undefined) updatePayload.difficulty = data.difficulty;
+    if (data.altitude !== undefined) updatePayload.altitude = data.altitude;
+    if (data.gpxData !== undefined) updatePayload.gpxData = data.gpxData;
+
+    return this.tourModel
+      .findOneAndUpdate(
+        { id },
+        { $set: updatePayload },
         { returnDocument: 'after' },
       )
       .select('-_id -__v')

@@ -40,7 +40,17 @@ export const routes: Route[] = [
   },
   {
     path: 'tour-editor',
-    component: TourEditor,
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        component: TourEditor,
+      },
+      {
+        path: ':id',
+        component: TourEditor,
+      },
+    ],
   },
   {
     path: LOGIN.path,

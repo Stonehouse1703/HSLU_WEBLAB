@@ -10,10 +10,12 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ToursService } from './tours.service.js';
 import { CreateTourDto } from './dto/create-tour.dto.js';
+import { UpdateTourDto } from './dto/update-tour.dto.js';
 import { SetUserRoleDto } from './dto/set-user-role.dto.js';
 import { AuthService } from '../auth/auth.service.js';
 import { UsersService } from '../users/users.service.js';
@@ -129,6 +131,12 @@ export class ToursController {
       throw new ForbiddenException('Keine Administratorrechte.');
     }
 
+    if (user.id === userId) {
+      throw new ForbiddenException(
+        'Die Tourleitung kann sich nicht selbst aus der Tour entfernen.',
+      );
+    }
+
     const tour = await this.toursService.removeUser(tourId, userId);
 
     if (!tour) {
@@ -164,6 +172,12 @@ export class ToursController {
       throw new BadRequestException('Ungültige Benutzerrolle.');
     }
 
+    if (user.id === userId && role === 'participant') {
+      throw new ForbiddenException(
+        'Die Tourleitung kann sich nicht selbst zum Teilnehmer zurückstufen.',
+      );
+    }
+
     const tour = await this.toursService.setUserRole(
       tourId,
       userId,
@@ -175,5 +189,31 @@ export class ToursController {
     }
 
     return tour;
+  }
+
+  @Patch(':id')
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() body: UpdateTourDto,
+    @Headers('authorization') authHeader?: string,
+  ) {
+    const user = this.authService.extractUserFromHeader(authHeader);
+
+    if (!user) {
+      throw new UnauthorizedException('Nicht authentifiziert.');
+    }
+
+    const isAdmin = await this.toursService.getUserRoleByTour(id, user.id);
+    if (!isAdmin) {
+      throw new ForbiddenException('Keine Administratorrechte für diese Tour.');
+    }
+
+    const updatedTour = await this.toursService.update(id, body);
+    if (!updatedTour) {
+      throw new NotFoundException('Tour wurde nicht gefunden.');
+    }
+
+    return updatedTour;
   }
 }

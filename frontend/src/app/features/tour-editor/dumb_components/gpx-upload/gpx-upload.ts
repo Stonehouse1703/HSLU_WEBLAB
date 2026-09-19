@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  effect,
+  input,
   output,
   signal,
   viewChild,
@@ -217,6 +219,7 @@ export interface GpxLoadedEvent {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GpxUpload {
+  readonly initialGpx = input<string | null | undefined>(undefined);
   readonly gpxLoaded = output<GpxLoadedEvent>();
   readonly gpxCleared = output<void>();
 
@@ -228,6 +231,17 @@ export class GpxUpload {
   readonly fileSize = signal<string | null>(null);
   readonly gpxContent = signal<string | null>(null);
   readonly errorMessage = signal<string | null>(null);
+
+  constructor() {
+    effect(() => {
+      const gpx = this.initialGpx();
+      if (gpx && !this.gpxContent()) {
+        this.gpxContent.set(gpx);
+        this.fileName.set('Hinterlegte GPX-Route');
+        this.fileSize.set(this.formatFileSize(new Blob([gpx]).size));
+      }
+    });
+  }
 
   triggerFileInput(): void {
     const input = this.fileInput()?.nativeElement;

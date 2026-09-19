@@ -9,32 +9,31 @@ import { UserCard, UserRoleChange } from '../../../user/dumb_components/user-car
   template: `
     <app-card title="Personen">
       <div class="user-list">
-
         @for (user of tourManagers(); track user.id) {
           <app-user-card
             [user]="user"
             [isTourManager]="true"
-            [canChangeRole]="canChangeRoles()"
-            [canRemoveUser]="canRemoveUsers()"
+            [canChangeRole]="canChangeRoles() && user.id !== currentUserId()"
+            [canRemoveUser]="canRemoveUsers() && user.id !== currentUserId()"
             [canViewEmergencyContact]="canViewEmergencyContacts()"
             (emergencyContactSelected)="emergencyContactSelected.emit($event)"
             (removeUser)="removeUser.emit($event)"
             (setUserRole)="setUserRole.emit($event)"
-           />
+          />
         }
 
         @for (user of participants(); track user.id) {
-          <app-user-card 
-          [user]="user"
-          [canChangeRole]="canChangeRoles()"
-          [canRemoveUser]="canRemoveUsers()"
-          [canViewEmergencyContact]="canViewEmergencyContacts()"
-          (emergencyContactSelected)="emergencyContactSelected.emit($event)"
-          (removeUser)="removeUser.emit($event)"
-          (setUserRole)="setUserRole.emit($event)"
+          <app-user-card
+            [user]="user"
+            [canChangeRole]="canChangeRoles()"
+            [canRemoveUser]="canRemoveUsers() && user.id !== currentUserId()"
+            [canViewEmergencyContact]="canViewEmergencyContacts()"
+            (emergencyContactSelected)="emergencyContactSelected.emit($event)"
+            (removeUser)="removeUser.emit($event)"
+            (setUserRole)="setUserRole.emit($event)"
           />
         }
-        
+
         @if (tourManagers().length === 0 && participants().length === 0) {
           <span>Keine Personen angegeben.</span>
         }
@@ -52,6 +51,7 @@ import { UserCard, UserRoleChange } from '../../../user/dumb_components/user-car
 export class ParticipantInformation {
   readonly participants = input.required<User[]>();
   readonly tourManagers = input.required<User[]>();
+  readonly currentUserId = input<string | undefined>();
   readonly canChangeRoles = input(false);
   readonly canRemoveUsers = input(false);
   readonly canViewEmergencyContacts = input(false);

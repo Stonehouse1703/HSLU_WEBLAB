@@ -29,6 +29,13 @@ export class TourService {
     return this.http.post<Tour>(this.tourUrl, tour);
   }
 
+  updateTour(tourId: string, tour: Partial<CreateTourInput>) {
+    return this.http.patch<Tour>(
+      `${this.tourUrl}/${encodeURIComponent(tourId)}`,
+      tour,
+    );
+  }
+
   getTourByIdResource(idSignal: Signal<string | null>) {
     return httpResource<Tour>(() => {
       const id = idSignal();

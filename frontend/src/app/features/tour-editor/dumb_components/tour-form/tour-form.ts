@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   inject,
   input,
   output,
@@ -9,6 +10,7 @@ import {
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Button } from '../../../../components/button/button';
 import { CreateTourInput } from '../../../tour-management/services/tour.api';
+import { Tour } from '../../../tour-management/tour.types';
 import { MeetingPoint } from '../meetingPoint/meetingPoint';
 import { TourPlaning } from '../tourPlaning/tourPlaning';
 import { GpxLoadedEvent, GpxUpload } from '../gpx-upload/gpx-upload';
@@ -37,6 +39,7 @@ import { GpxLoadedEvent, GpxUpload } from '../gpx-upload/gpx-upload';
 
       <hr class="divider" />
       <app-gpx-upload
+        [initialGpx]="gpxData()"
         (gpxLoaded)="onGpxLoaded($event)"
         (gpxCleared)="onGpxCleared()"
       />
@@ -44,10 +47,18 @@ import { GpxLoadedEvent, GpxUpload } from '../gpx-upload/gpx-upload';
       <div class="actions">
         <app-button
           type="submit"
-          text="Tour erstellen"
+          [text]="submitButtonText()"
           variant="primary"
           [disabled]="isSubmitting() || (submitted && tourForm.invalid)"
         />
+        @if (showCancelButton()) {
+          <app-button
+            type="button"
+            text="Abbrechen"
+            variant="secondary"
+            (clicked)="cancelClicked.emit()"
+          />
+        }
       </div>
     </form>
   `,
@@ -99,6 +110,9 @@ import { GpxLoadedEvent, GpxUpload } from '../gpx-upload/gpx-upload';
     }
 
     .actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
       margin-top: 1.5rem;
     }
 
@@ -114,7 +128,11 @@ export class TourForm {
   private readonly fb = inject(FormBuilder);
 
   readonly isSubmitting = input(false);
+  readonly tour = input<Tour | null | undefined>(null);
+  readonly submitButtonText = input<string>('Tour erstellen');
+  readonly showCancelButton = input<boolean>(false);
   readonly onFormSubmit = output<CreateTourInput>();
+  readonly cancelClicked = output<void>();
 
   submitted = false;
   readonly gpxData = signal<string | null>(null);
@@ -127,6 +145,30 @@ export class TourForm {
     altitude: ['', [Validators.required, Validators.min(1)]],
     difficulty: ['leicht', Validators.required],
   });
+
+  constructor() {
+    effect(() => {
+      const tour = this.tour();
+      if (tour) {
+        const cleanAltitude = tour.altitude
+          ? tour.altitude.replace(/[^0-9]/g, '')
+          : '';
+
+        this.tourForm.patchValue({
+          name: tour.name,
+          date: tour.date,
+          time: tour.time,
+          place: tour.location,
+          altitude: cleanAltitude,
+          difficulty: tour.difficulty,
+        });
+
+        if (tour.gpxData) {
+          this.gpxData.set(tour.gpxData);
+        }
+      }
+    });
+  }
 
   isInvalid(controlName: string): boolean {
     const control = this.tourForm.get(controlName);
