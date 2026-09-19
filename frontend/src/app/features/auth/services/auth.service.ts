@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal, computed } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { tap } from 'rxjs';
 
 export interface AuthUser {
@@ -34,8 +35,10 @@ export class AuthService {
           this.currentUser.set(user);
           localStorage.setItem(this.userKey, JSON.stringify(user));
         },
-        error: () => {
-          this.logout();
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 401) {
+            this.clearSession();
+          }
         },
       });
     }
@@ -76,9 +79,13 @@ export class AuthService {
   }
 
   logout(): void {
+    this.clearSession();
+    this.router.navigate(['/home']);
+  }
+
+  private clearSession(): void {
     localStorage.removeItem(this.tokenKey);
     localStorage.removeItem(this.userKey);
     this.currentUser.set(null);
-    this.router.navigate(['/home']);
   }
 }

@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Headers,
   NotFoundException,
@@ -56,7 +57,21 @@ export class ToursController {
   async removeUser(
     @Param('tourId') tourId: string,
     @Param('userId') userId: string,
+    @Headers('authorization') authHeader?: string,
   ) {
+    const user = this.authService.extractUserFromHeader(authHeader);
+    if (!user) {
+      throw new UnauthorizedException('Nicht authentifiziert.');
+    }
+
+    const isAdmin = await this.toursService.getUserRoleByTour(
+      tourId,
+      user.id,
+    );
+    if (!isAdmin) {
+      throw new ForbiddenException('Keine Administratorrechte.');
+    }
+
     const tour = await this.toursService.removeUser(tourId, userId);
 
     if (!tour) {
@@ -71,15 +86,31 @@ export class ToursController {
     @Param('tourId') tourId: string,
     @Param('userId') userId: string,
     @Body() body: SetUserRoleDto,
+    @Headers('authorization') authHeader?: string,
   ) {
-    if (body.role !== 'admin' && body.role !== 'participant') {
+    const role = body.role;
+    const user = this.authService.extractUserFromHeader(authHeader);
+
+    if (!user) {
+      throw new UnauthorizedException('Nicht authentifiziert.');
+    }
+
+    const isAdmin = await this.toursService.getUserRoleByTour(
+      tourId,
+      user.id,
+    );
+    if (!isAdmin) {
+      throw new ForbiddenException('Keine Administratorrechte.');
+    }
+
+    if (role !== 'admin' && role !== 'participant') {
       throw new BadRequestException('Ungültige Benutzerrolle.');
     }
 
     const tour = await this.toursService.setUserRole(
       tourId,
       userId,
-      body.role,
+      role,
     );
 
     if (!tour) {

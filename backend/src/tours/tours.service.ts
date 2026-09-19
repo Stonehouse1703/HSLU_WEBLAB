@@ -105,6 +105,16 @@ export class ToursService implements OnModuleInit {
       .exec();
   }
 
+  async getUserRoleByTour(tourId: string, userId: string): Promise<boolean> {
+    const tour = await this.tourModel
+      .findOne({ id: tourId, tourManagerIds: userId })
+      .select('_id')
+      .lean()
+      .exec();
+
+    return tour !== null;
+  }
+
   removeUser(tourId: string, userId: string): Promise<Tour | null> {
     return this.tourModel
       .findOneAndUpdate(

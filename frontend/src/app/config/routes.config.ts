@@ -45,11 +45,7 @@ export const routes: Route[] = [
     component: LoginPage,
   },
   {
-    path: LOGIN.path,
-    component: LoginPage,
-  },
-  {
     path: '**',
-    redirectTo: TOUR_MANAGEMENT.path,
+    redirectTo: HOME.path,
   }
 ];

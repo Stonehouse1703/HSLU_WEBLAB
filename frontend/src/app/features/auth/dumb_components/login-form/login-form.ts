@@ -34,7 +34,7 @@ import { Button } from '../../../../components/button/button';
           type="submit"
           text="Anmelden"
           variant="primary"
-          [disabled]="isSubmitting() || (submitted && loginForm.invalid)"
+          [disabled]="isSubmitting() || loginForm.invalid"
         />
       </div>
     </form>

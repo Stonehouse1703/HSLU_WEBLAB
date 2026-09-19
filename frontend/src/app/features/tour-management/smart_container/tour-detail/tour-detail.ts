@@ -5,6 +5,7 @@ import { TourService } from '../../services/tour.api';
 import { UserService } from '../../../user/services/user.api';
 import { User } from '../../../user/user.types';
 import { UserRoleChange } from '../../../user/dumb_components/user-card/user-card';
+import { AuthService } from '../../../auth/services/auth.service';
 import { MeetingPoint } from '../../dumb_components/meeting-point/meeting-point';
 import { TourInformation } from '../../dumb_components/tour-information/tour-information';
 import { ParticipantInformation } from '../../dumb_components/participant/participant';
@@ -35,6 +36,8 @@ import { ParticipantInformation } from '../../dumb_components/participant/partic
         <app-participant-information
           [participants]="participants()"
           [tourManagers]="tourManagers()"
+            [canChangeRoles]="canChangeRoles()"
+            [canRemoveUsers]="canChangeRoles()"
           (emergencyContactSelected)="openEmergencyContact($event)"
           (removeUser)="removeUser($event)"
           (setUserRole)="setUserRole($event)"
@@ -83,6 +86,7 @@ export class TourDetailContainer {
   private readonly router = inject(Router);
   private readonly tourService = inject(TourService);
   private readonly userService = inject(UserService);
+  private readonly authService = inject(AuthService);
 
   readonly tourResource = this.tourService.getTourByIdResource(
     computed(() => this.tourId()),
@@ -98,6 +102,12 @@ export class TourDetailContainer {
   readonly tourManagers = computed(() =>
     this.findUsers(this.tourResource.value()?.tourManagerIds ?? []),
   );
+  readonly canChangeRoles = computed(() => {
+    const currentUser = this.authService.currentUser();
+    const tour = this.tourResource.value();
+
+    return !!currentUser && !!tour?.tourManagerIds.includes(currentUser.id);
+  });
 
   private findUsers(ids: string[]): User[] {
     return ids
