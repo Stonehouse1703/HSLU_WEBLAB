@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { TourService } from '../../services/tour.api';
 import { TourPreview } from '../../dumb_components/tour-list/tour-detail';
 import { Button } from '../../../../components/button/button';
+import { getTodayDateString, isTourUpcoming } from '../../tour.types';
 
 @Component({
   selector: 'app-tour-list',
@@ -75,11 +76,11 @@ import { Button } from '../../../../components/button/button';
       <p>Touren werden geladen ...</p>
     } @else if (toursResource.error()) {
       <p>Die Touren konnten nicht geladen werden.</p>
-    } @else if (toursResource.value().length === 0) {
-      <p>Keine Touren vorhanden.</p>
+    } @else if (upcomingTours().length === 0) {
+      <p>Keine bevorstehenden Touren vorhanden.</p>
     } @else {
       <div class="tour-list">
-        @for (tour of toursResource.value(); track tour.id) {
+        @for (tour of upcomingTours(); track tour.id) {
           <app-tour-preview [tour]="tour" />
         }
       </div>
@@ -193,6 +194,23 @@ export class TourList {
 
   readonly toursResource = this.tourService.getMyTours();
 
+  readonly upcomingTours = computed(() => {
+    const tours = this.toursResource.value() ?? [];
+    const today = getTodayDateString();
+    return tours
+      .filter(tour => isTourUpcoming(tour.date, today))
+      .sort((a, b) => {
+        const dateA = a.date || '';
+        const dateB = b.date || '';
+        if (dateA !== dateB) {
+          return dateA.localeCompare(dateB);
+        }
+        const timeA = a.time || '';
+        const timeB = b.time || '';
+        return timeA.localeCompare(timeB);
+      });
+  });
+
   readonly showJoinInput = signal(false);
   readonly linkInput = signal('');
   readonly isJoining = signal(false);
@@ -281,6 +299,8 @@ export class TourList {
         this.joinError.set('Tour wurde nicht gefunden. Bitte überprüfe den Link oder die ID.');
       } else if (err?.status === 401) {
         this.joinError.set('Bitte melde dich zuerst an.');
+      } else if (err?.status === 400 && err?.error?.message) {
+        this.joinError.set(err.error.message);
       } else {
         this.joinError.set('Der Tour konnte nicht beigetreten werden.');
       }

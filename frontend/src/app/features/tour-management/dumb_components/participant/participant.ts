@@ -9,17 +9,19 @@ import { UserCard, UserRoleChange } from '../../../user/dumb_components/user-car
   imports: [Card, UserCard, Button],
   template: `
     <app-card title="Personen">
-      <div class="participant-header">
-        <app-button
-          [text]="isLinkCopied() ? 'Link kopiert!' : '+ Benutzer hinzufügen'"
-          [variant]="isLinkCopied() ? 'primary' : 'secondary'"
-          ariaLabel="Einladungslink kopieren um Benutzer hinzuzufügen"
-          (clicked)="addUser.emit()"
-        />
-        @if (isLinkCopied()) {
-          <span class="copy-success" role="status">Einladungslink wurde in die Zwischenablage kopiert!</span>
-        }
-      </div>
+      @if (canAddUsers()) {
+        <div class="participant-header">
+          <app-button
+            [text]="isLinkCopied() ? 'Link kopiert!' : '+ Benutzer hinzufügen'"
+            [variant]="isLinkCopied() ? 'primary' : 'secondary'"
+            ariaLabel="Einladungslink kopieren um Benutzer hinzuzufügen"
+            (clicked)="addUser.emit()"
+          />
+          @if (isLinkCopied()) {
+            <span class="copy-success" role="status">Einladungslink wurde in die Zwischenablage kopiert!</span>
+          }
+        </div>
+      }
 
       <div class="user-list">
         @for (user of tourManagers(); track user.id) {
@@ -83,6 +85,7 @@ export class ParticipantInformation {
   readonly canRemoveUsers = input(false);
   readonly canViewEmergencyContacts = input(false);
   readonly isLinkCopied = input(false);
+  readonly canAddUsers = input(true);
   readonly addUser = output<void>();
   readonly emergencyContactSelected = output<User>();
   readonly removeUser = output<User>();

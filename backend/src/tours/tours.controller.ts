@@ -91,6 +91,19 @@ export class ToursController {
       throw new NotFoundException('Tour wurde nicht gefunden.');
     }
 
+    if (existingTour.date) {
+      const today = new Date();
+      const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      const cleanedDate = existingTour.date.includes('T')
+        ? existingTour.date.split('T')[0].trim()
+        : existingTour.date.trim();
+      if (cleanedDate < todayStr) {
+        throw new BadRequestException(
+          'Vergangenen Touren kann nicht mehr beigetreten werden.',
+        );
+      }
+    }
+
     if (existingTour.tourManagerIds.includes(user.id)) {
       return existingTour;
     }

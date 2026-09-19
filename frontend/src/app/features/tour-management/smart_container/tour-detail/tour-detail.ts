@@ -10,6 +10,7 @@ import { MeetingPoint } from '../../dumb_components/meeting-point/meeting-point'
 import { TourInformation } from '../../dumb_components/tour-information/tour-information';
 import { ParticipantInformation } from '../../dumb_components/participant/participant';
 import { Button } from '../../../../components/button/button';
+import { isTourUpcoming } from '../../tour.types';
 
 @Component({
   selector: 'app-tour-detail-container',
@@ -36,16 +37,18 @@ import { Button } from '../../../../components/button/button';
           </div>
 
           <div class="header-actions">
-            <button
-              type="button"
-              class="share-button"
-              (click)="copyInviteLink()"
-              [title]="isLinkCopied() ? 'Link kopiert!' : 'Benutzer hinzufügen (Link kopieren)'"
-              [attr.aria-label]="isLinkCopied() ? 'Link kopiert' : 'Benutzer hinzufügen'"
-            >
-              <span class="material-icons" aria-hidden="true">{{ isLinkCopied() ? 'check' : 'person_add' }}</span>
-              <span class="share-button-text">{{ isLinkCopied() ? 'Link kopiert!' : 'Benutzer hinzufügen' }}</span>
-            </button>
+            @if (!isPastTour()) {
+              <button
+                type="button"
+                class="share-button"
+                (click)="copyInviteLink()"
+                [title]="isLinkCopied() ? 'Link kopiert!' : 'Benutzer hinzufügen (Link kopieren)'"
+                [attr.aria-label]="isLinkCopied() ? 'Link kopiert' : 'Benutzer hinzufügen'"
+              >
+                <span class="material-icons" aria-hidden="true">{{ isLinkCopied() ? 'check' : 'person_add' }}</span>
+                <span class="share-button-text">{{ isLinkCopied() ? 'Link kopiert!' : 'Benutzer hinzufügen' }}</span>
+              </button>
+            }
 
             @if (canChangeRoles()) {
               <button
@@ -68,6 +71,8 @@ import { Button } from '../../../../components/button/button';
               />
             } @else if (isJoining()) {
               <p role="status">Tour wird beigetreten ...</p>
+            } @else if (isPastTour() && !isMember()) {
+              <span class="past-tour-badge">Diese Tour ist bereits vergangen</span>
             }
           </div>
         </div>
@@ -84,6 +89,7 @@ import { Button } from '../../../../components/button/button';
           [canRemoveUsers]="canChangeRoles()"
           [canViewEmergencyContacts]="canChangeRoles()"
           [isLinkCopied]="isLinkCopied()"
+          [canAddUsers]="!isPastTour()"
           (addUser)="copyInviteLink()"
           (emergencyContactSelected)="openEmergencyContact($event)"
           (removeUser)="removeUser($event)"
@@ -212,6 +218,18 @@ import { Button } from '../../../../components/button/button';
       font-weight: 500;
     }
 
+    .past-tour-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.4rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #65636d;
+      background: #f0eff4;
+      border: 1px solid #c8c6d0;
+    }
+
     .detail-grid {
       display: grid;
       gap: 0.5rem;
@@ -252,6 +270,19 @@ export class TourDetailContainer {
 
     return !!currentUser && !!tour?.tourManagerIds.includes(currentUser.id);
   });
+  readonly isMember = computed(() => {
+    const currentUser = this.authService.currentUser();
+    const tour = this.tourResource.value();
+    if (!currentUser || !tour) return false;
+    return (
+      tour.tourManagerIds.includes(currentUser.id) ||
+      tour.participantIds.includes(currentUser.id)
+    );
+  });
+  readonly isPastTour = computed(() => {
+    const tour = this.tourResource.value();
+    return !!tour && !isTourUpcoming(tour.date);
+  });
   readonly canJoinTour = computed(() => {
     const currentUser = this.authService.currentUser();
     const tour = this.tourResource.value();
@@ -259,6 +290,7 @@ export class TourDetailContainer {
     return (
       !!currentUser &&
       !!tour &&
+      isTourUpcoming(tour.date) &&
       !tour.tourManagerIds.includes(currentUser.id) &&
       !tour.participantIds.includes(currentUser.id)
     );
@@ -286,8 +318,12 @@ export class TourDetailContainer {
     try {
       await firstValueFrom(this.tourService.joinTour(id));
       this.tourResource.reload();
-    } catch {
-      this.joinError.set('Der Tour konnte nicht beigetreten werden.');
+    } catch (err: any) {
+      if (err?.error?.message) {
+        this.joinError.set(err.error.message);
+      } else {
+        this.joinError.set('Der Tour konnte nicht beigetreten werden.');
+      }
     } finally {
       this.isJoining.set(false);
     }
