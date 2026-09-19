@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { Button } from '../../../../components/button/button';
 
 @Component({
   selector: 'app-login-form',
-  imports: [ReactiveFormsModule, Button],
+  imports: [ReactiveFormsModule, RouterLink, Button],
   template: `
     <form [formGroup]="loginForm" (ngSubmit)="submitForm()" novalidate>
       <div class="field">
@@ -36,6 +37,10 @@ import { Button } from '../../../../components/button/button';
           variant="primary"
           [disabled]="isSubmitting() || loginForm.invalid"
         />
+
+        <a routerLink="/register" class="register-switch-link">
+          Noch kein Konto? Jetzt registrieren
+        </a>
       </div>
     </form>
   `,
@@ -85,7 +90,24 @@ import { Button } from '../../../../components/button/button';
     }
 
     .actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
       margin-top: 0.5rem;
+    }
+
+    .register-switch-link {
+      color: #4f46a5;
+      font-size: 0.875rem;
+      text-decoration: none;
+      font-weight: 500;
+      transition: text-decoration 0.2s ease;
+    }
+
+    .register-switch-link:hover {
+      text-decoration: underline;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

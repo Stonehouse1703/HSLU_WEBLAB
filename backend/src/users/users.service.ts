@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { randomUUID } from 'node:crypto';
 import { Person, PersonDocument } from '../schemas/PersonDocument/person.schema.js';
 import { hashPassword } from '../auth/auth.utils.js';
+import { UpdateUserDto } from './dto/update-user.dto.js';
 
 export interface EmergencyContact {
   firstName: string;
@@ -189,4 +190,31 @@ export class UsersService implements OnModuleInit {
     const { _id, passwordHash: _, ...user } = userObj;
     return user as User;
   }
+
+  async update(id: string, data: UpdateUserDto): Promise<User | null> {
+    const updatePayload: Record<string, any> = {};
+    if (data.firstName !== undefined) updatePayload.firstName = data.firstName.trim();
+    if (data.lastName !== undefined) updatePayload.lastName = data.lastName.trim();
+    if (data.birthday !== undefined) updatePayload.birthday = data.birthday;
+    if (data.phoneNumber !== undefined) updatePayload.phoneNumber = data.phoneNumber.trim();
+    if (data.emergencyContact !== undefined) {
+      updatePayload.emergencyContact = {
+        firstName: data.emergencyContact.firstName?.trim() ?? '',
+        lastName: data.emergencyContact.lastName?.trim() ?? '',
+        phoneNumber: data.emergencyContact.phoneNumber?.trim() ?? '',
+        relationship: data.emergencyContact.relationship?.trim() ?? '',
+      };
+    }
+
+    return this.personModel
+      .findOneAndUpdate(
+        { id },
+        { $set: updatePayload },
+        { returnDocument: 'after' },
+      )
+      .select('-_id -__v -passwordHash')
+      .lean<User>()
+      .exec();
+  }
 }
+

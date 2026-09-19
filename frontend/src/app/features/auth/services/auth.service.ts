@@ -16,6 +16,21 @@ export interface AuthResponse {
   user: AuthUser;
 }
 
+export interface RegisterData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  birthday: string;
+  phoneNumber: string;
+  emergencyContact: {
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    relationship: string;
+  };
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -68,7 +83,7 @@ export class AuthService {
     );
   }
 
-  register(data: { firstName: string; lastName: string; email: string; password: string }) {
+  register(data: RegisterData) {
     return this.http.post<AuthResponse>('/api/auth/register', data).pipe(
       tap(res => {
         localStorage.setItem(this.tokenKey, res.token);

@@ -13,4 +13,8 @@ export const PATHS: { [key: string]: NavigationItem } = {
     path: 'login',
     label: 'Anmelden',
   },
+  REGISTER: {
+    path: 'register',
+    label: 'Registrieren',
+  },
 };

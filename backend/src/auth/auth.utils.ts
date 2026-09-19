@@ -52,3 +52,11 @@ export function verifyToken(token: string): TokenPayload | null {
     return null;
   }
 }
+
+export function extractUserFromHeader(authHeader?: string): TokenPayload | null {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return null;
+  }
+  const token = authHeader.substring(7).trim();
+  return verifyToken(token);
+}

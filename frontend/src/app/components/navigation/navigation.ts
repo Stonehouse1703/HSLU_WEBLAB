@@ -16,12 +16,15 @@ import { AuthUser } from '../../features/auth/services/auth.service';
 
       <div class="auth-section">
         @if (currentUser(); as user) {
-          <span class="user-greeting">
-            Angemeldet als <strong>{{ user.firstName }} {{ user.lastName }}</strong>
-          </span>
+          <a [routerLink]="['/user', user.id]" class="user-greeting-link" title="Mein Profil & Notfallkontakt bearbeiten">
+            <span class="user-greeting">
+              Angemeldet als <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+            </span>
+          </a>
           <button class="logout-btn" (click)="logout.emit()">Abmelden</button>
         } @else {
           <a routerLink="/login" class="login-link" routerLinkActive="active">Anmelden</a>
+          <a routerLink="/register" class="register-link" routerLinkActive="active">Registrieren</a>
         }
       </div>
     </nav>
@@ -61,6 +64,22 @@ import { AuthUser } from '../../features/auth/services/auth.service';
       gap: 1rem;
     }
 
+    .user-greeting-link {
+      text-decoration: none;
+      color: inherit;
+      padding: 0.35rem 0.5rem;
+      border-radius: 8px;
+      transition: background-color 0.15s ease;
+    }
+
+    .user-greeting-link:hover {
+      background: #f4f3ff;
+    }
+
+    .user-greeting-link:hover strong {
+      color: #4f46a5;
+    }
+
     .user-greeting {
       font-size: 0.875rem;
       color: #65636d;
@@ -85,6 +104,18 @@ import { AuthUser } from '../../features/auth/services/auth.service';
 
     .login-link {
       background: #eeecf9;
+      color: #4f46a5;
+    }
+
+    .register-link {
+      border: 1px solid #d0d5dd;
+      color: #253c38;
+      background: #fff;
+    }
+
+    .register-link:hover {
+      background: #f6f6fa;
+      border-color: #4f46a5;
       color: #4f46a5;
     }
 
@@ -118,6 +149,8 @@ export class Navigation {
   readonly logout = output<void>();
 
   visibleLinks(): NavigationItem[] {
-    return this.links().filter(item => item.path !== 'login');
+    return this.links().filter(
+      item => item.path !== 'login' && item.path !== 'register',
+    );
   }
 }

@@ -5,10 +5,11 @@ import {TourDetail} from '../features/tour-management/pages/tour-detail/tour-det
 import {UserDetail} from '../features/user/pages/user-detail/user-detail';
 import {Home} from '../pages/home/home';
 import { TourEditor } from '../features/tour-editor/pages/tour-editor/tour-editor';
-import { LoginPage } from '../features/auth/pages/login/login'
+import { LoginPage } from '../features/auth/pages/login/login';
+import { RegisterPage } from '../features/auth/pages/register/register';
 import { authGuard } from '../features/auth/services/auth.guard';
 
-const { HOME, TOUR_MANAGEMENT, LOGIN } = PATHS;
+const { HOME, TOUR_MANAGEMENT, LOGIN, REGISTER } = PATHS;
 
 export const routes: Route[] = [
   {
@@ -55,6 +56,10 @@ export const routes: Route[] = [
   {
     path: LOGIN.path,
     component: LoginPage,
+  },
+  {
+    path: REGISTER.path,
+    component: RegisterPage,
   },
   {
     path: '**',

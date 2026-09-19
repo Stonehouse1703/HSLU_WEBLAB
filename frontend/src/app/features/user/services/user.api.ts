@@ -1,5 +1,5 @@
-import { httpResource } from '@angular/common/http';
-import { Injectable, Signal } from '@angular/core';
+import { HttpClient, httpResource } from '@angular/common/http';
+import { inject, Injectable, Signal } from '@angular/core';
 import { User } from '../user.types';
 
 @Injectable({
@@ -7,6 +7,7 @@ import { User } from '../user.types';
 })
 export class UserService {
   private readonly usersUrl = '/api/users';
+  private readonly http = inject(HttpClient);
 
   getUsersResource() {
     return httpResource<User[]>(
@@ -22,9 +23,17 @@ export class UserService {
     return httpResource<User>(() => {
       const id = idSignal();
       const tourId = tourIdSignal();
-      return id && tourId
+      if (!id) return undefined;
+      return tourId
         ? `/api/tours/${encodeURIComponent(tourId)}/users/${encodeURIComponent(id)}/emergency-contact`
-        : undefined;
+        : `${this.usersUrl}/${encodeURIComponent(id)}`;
     });
+  }
+
+  updateUser(id: string, data: Partial<User>) {
+    return this.http.patch<User>(
+      `${this.usersUrl}/${encodeURIComponent(id)}`,
+      data,
+    );
   }
 }
