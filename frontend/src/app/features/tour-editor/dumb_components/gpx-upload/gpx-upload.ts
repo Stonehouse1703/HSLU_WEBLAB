@@ -15,6 +15,7 @@ export interface GpxLoadedEvent {
   fileName: string;
   suggestedName?: string;
   suggestedAltitude?: number;
+  suggestedDistance?: number;
 }
 
 @Component({
@@ -319,6 +320,7 @@ export class GpxUpload {
         fileName: file.name,
         suggestedName: metadata.suggestedName,
         suggestedAltitude: metadata.suggestedAltitude,
+        suggestedDistance: metadata.suggestedDistance,
       });
     };
 
@@ -338,6 +340,7 @@ export class GpxUpload {
   private extractGpxMetadata(xmlText: string): {
     suggestedName?: string;
     suggestedAltitude?: number;
+    suggestedDistance?: number;
   } {
     try {
       const parser = new DOMParser();
@@ -379,7 +382,41 @@ export class GpxUpload {
         }
       }
 
-      return { suggestedName, suggestedAltitude };
+      let suggestedDistance: number | undefined;
+      const trkptNodes = doc.querySelectorAll('trkpt');
+      if (trkptNodes.length > 1) {
+        let totalKm = 0;
+        let prevLat: number | null = null;
+        let prevLon: number | null = null;
+
+        trkptNodes.forEach(pt => {
+          const lat = parseFloat(pt.getAttribute('lat') ?? '');
+          const lon = parseFloat(pt.getAttribute('lon') ?? '');
+          if (!isNaN(lat) && !isNaN(lon)) {
+            if (prevLat !== null && prevLon !== null) {
+              const R = 6371;
+              const dLat = ((lat - prevLat) * Math.PI) / 180;
+              const dLon = ((lon - prevLon) * Math.PI) / 180;
+              const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos((prevLat * Math.PI) / 180) *
+                  Math.cos((lat * Math.PI) / 180) *
+                  Math.sin(dLon / 2) *
+                  Math.sin(dLon / 2);
+              const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+              totalKm += R * c;
+            }
+            prevLat = lat;
+            prevLon = lon;
+          }
+        });
+
+        if (totalKm > 0) {
+          suggestedDistance = parseFloat(totalKm.toFixed(1));
+        }
+      }
+
+      return { suggestedName, suggestedAltitude, suggestedDistance };
     } catch {
       return {};
     }

@@ -16,6 +16,10 @@ export class ToursService implements OnModuleInit {
       location: 'GIBZ',
       difficulty: 'easy',
       altitude: '2000m',
+      distance: '12 km',
+      cost: 20,
+      travelRoute: 'ÖV',
+      requirements: 'A',
       tourManagerIds: ['7f4d1c8e-2f1a-4c6d-9a12-8b4e5d7c1234'],
       participantIds: [
         '1a2b3c4d-1111-4444-8888-123456789abc',
@@ -31,6 +35,10 @@ export class ToursService implements OnModuleInit {
       location: 'KIBZ',
       difficulty: 'easy',
       altitude: '1000m',
+      distance: '15 km',
+      cost: 35,
+      travelRoute: 'PW',
+      requirements: 'B',
       tourManagerIds: ['1a2b3c4d-1111-4444-8888-123456789abc'],
       participantIds: [
         '7f4d1c8e-2f1a-4c6d-9a12-8b4e5d7c1234',
@@ -64,6 +72,10 @@ export class ToursService implements OnModuleInit {
       location: string;
       difficulty: string;
       altitude: string;
+      distance?: string;
+      cost?: number;
+      travelRoute?: string;
+      requirements?: string;
       gpxData?: string;
     },
     creatorId?: string,
@@ -76,6 +88,15 @@ export class ToursService implements OnModuleInit {
       location: data.location.trim(),
       difficulty: data.difficulty,
       altitude: data.altitude,
+      distance: data.distance?.trim() ?? '',
+      cost:
+        typeof data.cost === 'number'
+          ? Math.round(data.cost)
+          : data.cost !== undefined
+            ? parseInt(String(data.cost), 10) || 0
+            : 0,
+      travelRoute: data.travelRoute?.trim() ?? '',
+      requirements: data.requirements?.trim() ?? '',
       gpxData: data.gpxData,
       tourManagerIds: creatorId ? [creatorId] : [],
       participantIds: [],
@@ -185,6 +206,15 @@ export class ToursService implements OnModuleInit {
     if (data.location !== undefined) updatePayload.location = data.location.trim();
     if (data.difficulty !== undefined) updatePayload.difficulty = data.difficulty;
     if (data.altitude !== undefined) updatePayload.altitude = data.altitude;
+    if (data.distance !== undefined) updatePayload.distance = data.distance.trim();
+    if (data.cost !== undefined) {
+      updatePayload.cost =
+        typeof data.cost === 'number'
+          ? Math.round(data.cost)
+          : parseInt(String(data.cost), 10) || 0;
+    }
+    if (data.travelRoute !== undefined) updatePayload.travelRoute = data.travelRoute.trim();
+    if (data.requirements !== undefined) updatePayload.requirements = data.requirements.trim();
     if (data.gpxData !== undefined) updatePayload.gpxData = data.gpxData;
 
     return this.tourModel

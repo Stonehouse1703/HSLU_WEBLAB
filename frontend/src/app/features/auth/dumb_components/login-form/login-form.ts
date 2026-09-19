@@ -17,6 +17,15 @@ import { Button } from '../../../../components/button/button';
           placeholder="z.B. colin@muster.ch"
           [class.input-error]="isInvalid('email')"
         >
+        @if (isInvalid('email')) {
+          <span class="field-error">
+            @if (loginForm.get('email')?.hasError('required')) {
+              Bitte eine E-Mail-Adresse eingeben.
+            } @else if (loginForm.get('email')?.hasError('email')) {
+              Bitte eine gültige E-Mail-Adresse eingeben.
+            }
+          </span>
+        }
       </div>
 
       <div class="field">
@@ -28,6 +37,9 @@ import { Button } from '../../../../components/button/button';
           placeholder="Dein Passwort"
           [class.input-error]="isInvalid('password')"
         >
+        @if (isInvalid('password')) {
+          <span class="field-error">Bitte Passwort eingeben.</span>
+        }
       </div>
 
       <div class="actions">
@@ -87,6 +99,12 @@ import { Button } from '../../../../components/button/button';
       border-color: #dc2626 !important;
       background: #fff5f5;
       box-shadow: 0 0 0 3px rgb(220 38 38 / 8%);
+    }
+
+    .field-error {
+      color: #dc2626;
+      font-size: 0.8rem;
+      font-weight: 500;
     }
 
     .actions {

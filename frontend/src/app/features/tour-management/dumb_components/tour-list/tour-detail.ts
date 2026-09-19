@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { Tour } from '../../tour.types';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { formatCost, formatShortRequirements, Tour } from '../../tour.types';
 import { Card } from '../../../../components/card/card';
 import { InfoItem } from '../../../../components/info-item/info-item';
 import { RouterLink } from '@angular/router';
@@ -64,8 +64,17 @@ import { RouterLink } from '@angular/router';
 })
 export class TourPreview {
   readonly tour = input.required<Tour>();
+
+  readonly formattedShortRequirements = computed(() => {
+    const req = this.tour().requirements;
+    if (!req) return '';
+    return formatShortRequirements(req);
+  });
+
+  readonly formattedCost = computed(() => {
+    return formatCost(this.tour().cost);
+  });
 }
 
 // Alias for backwards compatibility
 export { TourPreview as TourDetail };
-  

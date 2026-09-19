@@ -34,6 +34,17 @@ export class ToursController {
     @Headers('authorization') authHeader?: string,
   ) {
     const user = this.authService.extractUserFromHeader(authHeader);
+
+    if (body.date) {
+      const today = new Date();
+      const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+      if (body.date < todayStr) {
+        throw new BadRequestException(
+          'Das Datum darf nicht in der Vergangenheit liegen.',
+        );
+      }
+    }
+
     return this.toursService.create(body, user?.id);
   }
 

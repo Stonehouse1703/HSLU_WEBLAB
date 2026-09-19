@@ -1,19 +1,43 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
   input,
   output,
   signal,
 } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Button } from '../../../../components/button/button';
 import { CreateTourInput } from '../../../tour-management/services/tour.api';
 import { Tour } from '../../../tour-management/tour.types';
-import { MeetingPoint } from '../meetingPoint/meetingPoint';
+import { getTodayDateString, MeetingPoint } from '../meetingPoint/meetingPoint';
 import { TourPlaning } from '../tourPlaning/tourPlaning';
 import { GpxLoadedEvent, GpxUpload } from '../gpx-upload/gpx-upload';
+
+export function notInPastValidator(
+  originalDateGetter?: () => string | undefined,
+): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    if (!control.value) {
+      return null;
+    }
+    const todayStr = getTodayDateString();
+    const original = originalDateGetter?.();
+    if (control.value < todayStr && control.value !== original) {
+      return { pastDate: true };
+    }
+    return null;
+  };
+}
 
 @Component({
   selector: 'app-tour-form',
@@ -29,10 +53,23 @@ import { GpxLoadedEvent, GpxUpload } from '../gpx-upload/gpx-upload';
           placeholder="z.B. Pazolastock"
           [class.input-error]="isInvalid('name')"
         />
+        @if (isInvalid('name')) {
+          <span class="field-error">
+            @if (tourForm.get('name')?.hasError('required')) {
+              Bitte einen Tournamen eingeben.
+            } @else if (tourForm.get('name')?.hasError('minlength')) {
+              Der Tourname muss mindestens 3 Zeichen lang sein.
+            }
+          </span>
+        }
       </div>
 
       <hr class="divider" />
-      <app-meeting-point [formGroup]="tourForm" [submitted]="submitted" />
+      <app-meeting-point
+        [formGroup]="tourForm"
+        [submitted]="submitted"
+        [minDate]="effectiveMinDate()"
+      />
 
       <hr class="divider" />
       <app-tour-planing [formGroup]="tourForm" [submitted]="submitted" />
@@ -49,7 +86,7 @@ import { GpxLoadedEvent, GpxUpload } from '../gpx-upload/gpx-upload';
           type="submit"
           [text]="submitButtonText()"
           variant="primary"
-          [disabled]="isSubmitting() || (submitted && tourForm.invalid)"
+          [disabled]="isSubmitting() || tourForm.invalid"
         />
         @if (showCancelButton()) {
           <app-button
@@ -121,6 +158,12 @@ import { GpxLoadedEvent, GpxUpload } from '../gpx-upload/gpx-upload';
       background: #fff5f5;
       box-shadow: 0 0 0 3px rgb(220 38 38 / 8%);
     }
+
+    .field-error {
+      color: #dc2626;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -137,13 +180,29 @@ export class TourForm {
   submitted = false;
   readonly gpxData = signal<string | null>(null);
 
+  readonly effectiveMinDate = computed(() => {
+    const existingDate = this.tour()?.date;
+    const todayStr = getTodayDateString();
+    if (existingDate && existingDate < todayStr) {
+      return existingDate;
+    }
+    return todayStr;
+  });
+
   readonly tourForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
-    date: ['', Validators.required],
+    date: [
+      '',
+      [Validators.required, notInPastValidator(() => this.tour()?.date)],
+    ],
     time: ['', Validators.required],
     place: ['', [Validators.required, Validators.minLength(2)]],
     altitude: ['', [Validators.required, Validators.min(1)]],
-    difficulty: ['leicht', Validators.required],
+    distance: ['', [Validators.required, Validators.min(0)]],
+    difficulty: ['', Validators.required],
+    requirements: ['', Validators.required],
+    travelRoute: ['', Validators.required],
+    cost: ['', [Validators.required, Validators.min(0)]],
   });
 
   constructor() {
@@ -153,6 +212,9 @@ export class TourForm {
         const cleanAltitude = tour.altitude
           ? tour.altitude.replace(/[^0-9]/g, '')
           : '';
+        const cleanDistance = tour.distance
+          ? tour.distance.replace(/[^0-9.]/g, '')
+          : '';
 
         this.tourForm.patchValue({
           name: tour.name,
@@ -160,7 +222,14 @@ export class TourForm {
           time: tour.time,
           place: tour.location,
           altitude: cleanAltitude,
-          difficulty: tour.difficulty,
+          distance: cleanDistance,
+          difficulty: tour.difficulty ?? '',
+          requirements: tour.requirements ?? '',
+          travelRoute: tour.travelRoute ?? '',
+          cost:
+            tour.cost !== undefined && tour.cost !== null
+              ? String(tour.cost)
+              : '',
         });
 
         if (tour.gpxData) {
@@ -193,6 +262,16 @@ export class TourForm {
       altitudeControl.setValue(String(event.suggestedAltitude));
       altitudeControl.markAsDirty();
     }
+
+    const distanceControl = this.tourForm.get('distance');
+    if (
+      distanceControl &&
+      (!distanceControl.value || Number(distanceControl.value) <= 0) &&
+      event.suggestedDistance
+    ) {
+      distanceControl.setValue(String(event.suggestedDistance));
+      distanceControl.markAsDirty();
+    }
   }
 
   onGpxCleared(): void {
@@ -217,7 +296,19 @@ export class TourForm {
     const time = value.time ?? '';
     const place = value.place?.trim() ?? '';
     const altitude = Number(value.altitude ?? 0);
-    const difficulty = value.difficulty ?? 'leicht';
+    const distanceVal =
+      value.distance !== null && value.distance !== undefined && value.distance !== ''
+        ? `${value.distance} km`
+        : '';
+    const difficulty = value.difficulty ?? '';
+    const requirements = value.requirements ?? '';
+    const travelRoute = value.travelRoute ?? '';
+    const costVal =
+      value.cost !== null &&
+      value.cost !== undefined &&
+      String(value.cost).trim() !== ''
+        ? Math.max(0, Math.round(Number(value.cost)))
+        : 0;
 
     this.onFormSubmit.emit({
       name,
@@ -225,7 +316,11 @@ export class TourForm {
       time,
       location: place,
       altitude: `${altitude}m`,
+      distance: distanceVal,
       difficulty,
+      requirements,
+      travelRoute,
+      cost: costVal,
       gpxData: this.gpxData() ?? undefined,
     });
   }

@@ -26,6 +26,18 @@ export class Tour {
   @Prop({ required: true })
   altitude: string;
 
+  @Prop({ type: String, required: false, default: '' })
+  distance?: string;
+
+  @Prop({ type: Number, required: false, default: 0 })
+  cost?: number;
+
+  @Prop({ type: String, required: false, default: '' })
+  travelRoute?: string;
+
+  @Prop({ type: String, required: false, default: '' })
+  requirements?: string;
+
   @Prop({ type: String, required: false })
   gpxData?: string;
 

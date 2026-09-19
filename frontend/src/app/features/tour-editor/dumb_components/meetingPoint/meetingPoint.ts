@@ -1,6 +1,14 @@
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
+export function getTodayDateString(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 @Component({
   selector: 'app-meeting-point',
   imports: [
@@ -16,8 +24,14 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
           id="date"
           type="date"
           formControlName="date"
+          [min]="effectiveMinDate"
           [class.input-error]="isInvalid('date')"
         >
+        @if (hasPastDateError()) {
+          <span class="field-error">Das Datum darf nicht in der Vergangenheit liegen.</span>
+        } @else if (isInvalid('date')) {
+          <span class="field-error">Bitte ein Datum auswählen.</span>
+        }
       </div>
 
       <div class="field">
@@ -28,6 +42,9 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
           formControlName="time"
           [class.input-error]="isInvalid('time')"
         >
+        @if (isInvalid('time')) {
+          <span class="field-error">Bitte eine Uhrzeit auswählen.</span>
+        }
       </div>
 
       <div class="field">
@@ -39,6 +56,15 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
           placeholder="z.B. Bahnhof Zug"
           [class.input-error]="isInvalid('place')"
         >
+        @if (isInvalid('place')) {
+          <span class="field-error">
+            @if (formGroup.get('place')?.hasError('required')) {
+              Bitte einen Ort / Treffpunkt angeben.
+            } @else if (formGroup.get('place')?.hasError('minlength')) {
+              Der Ort muss mindestens 2 Zeichen lang sein.
+            }
+          </span>
+        }
       </div>
     </div>
   `,
@@ -61,6 +87,13 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
       flex-direction: column;
       gap: 5px;
       flex: 1;
+      min-width: 180px;
+    }
+
+    .field label {
+      font-weight: 500;
+      color: #253c38;
+      font-size: 0.9rem;
     }
 
     .field input {
@@ -70,6 +103,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
       border: 1px solid #d0d5dd;
       border-radius: 10px;
       background: #fff;
+      font: inherit;
       transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
     }
 
@@ -84,16 +118,32 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
       background: #fff5f5;
       box-shadow: 0 0 0 3px rgb(220 38 38 / 8%);
     }
+
+    .field-error {
+      color: #dc2626;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MeetingPoint {
   @Input({ required: true }) formGroup!: FormGroup;
   @Input() submitted = false;
+  @Input() minDate?: string;
+
+  get effectiveMinDate(): string {
+    return this.minDate ?? getTodayDateString();
+  }
 
   isInvalid(controlName: string): boolean {
     const control = this.formGroup.get(controlName);
 
     return !!control && control.invalid && (control.touched || this.submitted);
+  }
+
+  hasPastDateError(): boolean {
+    const control = this.formGroup.get('date');
+    return !!control && control.hasError('pastDate') && (control.touched || this.submitted);
   }
 }

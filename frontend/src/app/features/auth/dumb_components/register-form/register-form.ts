@@ -27,6 +27,9 @@ import { RegisterData } from '../../services/auth.service';
             placeholder="z.B. Colin"
             [class.input-error]="isInvalid('firstName')"
           />
+          @if (isInvalid('firstName')) {
+            <span class="field-error">Bitte Vorname eingeben (mind. 2 Zeichen).</span>
+          }
         </div>
 
         <div class="field">
@@ -38,6 +41,9 @@ import { RegisterData } from '../../services/auth.service';
             placeholder="z.B. Muster"
             [class.input-error]="isInvalid('lastName')"
           />
+          @if (isInvalid('lastName')) {
+            <span class="field-error">Bitte Nachname eingeben (mind. 2 Zeichen).</span>
+          }
         </div>
       </div>
 
@@ -50,6 +56,9 @@ import { RegisterData } from '../../services/auth.service';
           placeholder="z.B. colin@muster.ch"
           [class.input-error]="isInvalid('email')"
         />
+        @if (isInvalid('email')) {
+          <span class="field-error">Bitte eine gültige E-Mail-Adresse eingeben.</span>
+        }
       </div>
 
       <div class="field">
@@ -61,6 +70,9 @@ import { RegisterData } from '../../services/auth.service';
           placeholder="Sicheres Passwort"
           [class.input-error]="isInvalid('password')"
         />
+        @if (isInvalid('password')) {
+          <span class="field-error">Das Passwort muss mindestens 6 Zeichen lang sein.</span>
+        }
       </div>
 
       <div class="fields-row">
@@ -72,6 +84,9 @@ import { RegisterData } from '../../services/auth.service';
             formControlName="birthday"
             [class.input-error]="isInvalid('birthday')"
           />
+          @if (isInvalid('birthday')) {
+            <span class="field-error">Bitte Geburtsdatum auswählen.</span>
+          }
         </div>
 
         <div class="field">
@@ -83,6 +98,9 @@ import { RegisterData } from '../../services/auth.service';
             placeholder="z.B. +41 79 123 45 67"
             [class.input-error]="isInvalid('phoneNumber')"
           />
+          @if (isInvalid('phoneNumber')) {
+            <span class="field-error">Bitte Telefonnummer eingeben (mind. 6 Zeichen).</span>
+          }
         </div>
       </div>
 
@@ -103,6 +121,9 @@ import { RegisterData } from '../../services/auth.service';
             placeholder="z.B. Anna"
             [class.input-error]="isInvalid('emergencyFirstName')"
           />
+          @if (isInvalid('emergencyFirstName')) {
+            <span class="field-error">Bitte Vorname des Notfallkontakts eingeben.</span>
+          }
         </div>
 
         <div class="field">
@@ -114,6 +135,9 @@ import { RegisterData } from '../../services/auth.service';
             placeholder="z.B. Muster"
             [class.input-error]="isInvalid('emergencyLastName')"
           />
+          @if (isInvalid('emergencyLastName')) {
+            <span class="field-error">Bitte Nachname des Notfallkontakts eingeben.</span>
+          }
         </div>
       </div>
 
@@ -127,6 +151,9 @@ import { RegisterData } from '../../services/auth.service';
             placeholder="z.B. +41 78 234 56 78"
             [class.input-error]="isInvalid('emergencyPhone')"
           />
+          @if (isInvalid('emergencyPhone')) {
+            <span class="field-error">Bitte Telefonnummer des Notfallkontakts eingeben.</span>
+          }
         </div>
 
         <div class="field">
@@ -138,6 +165,9 @@ import { RegisterData } from '../../services/auth.service';
             placeholder="z.B. Mutter, Partner/in, Vater"
             [class.input-error]="isInvalid('emergencyRelationship')"
           />
+          @if (isInvalid('emergencyRelationship')) {
+            <span class="field-error">Bitte Beziehung zum Notfallkontakt eingeben.</span>
+          }
         </div>
       </div>
 
@@ -146,7 +176,7 @@ import { RegisterData } from '../../services/auth.service';
           type="submit"
           text="Registrieren"
           variant="primary"
-          [disabled]="isSubmitting() || (submitted && registerForm.invalid)"
+          [disabled]="isSubmitting() || registerForm.invalid"
         />
 
         <a routerLink="/login" class="login-switch-link">
@@ -231,6 +261,12 @@ import { RegisterData } from '../../services/auth.service';
       border-color: #dc2626 !important;
       background: #fff5f5;
       box-shadow: 0 0 0 3px rgb(220 38 38 / 8%);
+    }
+
+    .field-error {
+      color: #dc2626;
+      font-size: 0.8rem;
+      font-weight: 500;
     }
 
     .actions {
