@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Card } from '../../../../components/card/card';
 import { AuthService } from '../../services/auth.service';
 import { LoginForm } from '../../dumb_components/login-form/login-form';
@@ -58,6 +58,7 @@ import { LoginForm } from '../../dumb_components/login-form/login-form';
 })
 export class LoginContainer {
   private readonly authService = inject(AuthService);
+  private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
   readonly isSubmitting = signal(false);
@@ -73,7 +74,12 @@ export class LoginContainer {
 
     this.authService.login(credentials).subscribe({
       next: () => {
-        this.router.navigate(['/tour-management']);
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+        const targetUrl =
+          returnUrl?.startsWith('/') && !returnUrl.startsWith('//')
+            ? returnUrl
+            : '/tour-management';
+        this.router.navigateByUrl(targetUrl);
       },
       error: err => {
         this.isSubmitting.set(false);

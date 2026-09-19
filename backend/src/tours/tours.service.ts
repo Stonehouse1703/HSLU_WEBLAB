@@ -113,7 +113,7 @@ export class ToursService implements OnModuleInit {
           $pull: { tourManagerIds: userId },
           $addToSet: { participantIds: userId },
         },
-        { new: true },
+        { returnDocument: 'after' },
       )
       .select('-_id -__v')
       .lean<Tour>()
@@ -140,7 +140,7 @@ export class ToursService implements OnModuleInit {
             tourManagerIds: userId,
           },
         },
-        { new: true },
+        { returnDocument: 'after' },
       )
       .select('-_id -__v')
       .lean<Tour>()
@@ -167,7 +167,7 @@ export class ToursService implements OnModuleInit {
       .findOneAndUpdate(
         { id: tourId },
         update,
-        { new: true },
+        { returnDocument: 'after' },
       )
       .select('-_id -__v')
       .lean<Tour>()

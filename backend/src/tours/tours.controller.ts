@@ -45,7 +45,15 @@ export class ToursController {
   }
 
   @Get(':id')
-  async findById(@Param('id') id: string) {
+  async findById(
+    @Param('id') id: string,
+    @Headers('authorization') authHeader?: string,
+  ) {
+    const user = this.authService.extractUserFromHeader(authHeader);
+    if (!user) {
+      throw new UnauthorizedException('Nicht authentifiziert.');
+    }
+
     const tour = await this.toursService.findById(id);
 
     if (!tour) {

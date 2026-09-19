@@ -18,8 +18,8 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     ToursModule,
     AuthModule,
     ObserveModule.forRoot({
-      appKey: 'YOUR_APP_KEY',
-      appSecret: 'YOUR_APP_SECRET',
+      appKey: process.env.OBSERVE_APP_KEY ?? '',
+      appSecret: process.env.OBSERVE_APP_SECRET ?? '',
       serviceId: 'backend',
     }),
   ],

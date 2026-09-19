@@ -6,6 +6,7 @@ import {UserDetail} from '../features/user/pages/user-detail/user-detail';
 import {Home} from '../pages/home/home';
 import { TourEditor } from '../features/tour-editor/pages/tour-editor/tour-editor';
 import { LoginPage } from '../features/auth/pages/login/login'
+import { authGuard } from '../features/auth/services/auth.guard';
 
 const { HOME, TOUR_MANAGEMENT, LOGIN } = PATHS;
 
@@ -21,6 +22,7 @@ export const routes: Route[] = [
   },
   {
     path: TOUR_MANAGEMENT.path,
+    canActivate: [authGuard],
     children: [
       {
         path: '',
