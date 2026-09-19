@@ -5,4 +5,5 @@ export class CreateTourDto {
   location: string;
   difficulty: string;
   altitude: string;
+  gpxData?: string;
 }

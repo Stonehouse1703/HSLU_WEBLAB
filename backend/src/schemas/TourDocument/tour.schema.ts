@@ -26,6 +26,9 @@ export class Tour {
   @Prop({ required: true })
   altitude: string;
 
+  @Prop({ type: String, required: false })
+  gpxData?: string;
+
   @Prop({ type: [String], required: true, default: [] })
   tourManagerIds: string[];
 

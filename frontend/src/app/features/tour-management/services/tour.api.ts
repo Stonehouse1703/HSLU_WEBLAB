@@ -9,6 +9,7 @@ export type CreateTourInput = {
   location: string;
   difficulty: string;
   altitude: string;
+  gpxData?: string;
 };
 
 @Injectable({

@@ -63,6 +63,7 @@ export class ToursService implements OnModuleInit {
       location: string;
       difficulty: string;
       altitude: string;
+      gpxData?: string;
     },
     creatorId?: string,
   ): Promise<Tour> {
@@ -74,6 +75,7 @@ export class ToursService implements OnModuleInit {
       location: data.location.trim(),
       difficulty: data.difficulty,
       altitude: data.altitude,
+      gpxData: data.gpxData,
       tourManagerIds: creatorId ? [creatorId] : [],
       participantIds: [],
     };

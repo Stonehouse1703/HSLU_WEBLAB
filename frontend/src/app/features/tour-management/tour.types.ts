@@ -6,6 +6,7 @@ export interface Tour {
   location: string;
   difficulty: string;
   altitude: string;
+  gpxData?: string;
   tourManagerIds: string[];
   participantIds: string[];
 }

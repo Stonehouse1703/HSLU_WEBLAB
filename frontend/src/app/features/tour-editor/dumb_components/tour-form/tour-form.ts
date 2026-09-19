@@ -1,13 +1,21 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Button } from '../../../../components/button/button';
 import { CreateTourInput } from '../../../tour-management/services/tour.api';
 import { MeetingPoint } from '../meetingPoint/meetingPoint';
 import { TourPlaning } from '../tourPlaning/tourPlaning';
+import { GpxLoadedEvent, GpxUpload } from '../gpx-upload/gpx-upload';
 
 @Component({
   selector: 'app-tour-form',
-  imports: [ReactiveFormsModule, MeetingPoint, TourPlaning, Button],
+  imports: [ReactiveFormsModule, MeetingPoint, TourPlaning, GpxUpload, Button],
   template: `
     <form [formGroup]="tourForm" (ngSubmit)="submitForm()" novalidate>
       <div class="field">
@@ -18,14 +26,20 @@ import { TourPlaning } from '../tourPlaning/tourPlaning';
           formControlName="name"
           placeholder="z.B. Pazolastock"
           [class.input-error]="isInvalid('name')"
-        >
+        />
       </div>
 
-      <hr class="divider">
+      <hr class="divider" />
       <app-meeting-point [formGroup]="tourForm" [submitted]="submitted" />
 
-      <hr class="divider">
+      <hr class="divider" />
       <app-tour-planing [formGroup]="tourForm" [submitted]="submitted" />
+
+      <hr class="divider" />
+      <app-gpx-upload
+        (gpxLoaded)="onGpxLoaded($event)"
+        (gpxCleared)="onGpxCleared()"
+      />
 
       <div class="actions">
         <app-button
@@ -66,7 +80,10 @@ import { TourPlaning } from '../tourPlaning/tourPlaning';
       border-radius: 10px;
       background: #fff;
       font: inherit;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
     }
 
     .field input:focus {
@@ -100,6 +117,7 @@ export class TourForm {
   readonly onFormSubmit = output<CreateTourInput>();
 
   submitted = false;
+  readonly gpxData = signal<string | null>(null);
 
   readonly tourForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
@@ -113,6 +131,30 @@ export class TourForm {
   isInvalid(controlName: string): boolean {
     const control = this.tourForm.get(controlName);
     return !!control && control.invalid && (control.touched || this.submitted);
+  }
+
+  onGpxLoaded(event: GpxLoadedEvent): void {
+    this.gpxData.set(event.content);
+
+    const nameControl = this.tourForm.get('name');
+    if (nameControl && !nameControl.value?.trim() && event.suggestedName) {
+      nameControl.setValue(event.suggestedName);
+      nameControl.markAsDirty();
+    }
+
+    const altitudeControl = this.tourForm.get('altitude');
+    if (
+      altitudeControl &&
+      (!altitudeControl.value || Number(altitudeControl.value) <= 0) &&
+      event.suggestedAltitude
+    ) {
+      altitudeControl.setValue(String(event.suggestedAltitude));
+      altitudeControl.markAsDirty();
+    }
+  }
+
+  onGpxCleared(): void {
+    this.gpxData.set(null);
   }
 
   submitForm(): void {
@@ -142,6 +184,7 @@ export class TourForm {
       location: place,
       altitude: `${altitude}m`,
       difficulty,
+      gpxData: this.gpxData() ?? undefined,
     });
   }
 }
