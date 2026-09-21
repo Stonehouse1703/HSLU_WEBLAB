@@ -1,18 +1,19 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { Card } from '../../../../components/card/card';
 import { Tour } from '../../tour.types';
 import { InfoItem } from '../../../../components/info-item/info-item';
 
 @Component({
   selector: 'app-meeting-point',
-  imports: [Card, InfoItem],
+  imports: [Card, InfoItem, DatePipe],
   template: `
     <app-card title="Treffpunkt & Zeit">
       <dl class="tour-info">
         <app-info-item
           icon="date_range"
           title="Datum"
-          [description]="tour().date"
+          [description]="(tour().date | date:'dd.MM.yyyy':'UTC') ?? ''"
         />
         <app-info-item
           icon="access_time"

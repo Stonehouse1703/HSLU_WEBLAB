@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Button } from '../../../../components/button/button';
 import { Badge } from '../../../../components/badge/badge';
@@ -12,7 +13,7 @@ export interface UserRoleChange {
 
 @Component({
   selector: 'app-user-card',
-  imports: [Button, Badge, RouterLink],
+  imports: [Button, Badge, RouterLink, DatePipe],
   template: `
     <div class="user-row">
       <div class="user-identity">
@@ -35,7 +36,7 @@ export interface UserRoleChange {
         </span>
         <span class="meta-item">
           <span class="material-icons meta-icon" aria-hidden="true">cake</span>
-          {{ user().birthday }}
+          {{ user().birthday | date: 'dd.MM.yyyy' }}
         </span>
       </div>
 
