@@ -9,7 +9,7 @@ import { AuthService } from './features/auth/services/auth.service';
   imports: [RouterOutlet, Navigation],
   template: `
     <app-navigation
-      [links]="getAvailableLinks()"
+      [links]="navLinks"
       [currentUser]="authService.currentUser()"
       (logout)="authService.logout()"
     />
@@ -45,8 +45,5 @@ import { AuthService } from './features/auth/services/auth.service';
 })
 export class App {
   readonly authService = inject(AuthService);
-
-  getAvailableLinks() {
-    return Object.values(PATHS);
-  }
+  readonly navLinks = Object.values(PATHS);
 }

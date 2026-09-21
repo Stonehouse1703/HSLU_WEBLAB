@@ -21,6 +21,35 @@ import 'leaflet-gpx';
         <p class="error-note">Die GPX-Routendaten konnten nicht dargestellt werden.</p>
       }
 
+      @if (hasStats()) {
+        <div class="gpx-stats">
+          @if (routeName()) {
+            <span class="stat-pill stat-name">
+              <span class="material-icons" style="font-size: 1rem;" aria-hidden="true">place</span>
+              {{ routeName() }}
+            </span>
+          }
+          @if (distanceKm() !== null) {
+            <span class="stat-pill">
+              <span class="material-icons" style="font-size: 1rem;" aria-hidden="true">straighten</span>
+              {{ distanceKm() }} km
+            </span>
+          }
+          @if (elevationGain() !== null) {
+            <span class="stat-pill">
+              <span class="material-icons" style="font-size: 1rem;" aria-hidden="true">trending_up</span>
+              +{{ elevationGain() }} m
+            </span>
+          }
+          @if (elevationLoss() !== null) {
+            <span class="stat-pill">
+              <span class="material-icons" style="font-size: 1rem;" aria-hidden="true">trending_down</span>
+              -{{ elevationLoss() }} m
+            </span>
+          }
+        </div>
+      }
+
       <div
         #mapContainer
         class="map-container"

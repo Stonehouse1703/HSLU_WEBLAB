@@ -74,9 +74,9 @@ Das Projekt folgt einer sauberen **Smart Container / Dumb Component**-Architektu
 
 ---
 
-## 📚 Projektdokumentation
+## 📚 Projektdokumentation (mit `make all` kompilierbar)
 
-- [Projektbeschreibung](Doc/projektbeschreibung/main.pdf)
+- [Projektbeschreibung](Doc/projektbeschreibung.pdf)
 - [Architekturdokumentation](Doc/architektur.pdf)
 - [Fazit & Reflexion](Doc/fazit_reflexion.pdf)
-- [Arbeitsjournal](/Doc/arbeitsjournal.pdf)
+- [Arbeitsjournal](Doc/arbeitsjournal.pdf)

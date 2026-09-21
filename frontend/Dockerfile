@@ -3,11 +3,11 @@ FROM node:24-slim AS frontend-builder
 WORKDIR /app
 
 COPY frontend/package*.json ./frontend/
-COPY frontend/ ./frontend/
 
 WORKDIR /app/frontend
-RUN npm install
+RUN npm ci
 
+COPY frontend/ ./
 RUN npm run build -- --configuration production
 
 FROM nginx:alpine

@@ -34,6 +34,9 @@ export class ToursController {
     @Headers('authorization') authHeader?: string,
   ) {
     const user = this.authService.extractUserFromHeader(authHeader);
+    if (!user) {
+      throw new UnauthorizedException('Nicht authentifiziert.');
+    }
 
     if (body.date) {
       const today = new Date();
@@ -45,7 +48,7 @@ export class ToursController {
       }
     }
 
-    return this.toursService.create(body, user?.id);
+    return this.toursService.create(body, user.id);
   }
 
   @Get('my-tours')
@@ -55,6 +58,34 @@ export class ToursController {
       throw new UnauthorizedException('Nicht authentifiziert.');
     }
     return this.toursService.findUserTours(user.id);
+  }
+
+  @Get(':id/members')
+  async findTourMembers(
+    @Param('id') id: string,
+    @Headers('authorization') authHeader?: string,
+  ) {
+    const user = this.authService.extractUserFromHeader(authHeader);
+    if (!user) {
+      throw new UnauthorizedException('Nicht authentifiziert.');
+    }
+
+    const tour = await this.toursService.findById(id);
+    if (!tour) {
+      throw new NotFoundException('Tour wurde nicht gefunden.');
+    }
+
+    const allIds = [
+      ...tour.tourManagerIds,
+      ...tour.participantIds,
+    ];
+    const users = await this.usersService.findByIds(allIds);
+    const userMap = new Map(users.map(u => [u.id, u]));
+
+    return {
+      tourManagers: tour.tourManagerIds.map(uid => userMap.get(uid)).filter(Boolean),
+      participants: tour.participantIds.map(uid => userMap.get(uid)).filter(Boolean),
+    };
   }
 
   @Get(':id')

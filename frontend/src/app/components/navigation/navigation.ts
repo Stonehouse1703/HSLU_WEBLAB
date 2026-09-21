@@ -1,4 +1,4 @@
-import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, computed, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { NavigationItem } from './navigation.type';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthUser } from '../../features/auth/services/auth.service';
@@ -148,9 +148,9 @@ export class Navigation {
   readonly currentUser = input<AuthUser | null>(null);
   readonly logout = output<void>();
 
-  visibleLinks(): NavigationItem[] {
+  readonly visibleLinks = computed(() => {
     return this.links().filter(
       item => item.path !== 'login' && item.path !== 'register',
     );
-  }
+  });
 }

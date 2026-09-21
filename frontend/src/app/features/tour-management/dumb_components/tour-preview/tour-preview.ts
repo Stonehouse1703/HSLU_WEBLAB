@@ -6,18 +6,19 @@ import { InfoItem } from '../../../../components/info-item/info-item';
 import { Badge } from '../../../../components/badge/badge';
 import { BadgeColor } from '../../../../components/badge/badge.type';
 import { RouterLink } from '@angular/router';
+import { ShortenerPipe } from '../../../../pipes/shortener-pipe';
 
 @Component({
   selector: 'app-tour-preview',
-  imports: [Card, InfoItem, Badge, RouterLink, DatePipe],
+  imports: [Card, InfoItem, Badge, RouterLink, DatePipe, ShortenerPipe],
   template: `
     <a [routerLink]="['/tour-management', tour().id]" class="tour-card-link">
-      <app-card [title]="tour().name">
+      <app-card [title]="(tour().name | shortIt: 45)">
         <div class="card-top-bar">
           <app-badge [color]="difficultyColor()" [text]="'Schwierigkeit: ' + tour().difficulty" />
         </div>
         <dl class="tour-preview">
-          <app-info-item icon="date_range" title="Datum" [description]="(tour().date | date: 'dd.MM.yyyy') ?? ''" />
+          <app-info-item icon="date_range" title="Datum" [description]="(tour().date | date: 'dd.MM.yyyy':'UTC') ?? ''" />
           <app-info-item icon="access_time" title="Zeit" [description]="tour().time" />
           <app-info-item icon="location_on" title="Ort" [description]="tour().location" />
           <app-info-item icon="terrain" title="Höhenmeter" [description]="tour().altitude" />
@@ -99,6 +100,3 @@ export class TourPreview {
     return formatCost(this.tour().cost);
   });
 }
-
-// Backward compatibility alias
-export { TourPreview as TourDetail };

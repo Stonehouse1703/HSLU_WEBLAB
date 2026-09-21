@@ -19,7 +19,11 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  findAll() {
+  findAll(@Headers('authorization') authHeader?: string) {
+    const user = extractUserFromHeader(authHeader);
+    if (!user) {
+      throw new UnauthorizedException('Nicht authentifiziert.');
+    }
     return this.usersService.findAll();
   }
 

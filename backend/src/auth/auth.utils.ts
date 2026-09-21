@@ -12,10 +12,17 @@ export function verifyPassword(password: string, storedHash: string): boolean {
   if (!storedHash || !storedHash.includes(':')) {
     return false;
   }
-  const [salt, key] = storedHash.split(':');
-  const keyBuffer = Buffer.from(key, 'hex');
-  const derivedKey = scryptSync(password, salt, 64);
-  return timingSafeEqual(keyBuffer, derivedKey);
+  try {
+    const [salt, key] = storedHash.split(':');
+    const keyBuffer = Buffer.from(key, 'hex');
+    const derivedKey = scryptSync(password, salt, 64);
+    if (keyBuffer.length !== derivedKey.length) {
+      return false;
+    }
+    return timingSafeEqual(keyBuffer, derivedKey);
+  } catch {
+    return false;
+  }
 }
 
 export interface TokenPayload {
@@ -40,7 +47,15 @@ export function verifyToken(token: string): TokenPayload | null {
   if (parts.length !== 3) return null;
   const [header, body, signature] = parts;
   const expectedSignature = createHmac('sha256', JWT_SECRET).update(`${header}.${body}`).digest('base64url');
-  if (signature !== expectedSignature) return null;
+
+  const sigBuffer = Buffer.from(signature);
+  const expectedBuffer = Buffer.from(expectedSignature);
+  if (
+    sigBuffer.length !== expectedBuffer.length ||
+    !timingSafeEqual(sigBuffer, expectedBuffer)
+  ) {
+    return null;
+  }
 
   try {
     const data = JSON.parse(Buffer.from(body, 'base64url').toString('utf8')) as TokenPayload;

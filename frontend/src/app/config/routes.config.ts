@@ -1,12 +1,5 @@
 import { Route } from '@angular/router';
 import { PATHS } from './paths.config';
-import { TourOverviewPage } from '../features/tour-management/pages/tour-overview/tour-overview';
-import { TourDetail } from '../features/tour-management/pages/tour-detail/tour-detail';
-import { UserDetail } from '../features/user/pages/user-detail/user-detail';
-import { Home } from '../pages/home/home';
-import { TourEditor } from '../features/tour-editor/pages/tour-editor/tour-editor';
-import { LoginPage } from '../features/auth/pages/login/login';
-import { RegisterPage } from '../features/auth/pages/register/register';
 import { authGuard } from '../features/auth/services/auth.guard';
 
 const { HOME, TOUR_MANAGEMENT, LOGIN, REGISTER } = PATHS;
@@ -19,7 +12,7 @@ export const routes: Route[] = [
   },
   {
     path: HOME.path,
-    component: Home,
+    loadComponent: () => import('../pages/home/home').then(m => m.Home),
   },
   {
     path: TOUR_MANAGEMENT.path,
@@ -27,17 +20,27 @@ export const routes: Route[] = [
     children: [
       {
         path: '',
-        component: TourOverviewPage,
+        loadComponent: () =>
+          import('../features/tour-management/pages/tour-overview/tour-overview').then(
+            m => m.TourOverviewPage,
+          ),
       },
       {
         path: ':id',
-        component: TourDetail,
+        loadComponent: () =>
+          import('../features/tour-management/pages/tour-detail/tour-detail').then(
+            m => m.TourDetail,
+          ),
       },
     ],
   },
   {
     path: 'user/:id',
-    component: UserDetail,
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('../features/user/pages/user-detail/user-detail').then(
+        m => m.UserDetail,
+      ),
   },
   {
     path: 'tour-editor',
@@ -45,21 +48,31 @@ export const routes: Route[] = [
     children: [
       {
         path: '',
-        component: TourEditor,
+        loadComponent: () =>
+          import('../features/tour-editor/pages/tour-editor/tour-editor').then(
+            m => m.TourEditor,
+          ),
       },
       {
         path: ':id',
-        component: TourEditor,
+        loadComponent: () =>
+          import('../features/tour-editor/pages/tour-editor/tour-editor').then(
+            m => m.TourEditor,
+          ),
       },
     ],
   },
   {
     path: LOGIN.path,
-    component: LoginPage,
+    loadComponent: () =>
+      import('../features/auth/pages/login/login').then(m => m.LoginPage),
   },
   {
     path: REGISTER.path,
-    component: RegisterPage,
+    loadComponent: () =>
+      import('../features/auth/pages/register/register').then(
+        m => m.RegisterPage,
+      ),
   },
   {
     path: '**',

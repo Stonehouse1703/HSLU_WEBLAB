@@ -5,7 +5,7 @@ export interface User {
   email?: string;
   birthday: string;
   phoneNumber: string;
-  emergencyContact: EmergencyContact;
+  emergencyContact?: EmergencyContact;
 }
 
 export interface EmergencyContact {

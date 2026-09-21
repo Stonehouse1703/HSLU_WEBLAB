@@ -113,14 +113,12 @@ export class UsersService implements OnModuleInit {
         updateOne: {
           filter: { id: user.id },
           update: {
-            $set: {
-              email: user.email,
-              passwordHash: user.passwordHash,
-            },
             $setOnInsert: {
               id: user.id,
               firstName: user.firstName,
               lastName: user.lastName,
+              email: user.email,
+              passwordHash: user.passwordHash,
               birthday: user.birthday,
               phoneNumber: user.phoneNumber,
               emergencyContact: user.emergencyContact,
@@ -135,6 +133,17 @@ export class UsersService implements OnModuleInit {
   findAll(): Promise<User[]> {
     return this.personModel
       .find()
+      .select('-_id -__v -passwordHash -emergencyContact')
+      .lean<User[]>()
+      .exec();
+  }
+
+  findByIds(ids: string[]): Promise<User[]> {
+    if (!ids || ids.length === 0) {
+      return Promise.resolve([]);
+    }
+    return this.personModel
+      .find({ id: { $in: ids } })
       .select('-_id -__v -passwordHash -emergencyContact')
       .lean<User[]>()
       .exec();

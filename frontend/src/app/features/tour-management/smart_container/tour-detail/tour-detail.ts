@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal } f
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { TourService } from '../../services/tour.api';
-import { UserService } from '../../../user/services/user.api';
 import { AuthService } from '../../../auth/services/auth.service';
 import { User } from '../../../user/user.types';
 import { UserRoleChange } from '../../../user/dumb_components/user-card/user-card';
@@ -104,6 +103,7 @@ import { isTourUpcoming } from '../../tour.types';
           <app-security-matrix-display [matrix]="selectedTour.securityMatrix" />
         }
         <app-participant-information
+          [tourId]="selectedTour.id"
           [participants]="participants()"
           [tourManagers]="tourManagers()"
           [currentUserId]="currentUserId()"
@@ -121,9 +121,11 @@ import { isTourUpcoming } from '../../tour.types';
     } @else {
       <div class="empty-state">
         <p>Diese Tour wurde nicht gefunden.</p>
-        <a routerLink="/tour-management">
-          <app-button text="Zur Tourenübersicht" variant="secondary" />
-        </a>
+        <app-button
+          text="Zur Tourenübersicht"
+          variant="secondary"
+          (clicked)="navigateToOverview()"
+        />
       </div>
     }
   `,
@@ -327,13 +329,14 @@ export class TourDetailContainer {
 
   private readonly router = inject(Router);
   private readonly tourService = inject(TourService);
-  private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
 
   readonly tourResource = this.tourService.getTourByIdResource(
     computed(() => this.tourId()),
   );
-  private readonly usersResource = this.userService.getUsersResource();
+  readonly membersResource = this.tourService.getTourMembersResource(
+    computed(() => this.tourId()),
+  );
 
   readonly isRemoving = signal(false);
   readonly removeError = signal<string | null>(null);
@@ -342,11 +345,11 @@ export class TourDetailContainer {
   readonly isLinkCopied = signal(false);
   private copyTimeout?: ReturnType<typeof setTimeout>;
 
-  readonly participants = computed(() =>
-    this.findUsers(this.tourResource.value()?.participantIds ?? []),
+  readonly participants = computed(
+    () => this.membersResource.value()?.participants ?? [],
   );
-  readonly tourManagers = computed(() =>
-    this.findUsers(this.tourResource.value()?.tourManagerIds ?? []),
+  readonly tourManagers = computed(
+    () => this.membersResource.value()?.tourManagers ?? [],
   );
   readonly currentUserId = computed(() => this.authService.currentUser()?.id);
 
@@ -385,10 +388,8 @@ export class TourDetailContainer {
     );
   });
 
-  private findUsers(ids: string[]): User[] {
-    return ids
-      .map(id => this.usersResource.value().find(user => user.id === id))
-      .filter((user): user is User => user !== undefined);
+  navigateToOverview(): void {
+    this.router.navigate(['/tour-management']);
   }
 
   openEmergencyContact(user: User): void {
@@ -407,6 +408,7 @@ export class TourDetailContainer {
     try {
       await firstValueFrom(this.tourService.joinTour(id));
       this.tourResource.reload();
+      this.membersResource.reload();
     } catch (err: any) {
       if (err?.error?.message) {
         this.joinError.set(err.error.message);
@@ -428,6 +430,7 @@ export class TourDetailContainer {
     try {
       await firstValueFrom(this.tourService.removeUser(id, user.id));
       this.tourResource.reload();
+      this.membersResource.reload();
     } catch {
       this.removeError.set('Die Person konnte nicht aus der Tour entfernt werden.');
     } finally {
@@ -456,6 +459,7 @@ export class TourDetailContainer {
       this.tourService.setUserRole(id, change.user.id, change.role),
     );
     this.tourResource.reload();
+    this.membersResource.reload();
   }
 
   async copyInviteLink(): Promise<void> {

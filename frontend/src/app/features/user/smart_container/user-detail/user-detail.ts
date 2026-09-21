@@ -6,7 +6,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.api';
 import { AuthService } from '../../../auth/services/auth.service';
 import { PersInformation } from '../../dumb_components/pers-information/pers-information';
@@ -88,9 +88,11 @@ import { User } from '../../user.types';
     } @else {
       <div class="empty-state">
         <p>Diese Person wurde nicht im System gefunden.</p>
-        <a routerLink="/tour-management">
-          <app-button text="Zurück zur Tourenübersicht" variant="secondary" />
-        </a>
+        <app-button
+          text="Zurück zur Tourenübersicht"
+          variant="secondary"
+          (clicked)="navigateToOverview()"
+        />
       </div>
     }
   `,
@@ -197,6 +199,7 @@ export class UserDetailContainer {
   readonly userId = input.required<string>();
   readonly tourId = input<string | null>(null);
 
+  private readonly router = inject(Router);
   private readonly userService = inject(UserService);
   private readonly authService = inject(AuthService);
 
@@ -213,6 +216,10 @@ export class UserDetailContainer {
     computed(() => this.userId()),
     computed(() => this.tourId()),
   );
+
+  navigateToOverview(): void {
+    this.router.navigate(['/tour-management']);
+  }
 
   startEditing(): void {
     this.errorMessage.set(null);

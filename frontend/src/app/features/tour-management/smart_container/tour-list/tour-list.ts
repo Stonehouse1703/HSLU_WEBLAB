@@ -15,12 +15,11 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
       <h2>Deine bevorstehenden Touren</h2>
 
       <div class="header-actions">
-        <a routerLink="/tour-editor">
-          <app-button
-            text="Tour erstellen"
-            variant="primary"
-          />
-        </a>
+        <app-button
+          text="Tour erstellen"
+          variant="primary"
+          (clicked)="navigateToCreateTour()"
+        />
         <app-button
           text="Per Link beitreten"
           variant="secondary"
@@ -82,9 +81,11 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
     } @else if (upcomingTours().length === 0) {
       <div class="state-message empty">
         <p>Keine bevorstehenden Touren vorhanden.</p>
-        <a routerLink="/tour-editor">
-          <app-button text="Erste Tour erstellen" variant="primary" />
-        </a>
+        <app-button
+          text="Erste Tour erstellen"
+          variant="primary"
+          (clicked)="navigateToCreateTour()"
+        />
       </div>
     } @else {
       <div class="tour-list">
@@ -253,6 +254,10 @@ export class TourList {
   readonly linkInput = signal('');
   readonly isJoining = signal(false);
   readonly joinError = signal<string | null>(null);
+
+  navigateToCreateTour(): void {
+    this.router.navigate(['/tour-editor']);
+  }
 
   toggleJoinInput(): void {
     this.showJoinInput.update(prev => !prev);

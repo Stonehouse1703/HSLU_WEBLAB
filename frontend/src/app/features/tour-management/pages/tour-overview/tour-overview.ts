@@ -21,6 +21,3 @@ import { TourList } from '../../smart_container/tour-list/tour-list';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TourOverviewPage {}
-
-// Backward compatibility alias
-export { TourOverviewPage as TourManagement };

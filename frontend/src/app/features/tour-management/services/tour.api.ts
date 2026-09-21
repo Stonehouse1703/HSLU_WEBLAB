@@ -1,6 +1,12 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable, type Signal } from '@angular/core';
 import { SecurityMatrix, Tour } from '../tour.types';
+import { User } from '../../user/user.types';
+
+export interface TourMembers {
+  tourManagers: User[];
+  participants: User[];
+}
 
 export type CreateTourInput = {
   name: string;
@@ -28,6 +34,16 @@ export class TourService {
     return httpResource<Tour[]>(
       () => `${this.tourUrl}/my-tours`,
       { defaultValue: [] },
+    );
+  }
+
+  getTourMembersResource(idSignal: Signal<string | null>) {
+    return httpResource<TourMembers>(
+      () => {
+        const id = idSignal();
+        return id ? `${this.tourUrl}/${encodeURIComponent(id)}/members` : undefined;
+      },
+      { defaultValue: { tourManagers: [], participants: [] } },
     );
   }
   createTour(tour: CreateTourInput) {

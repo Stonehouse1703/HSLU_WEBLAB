@@ -20,7 +20,11 @@ export interface UserRoleChange {
         <span class="material-icons user-icon" aria-hidden="true">
           {{ isTourManager() ? 'record_voice_over' : 'person' }}
         </span>
-        <a [routerLink]="['/user', user().id]" class="user-name">
+        <a
+          [routerLink]="['/user', user().id]"
+          [queryParams]="tourId() ? { tourId: tourId() } : null"
+          class="user-name"
+        >
           {{ user().firstName }} {{ user().lastName }}
         </a>
         <app-badge
@@ -166,6 +170,7 @@ export interface UserRoleChange {
 })
 export class UserCard {
   readonly user = input.required<User>();
+  readonly tourId = input<string | undefined>();
   readonly isTourManager = input(false);
   readonly canChangeRole = input(false);
   readonly canRemoveUser = input(false);

@@ -27,6 +27,7 @@ import { UserCard, UserRoleChange } from '../../../user/dumb_components/user-car
         @for (user of tourManagers(); track user.id) {
           <app-user-card
             [user]="user"
+            [tourId]="tourId()"
             [isTourManager]="true"
             [canChangeRole]="canChangeRoles() && user.id !== currentUserId()"
             [canRemoveUser]="canRemoveUsers() && user.id !== currentUserId()"
@@ -40,6 +41,7 @@ import { UserCard, UserRoleChange } from '../../../user/dumb_components/user-car
         @for (user of participants(); track user.id) {
           <app-user-card
             [user]="user"
+            [tourId]="tourId()"
             [canChangeRole]="canChangeRoles()"
             [canRemoveUser]="canRemoveUsers() && user.id !== currentUserId()"
             [canViewEmergencyContact]="canViewEmergencyContacts()"
@@ -81,6 +83,7 @@ export class ParticipantInformation {
   readonly participants = input.required<User[]>();
   readonly tourManagers = input.required<User[]>();
   readonly currentUserId = input<string | undefined>();
+  readonly tourId = input<string | undefined>();
   readonly canChangeRoles = input(false);
   readonly canRemoveUsers = input(false);
   readonly canViewEmergencyContacts = input(false);
