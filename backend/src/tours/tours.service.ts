@@ -77,6 +77,7 @@ export class ToursService implements OnModuleInit {
       travelRoute?: string;
       requirements?: string;
       gpxData?: string;
+      securityMatrix?: Record<string, any>;
     },
     creatorId?: string,
   ): Promise<Tour> {
@@ -98,6 +99,7 @@ export class ToursService implements OnModuleInit {
       travelRoute: data.travelRoute?.trim() ?? '',
       requirements: data.requirements?.trim() ?? '',
       gpxData: data.gpxData,
+      securityMatrix: data.securityMatrix,
       tourManagerIds: creatorId ? [creatorId] : [],
       participantIds: [],
     };
@@ -216,6 +218,7 @@ export class ToursService implements OnModuleInit {
     if (data.travelRoute !== undefined) updatePayload.travelRoute = data.travelRoute.trim();
     if (data.requirements !== undefined) updatePayload.requirements = data.requirements.trim();
     if (data.gpxData !== undefined) updatePayload.gpxData = data.gpxData;
+    if (data.securityMatrix !== undefined) updatePayload.securityMatrix = data.securityMatrix;
 
     return this.tourModel
       .findOneAndUpdate(

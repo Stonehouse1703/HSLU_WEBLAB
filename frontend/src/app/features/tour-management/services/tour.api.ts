@@ -1,6 +1,6 @@
 import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable, type Signal } from '@angular/core';
-import { Tour } from '../tour.types';
+import { SecurityMatrix, Tour } from '../tour.types';
 
 export type CreateTourInput = {
   name: string;
@@ -14,6 +14,7 @@ export type CreateTourInput = {
   travelRoute?: string;
   requirements?: string;
   gpxData?: string;
+  securityMatrix?: SecurityMatrix;
 };
 
 @Injectable({

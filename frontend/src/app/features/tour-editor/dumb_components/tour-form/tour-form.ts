@@ -11,6 +11,7 @@ import {
 import {
   AbstractControl,
   FormBuilder,
+  FormGroup,
   ReactiveFormsModule,
   ValidationErrors,
   ValidatorFn,
@@ -18,10 +19,11 @@ import {
 } from '@angular/forms';
 import { Button } from '../../../../components/button/button';
 import { InputFieldError } from '../../../../components/input-field-error/input-field-error';
-import { Tour, getTodayDateString } from '../../../tour-management/tour.types';
+import { Tour, SecurityMatrix, getTodayDateString } from '../../../tour-management/tour.types';
 import { CreateTourInput } from '../../../tour-management/services/tour.api';
 import { MeetingPointForm } from '../meeting-point-form/meeting-point-form';
 import { TourPlanningForm } from '../tour-planning-form/tour-planning-form';
+import { SecurityMatrixForm } from '../security-matrix-form/security-matrix-form';
 import { GpxUpload, GpxLoadedEvent } from '../gpx-upload/gpx-upload';
 
 export function notInPastValidator(
@@ -46,6 +48,7 @@ export function notInPastValidator(
     ReactiveFormsModule,
     MeetingPointForm,
     TourPlanningForm,
+    SecurityMatrixForm,
     GpxUpload,
     Button,
     InputFieldError,
@@ -76,6 +79,9 @@ export function notInPastValidator(
 
       <hr class="divider">
       <app-tour-planning-form [formGroup]="tourForm" [submitted]="submitted()" />
+
+      <hr class="divider">
+      <app-security-matrix-form [formGroup]="tourForm" [submitted]="submitted()" />
 
       <hr class="divider">
       <app-gpx-upload
@@ -200,6 +206,18 @@ export class TourForm {
     requirements: ['', Validators.required],
     travelRoute: ['', Validators.required],
     cost: ['', [Validators.required, Validators.min(0)]],
+    securityMatrix: this.fb.group({
+      participants: [''],
+      cloudCover: [''],
+      precipitation: [''],
+      visibility: [''],
+      wind: [''],
+      temperature2000m: [''],
+      avalancheDanger: [null as number | null],
+      dangerSources: [[] as string[]],
+      dangerLocations: [[] as string[]],
+      otherHazards: [[] as string[]],
+    }),
   });
 
   constructor() {
@@ -228,6 +246,10 @@ export class TourForm {
               ? String(tour.cost)
               : '',
         });
+
+        if (tour.securityMatrix) {
+          (this.tourForm.get('securityMatrix') as FormGroup).patchValue(tour.securityMatrix);
+        }
 
         if (tour.gpxData) {
           this.gpxData.set(tour.gpxData);
@@ -309,6 +331,42 @@ export class TourForm {
         ? Math.max(0, Math.round(Number(value.cost)))
         : 0;
 
+    const matrixValue = (this.tourForm.get('securityMatrix') as FormGroup)?.getRawValue();
+    let securityMatrix: SecurityMatrix | undefined = undefined;
+    if (
+      matrixValue &&
+      (matrixValue.participants ||
+        matrixValue.cloudCover ||
+        matrixValue.precipitation ||
+        matrixValue.visibility ||
+        matrixValue.wind ||
+        (matrixValue.temperature2000m !== undefined &&
+          matrixValue.temperature2000m !== null &&
+          String(matrixValue.temperature2000m).trim() !== '') ||
+        matrixValue.avalancheDanger ||
+        (matrixValue.dangerSources && matrixValue.dangerSources.length > 0) ||
+        (matrixValue.dangerLocations && matrixValue.dangerLocations.length > 0) ||
+        (matrixValue.otherHazards && matrixValue.otherHazards.length > 0))
+    ) {
+      securityMatrix = {
+        participants: matrixValue.participants || undefined,
+        cloudCover: matrixValue.cloudCover || undefined,
+        precipitation: matrixValue.precipitation || undefined,
+        visibility: matrixValue.visibility || undefined,
+        wind: matrixValue.wind || undefined,
+        temperature2000m:
+          matrixValue.temperature2000m !== undefined &&
+          matrixValue.temperature2000m !== null &&
+          String(matrixValue.temperature2000m).trim() !== ''
+            ? String(matrixValue.temperature2000m)
+            : undefined,
+        avalancheDanger: matrixValue.avalancheDanger ? Number(matrixValue.avalancheDanger) : undefined,
+        dangerSources: matrixValue.dangerSources?.length ? matrixValue.dangerSources : undefined,
+        dangerLocations: matrixValue.dangerLocations?.length ? matrixValue.dangerLocations : undefined,
+        otherHazards: matrixValue.otherHazards?.length ? matrixValue.otherHazards : undefined,
+      };
+    }
+
     this.onFormSubmit.emit({
       name,
       date,
@@ -321,6 +379,7 @@ export class TourForm {
       travelRoute,
       cost: costVal,
       gpxData: this.gpxData() ?? undefined,
+      securityMatrix,
     });
   }
 }

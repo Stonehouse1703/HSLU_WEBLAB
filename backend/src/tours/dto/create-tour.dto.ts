@@ -10,4 +10,5 @@ export class CreateTourDto {
   travelRoute?: string;
   requirements?: string;
   gpxData?: string;
+  securityMatrix?: Record<string, any>;
 }

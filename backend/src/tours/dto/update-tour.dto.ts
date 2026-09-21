@@ -10,4 +10,5 @@ export class UpdateTourDto {
   travelRoute?: string;
   requirements?: string;
   gpxData?: string;
+  securityMatrix?: Record<string, any>;
 }

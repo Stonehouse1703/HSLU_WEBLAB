@@ -8,6 +8,7 @@ import { User } from '../../../user/user.types';
 import { UserRoleChange } from '../../../user/dumb_components/user-card/user-card';
 import { MeetingPoint } from '../../dumb_components/meeting-point/meeting-point';
 import { TourInformation } from '../../dumb_components/tour-information/tour-information';
+import { SecurityMatrixDisplay } from '../../dumb_components/security-matrix-display/security-matrix-display';
 import { ParticipantInformation } from '../../dumb_components/participant/participant';
 import { LoadingSpinner } from '../../../../components/loading-spinner/loading-spinner';
 import { Button } from '../../../../components/button/button';
@@ -18,6 +19,7 @@ import { isTourUpcoming } from '../../tour.types';
   imports: [
     MeetingPoint,
     TourInformation,
+    SecurityMatrixDisplay,
     ParticipantInformation,
     LoadingSpinner,
     Button,
@@ -98,6 +100,9 @@ import { isTourUpcoming } from '../../tour.types';
       <div class="detail-grid">
         <app-meeting-point [tour]="selectedTour" />
         <app-tour-information [tour]="selectedTour" />
+        @if (selectedTour.securityMatrix) {
+          <app-security-matrix-display [matrix]="selectedTour.securityMatrix" />
+        }
         <app-participant-information
           [participants]="participants()"
           [tourManagers]="tourManagers()"

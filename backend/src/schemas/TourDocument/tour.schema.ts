@@ -41,6 +41,9 @@ export class Tour {
   @Prop({ type: String, required: false })
   gpxData?: string;
 
+  @Prop({ type: Object, required: false })
+  securityMatrix?: Record<string, any>;
+
   @Prop({ type: [String], required: true, default: [] })
   tourManagerIds: string[];
 
