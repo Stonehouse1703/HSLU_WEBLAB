@@ -35,7 +35,7 @@ export interface TokenPayload {
 
 export function generateToken(payload: TokenPayload): string {
   const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
-  const exp = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days
+  const exp = Date.now() + 60 * 60 * 1000; // 1 hour
   const body = Buffer.from(JSON.stringify({ ...payload, exp })).toString('base64url');
   const signature = createHmac('sha256', JWT_SECRET).update(`${header}.${body}`).digest('base64url');
   return `${header}.${body}.${signature}`;
