@@ -3,13 +3,24 @@ import { TourList } from '../../smart_container/tour-list/tour-list';
 
 @Component({
   selector: 'app-tour-overview',
-  imports: [
-    TourList,
-  ],
+  imports: [TourList],
   template: `
-  <app-tour-list/>
+    <main class="tour-overview-page">
+      <app-tour-list />
+    </main>
   `,
-  styles: '',
+  styles: `
+    :host {
+      display: block;
+    }
+
+    .tour-overview-page {
+      display: block;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TourManagement {}
+export class TourOverviewPage {}
+
+// Backward compatibility alias
+export { TourOverviewPage as TourManagement };

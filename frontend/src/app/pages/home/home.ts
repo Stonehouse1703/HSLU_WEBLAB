@@ -61,6 +61,19 @@ import { RouterLink } from '@angular/router';
           </article>
         </div>
       </section>
+
+      <div class="next-step">
+        <div>
+          <span class="material-icons" aria-hidden="true">hiking</span>
+          <div>
+            <h2>Tourplanung starten</h2>
+            <p>Erstelle in wenigen Schritten eine neue Tour und lade Teilnehmende ein.</p>
+          </div>
+        </div>
+        <a class="secondary-action" routerLink="/tour-editor">
+          Neue Tour erstellen
+        </a>
+      </div>
     </main>
   `,
   styles: `
@@ -85,6 +98,7 @@ import { RouterLink } from '@angular/router';
       color: #fff;
       background: #253c38;
       overflow: hidden;
+      box-shadow: 0 4px 20px rgb(37 60 56 / 15%);
     }
 
     .intro-copy {
@@ -114,6 +128,7 @@ import { RouterLink } from '@angular/router';
       font-size: clamp(2.2rem, 5vw, 4.5rem);
       font-weight: 500;
       line-height: 1.04;
+      color: #fff;
     }
 
     .intro p {
@@ -131,6 +146,7 @@ import { RouterLink } from '@angular/router';
       border-radius: 8px;
       font-weight: 500;
       text-decoration: none;
+      transition: filter 0.15s ease, transform 0.1s ease;
     }
 
     .primary-action {
@@ -142,6 +158,7 @@ import { RouterLink } from '@angular/router';
     .primary-action:hover,
     .secondary-action:hover {
       filter: brightness(1.06);
+      transform: translateY(-1px);
     }
 
     .intro-mark {
@@ -178,7 +195,7 @@ import { RouterLink } from '@angular/router';
     .feature-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1rem;
+      gap: 1.25rem;
     }
 
     .feature-card {
@@ -190,6 +207,12 @@ import { RouterLink } from '@angular/router';
       border: 1px solid #d9ded8;
       border-radius: 12px;
       background: #fff;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgb(30 25 60 / 6%);
     }
 
     .feature-card--accent {
@@ -222,6 +245,10 @@ import { RouterLink } from '@angular/router';
       font-size: 0.9rem;
       font-weight: 600;
       text-decoration: none;
+    }
+
+    .feature-card a:hover {
+      text-decoration: underline;
     }
 
     .feature-card a span {

@@ -2,16 +2,17 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { TourService } from '../../services/tour.api';
-import { TourPreview } from '../../dumb_components/tour-list/tour-detail';
+import { TourPreview } from '../../dumb_components/tour-preview/tour-preview';
 import { Button } from '../../../../components/button/button';
+import { LoadingSpinner } from '../../../../components/loading-spinner/loading-spinner';
 import { getTodayDateString, isTourUpcoming } from '../../tour.types';
 
 @Component({
   selector: 'app-tour-list',
-  imports: [TourPreview, RouterLink, Button],
+  imports: [TourPreview, RouterLink, Button, LoadingSpinner],
   template: `
     <div class="list-header">
-      <h2>Deine bevorstehenden Touren:</h2>
+      <h2>Deine bevorstehenden Touren</h2>
 
       <div class="header-actions">
         <a routerLink="/tour-editor">
@@ -73,11 +74,18 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
     }
 
     @if (toursResource.isLoading()) {
-      <p>Touren werden geladen ...</p>
+      <app-loading-spinner label="Touren werden geladen..." />
     } @else if (toursResource.error()) {
-      <p>Die Touren konnten nicht geladen werden.</p>
+      <div class="state-message error" role="alert">
+        <p>Die Touren konnten leider nicht geladen werden. Bitte versuche es später nochmals.</p>
+      </div>
     } @else if (upcomingTours().length === 0) {
-      <p>Keine bevorstehenden Touren vorhanden.</p>
+      <div class="state-message empty">
+        <p>Keine bevorstehenden Touren vorhanden.</p>
+        <a routerLink="/tour-editor">
+          <app-button text="Erste Tour erstellen" variant="primary" />
+        </a>
+      </div>
     } @else {
       <div class="tour-list">
         @for (tour of upcomingTours(); track tour.id) {
@@ -87,6 +95,10 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
     }
   `,
   styles: `
+    :host {
+      display: block;
+    }
+
     .list-header {
       display: flex;
       justify-content: space-between;
@@ -101,6 +113,10 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
       color: #25252d;
       font-size: clamp(1.4rem, 3.5vw, 1.85rem);
       font-weight: 500;
+    }
+
+    .list-header a {
+      text-decoration: none;
     }
 
     .header-actions {
@@ -183,7 +199,29 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
     .tour-list {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.75rem;
+    }
+
+    .state-message {
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #e2e1e8;
+    }
+
+    .state-message.error {
+      color: #b3261e;
+      border-color: #f87171;
+      background: #fff5f5;
+    }
+
+    .state-message.empty {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      color: #65636d;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -242,16 +280,13 @@ export class TourList {
     const trimmed = raw.trim();
     if (!trimmed) return null;
 
-    // Remove query params and hashes first if present
     const clean = trimmed.split('?')[0].split('#')[0].replace(/\/+$/, '');
 
-    // Case 1: contains tour-management/<id>
     const match = clean.match(/tour-management\/([a-zA-Z0-9_-]+)/i);
     if (match && match[1]) {
       return match[1];
     }
 
-    // Case 2: URL ending with an id
     if (clean.includes('://')) {
       try {
         const url = new URL(clean);
@@ -263,11 +298,10 @@ export class TourList {
           }
         }
       } catch {
-        // ignore URL parse errors
+        // ignore parse error
       }
     }
 
-    // Case 3: Raw ID (alphanumeric, hyphens, underscores)
     if (/^[a-zA-Z0-9_-]+$/.test(clean)) {
       return clean;
     }

@@ -3,20 +3,25 @@ import { User } from '../../user.types';
 import { Card } from '../../../../components/card/card';
 import { InfoItem } from '../../../../components/info-item/info-item';
 
-
 @Component({
   selector: 'app-pers-information',
-  imports: [
-    Card, InfoItem],
+  imports: [Card, InfoItem],
   template: `
-    <app-card title="Persönliche Informationen">
-          <dl class="info-list">
-            <app-info-item icon="cake" title="Geburtsdatum" [description]="person().birthday" />
-            <app-info-item icon="phone" title="Telefonnummer" [description]="person().phoneNumber" />
-          </dl>
-        </app-card>
+    <app-card title="Persönliche Angaben">
+      <dl class="info-list">
+        <app-info-item icon="cake" title="Geburtsdatum" [description]="person().birthday" />
+        <app-info-item icon="phone" title="Telefonnummer" [description]="person().phoneNumber" />
+      </dl>
+    </app-card>
   `,
-  styles: ``,
+  styles: `
+    .info-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.25rem;
+      margin: 0;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PersInformation {

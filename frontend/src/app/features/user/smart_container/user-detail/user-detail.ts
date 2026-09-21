@@ -6,50 +6,66 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.api';
 import { AuthService } from '../../../auth/services/auth.service';
 import { PersInformation } from '../../dumb_components/pers-information/pers-information';
 import { EmergInformation } from '../../dumb_components/emerg-information/emerg-information';
 import { EditProfileForm } from '../../dumb_components/edit-profile-form/edit-profile-form';
+import { LoadingSpinner } from '../../../../components/loading-spinner/loading-spinner';
+import { Button } from '../../../../components/button/button';
 import { Card } from '../../../../components/card/card';
 import { User } from '../../user.types';
 
 @Component({
   selector: 'app-user-detail-container',
-  imports: [PersInformation, EmergInformation, EditProfileForm, Card],
+  imports: [
+    PersInformation,
+    EmergInformation,
+    EditProfileForm,
+    LoadingSpinner,
+    Button,
+    Card,
+    RouterLink,
+  ],
   template: `
+    <div class="navigation-bar">
+      <a [routerLink]="tourId() ? ['/tour-management', tourId()] : '/tour-management'" class="back-link">
+        <span class="material-icons" aria-hidden="true">arrow_back</span>
+        {{ tourId() ? 'Zurück zur Tour' : 'Zurück zur Übersicht' }}
+      </a>
+    </div>
+
     @if (errorMessage()) {
-      <p class="error-banner" role="alert">{{ errorMessage() }}</p>
+      <div class="error-banner" role="alert">{{ errorMessage() }}</div>
     }
     @if (successMessage()) {
-      <p class="success-banner" role="status">{{ successMessage() }}</p>
+      <div class="success-banner" role="status">{{ successMessage() }}</div>
     }
 
     @if (userResource.isLoading()) {
-      <p>Person wird geladen ...</p>
+      <app-loading-spinner label="Personendaten werden geladen..." />
     } @else if (userResource.error()) {
-      <p class="error-banner">Die Person konnte nicht geladen werden.</p>
+      <div class="error-banner" role="alert">
+        Die Person konnte nicht geladen werden. Bitte versuche es später nochmals.
+      </div>
     } @else if (userResource.value(); as selectedUser) {
       <header class="page-header">
         <div class="header-row">
           <div>
             <span class="eyebrow">
-              {{ isOwnProfile() ? 'Mein Profil' : 'Personendetails' }}
+              {{ isOwnProfile() ? 'Mein Profil' : 'Personendetails & Sicherheitsdaten' }}
             </span>
-            <h1>{{ selectedUser.firstName }} {{ selectedUser.lastName }}</h1>
+            <h2>{{ selectedUser.firstName }} {{ selectedUser.lastName }}</h2>
           </div>
 
           @if (isOwnProfile() && !isEditing()) {
-            <button
-              type="button"
-              class="edit-button"
-              (click)="startEditing()"
-              title="Profil & Notfallkontakt bearbeiten"
-              aria-label="Profil & Notfallkontakt bearbeiten"
-            >
-              <span class="material-icons" aria-hidden="true">edit</span>
-              <span>Bearbeiten</span>
-            </button>
+            <app-button
+              text="Profil bearbeiten"
+              variant="secondary"
+              ariaLabel="Profil und Notfallkontakt bearbeiten"
+              (clicked)="startEditing()"
+            />
           }
         </div>
       </header>
@@ -70,12 +86,39 @@ import { User } from '../../user.types';
         </div>
       }
     } @else {
-      <p>Diese Person wurde nicht gefunden.</p>
+      <div class="empty-state">
+        <p>Diese Person wurde nicht im System gefunden.</p>
+        <a routerLink="/tour-management">
+          <app-button text="Zurück zur Tourenübersicht" variant="secondary" />
+        </a>
+      </div>
     }
   `,
   styles: `
     :host {
       display: block;
+    }
+
+    .navigation-bar {
+      margin-bottom: 1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: #4f46a5;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .back-link .material-icons {
+      font-size: 1.1rem;
     }
 
     .page-header {
@@ -85,8 +128,9 @@ import { User } from '../../user.types';
     .header-row {
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       gap: 1rem;
+      flex-wrap: wrap;
     }
 
     .eyebrow {
@@ -94,57 +138,23 @@ import { User } from '../../user.types';
       margin-bottom: 0.35rem;
       color: #65636d;
       font-size: 0.8rem;
-      font-weight: 500;
+      font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    h1 {
+    h2 {
       margin: 0;
       color: #25252d;
       font-size: clamp(1.6rem, 4vw, 2.25rem);
       font-weight: 500;
     }
 
-    .edit-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.6rem 1rem;
-      border: 1px solid #c8c6d0;
-      border-radius: 8px;
-      background: #fff;
-      color: #4f46a5;
-      font-weight: 500;
-      font-size: 0.9rem;
-      cursor: pointer;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      transition:
-        background-color 0.15s ease,
-        border-color 0.15s ease,
-        box-shadow 0.15s ease;
-    }
-
-    .edit-button:hover {
-      background: #f4f3ff;
-      border-color: #4f46a5;
-      box-shadow: 0 2px 6px rgb(79 70 165 / 15%);
-    }
-
-    .edit-button .material-icons {
-      font-size: 1.2rem;
-    }
-
     .detail-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1rem;
+      gap: 1.25rem;
       align-items: stretch;
-    }
-
-    app-pers-information,
-    app-emerg-information {
-      display: grid;
     }
 
     .error-banner {
@@ -154,6 +164,7 @@ import { User } from '../../user.types';
       color: #991b1b;
       background-color: #fee2e2;
       border: 1px solid #f87171;
+      font-size: 0.875rem;
     }
 
     .success-banner {
@@ -163,6 +174,15 @@ import { User } from '../../user.types';
       color: #166534;
       background-color: #dcfce7;
       border: 1px solid #86efac;
+      font-size: 0.875rem;
+    }
+
+    .empty-state {
+      padding: 3rem 1rem;
+      text-align: center;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #e2e1e8;
     }
 
     @media (max-width: 700px) {

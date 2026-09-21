@@ -8,7 +8,7 @@ import { MapComponent } from '../map/map';
   selector: 'app-tour-information',
   imports: [Card, InfoItem, MapComponent],
   template: `
-    <app-card title="Tourinformationen">
+    <app-card title="Tourinformationen & Anforderungen">
       <div class="tour-content" [class.has-map]="!!tour().gpxData">
         <div class="info-pane">
           <dl class="tour-info">
@@ -88,8 +88,8 @@ import { MapComponent } from '../map/map';
 
     .tour-info {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
       margin: 0;
     }
 
@@ -100,7 +100,7 @@ import { MapComponent } from '../map/map';
     @media (max-width: 768px) {
       .tour-content.has-map {
         grid-template-columns: 1fr;
-        gap: 1rem;
+        gap: 1.25rem;
       }
     }
   `,

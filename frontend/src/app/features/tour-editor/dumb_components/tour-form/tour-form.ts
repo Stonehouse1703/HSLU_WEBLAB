@@ -17,11 +17,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { Button } from '../../../../components/button/button';
+import { InputFieldError } from '../../../../components/input-field-error/input-field-error';
+import { Tour, getTodayDateString } from '../../../tour-management/tour.types';
 import { CreateTourInput } from '../../../tour-management/services/tour.api';
-import { Tour } from '../../../tour-management/tour.types';
-import { getTodayDateString, MeetingPoint } from '../meetingPoint/meetingPoint';
-import { TourPlaning } from '../tourPlaning/tourPlaning';
-import { GpxLoadedEvent, GpxUpload } from '../gpx-upload/gpx-upload';
+import { MeetingPointForm } from '../meeting-point-form/meeting-point-form';
+import { TourPlanningForm } from '../tour-planning-form/tour-planning-form';
+import { GpxUpload, GpxLoadedEvent } from '../gpx-upload/gpx-upload';
 
 export function notInPastValidator(
   originalDateGetter?: () => string | undefined,
@@ -41,7 +42,14 @@ export function notInPastValidator(
 
 @Component({
   selector: 'app-tour-form',
-  imports: [ReactiveFormsModule, MeetingPoint, TourPlaning, GpxUpload, Button],
+  imports: [
+    ReactiveFormsModule,
+    MeetingPointForm,
+    TourPlanningForm,
+    GpxUpload,
+    Button,
+    InputFieldError,
+  ],
   template: `
     <form [formGroup]="tourForm" (ngSubmit)="submitForm()" novalidate>
       <div class="field">
@@ -50,31 +58,26 @@ export function notInPastValidator(
           id="name"
           type="text"
           formControlName="name"
-          placeholder="z.B. Pazolastock"
-          [class.input-error]="isInvalid('name')"
+          placeholder="z.B. Pazolastock Skitour"
+          [class.has-error]="isInvalid('name')"
+        >
+        <app-input-field-error
+          [formField]="tourForm.get('name')"
+          [submitted]="submitted()"
         />
-        @if (isInvalid('name')) {
-          <span class="field-error">
-            @if (tourForm.get('name')?.hasError('required')) {
-              Bitte einen Tournamen eingeben.
-            } @else if (tourForm.get('name')?.hasError('minlength')) {
-              Der Tourname muss mindestens 3 Zeichen lang sein.
-            }
-          </span>
-        }
       </div>
 
-      <hr class="divider" />
-      <app-meeting-point
+      <hr class="divider">
+      <app-meeting-point-form
         [formGroup]="tourForm"
-        [submitted]="submitted"
+        [submitted]="submitted()"
         [minDate]="effectiveMinDate()"
       />
 
-      <hr class="divider" />
-      <app-tour-planing [formGroup]="tourForm" [submitted]="submitted" />
+      <hr class="divider">
+      <app-tour-planning-form [formGroup]="tourForm" [submitted]="submitted()" />
 
-      <hr class="divider" />
+      <hr class="divider">
       <app-gpx-upload
         [initialGpx]="gpxData()"
         (gpxLoaded)="onGpxLoaded($event)"
@@ -86,7 +89,7 @@ export function notInPastValidator(
           type="submit"
           [text]="submitButtonText()"
           variant="primary"
-          [disabled]="isSubmitting() || tourForm.invalid"
+          [disabled]="isSubmitting() || (submitted() && tourForm.invalid)"
         />
         @if (showCancelButton()) {
           <app-button
@@ -105,64 +108,58 @@ export function notInPastValidator(
     }
 
     form {
-      display: block;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
     }
 
     .field {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
+      gap: 0.35rem;
     }
 
     .field label {
-      color: #253c38;
-      font-weight: 600;
+      color: #25252d;
+      font-weight: 500;
+      font-size: 0.875rem;
     }
 
     .field input {
       width: 100%;
       box-sizing: border-box;
-      padding: 0.75rem 0.875rem;
-      border: 1px solid #d0d5dd;
-      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid #c8c6d0;
+      border-radius: 8px;
       background: #fff;
       font: inherit;
-      transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background-color 0.2s ease;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     .field input:focus {
       border-color: #4f46a5;
-      box-shadow: 0 0 0 3px rgb(79 70 165 / 10%);
-      outline: none;
+      box-shadow: 0 0 0 3px rgba(79, 70, 165, 0.12);
     }
 
     .divider {
       border: none;
-      border-top: 1px solid #e5e7eb;
-      margin: 1.5rem 0;
+      border-top: 1px solid #e2e1e8;
+      margin: 0.5rem 0;
     }
 
     .actions {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      margin-top: 1.5rem;
+      margin-top: 0.5rem;
+      flex-wrap: wrap;
     }
 
-    .input-error {
-      border-color: #dc2626 !important;
-      background: #fff5f5;
-      box-shadow: 0 0 0 3px rgb(220 38 38 / 8%);
-    }
-
-    .field-error {
-      color: #dc2626;
-      font-size: 0.8rem;
-      font-weight: 500;
+    .has-error {
+      border-color: #b3261e !important;
+      background: #fff8f8;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -177,7 +174,7 @@ export class TourForm {
   readonly onFormSubmit = output<CreateTourInput>();
   readonly cancelClicked = output<void>();
 
-  submitted = false;
+  readonly submitted = signal(false);
   readonly gpxData = signal<string | null>(null);
 
   readonly effectiveMinDate = computed(() => {
@@ -217,10 +214,10 @@ export class TourForm {
           : '';
 
         this.tourForm.patchValue({
-          name: tour.name,
-          date: tour.date,
-          time: tour.time,
-          place: tour.location,
+          name: tour.name ?? '',
+          date: tour.date ?? '',
+          time: tour.time ?? '',
+          place: tour.location ?? '',
           altitude: cleanAltitude,
           distance: cleanDistance,
           difficulty: tour.difficulty ?? '',
@@ -241,7 +238,7 @@ export class TourForm {
 
   isInvalid(controlName: string): boolean {
     const control = this.tourForm.get(controlName);
-    return !!control && control.invalid && (control.touched || this.submitted);
+    return !!control && control.invalid && (control.touched || this.submitted());
   }
 
   onGpxLoaded(event: GpxLoadedEvent): void {
@@ -283,7 +280,7 @@ export class TourForm {
       return;
     }
 
-    this.submitted = true;
+    this.submitted.set(true);
     this.tourForm.markAllAsTouched();
 
     if (this.tourForm.invalid) {
@@ -297,7 +294,9 @@ export class TourForm {
     const place = value.place?.trim() ?? '';
     const altitude = Number(value.altitude ?? 0);
     const distanceVal =
-      value.distance !== null && value.distance !== undefined && value.distance !== ''
+      value.distance !== null &&
+      value.distance !== undefined &&
+      value.distance !== ''
         ? `${value.distance} km`
         : '';
     const difficulty = value.difficulty ?? '';

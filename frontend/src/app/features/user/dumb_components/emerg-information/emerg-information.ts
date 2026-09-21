@@ -7,19 +7,34 @@ import { User } from '../../user.types';
   selector: 'app-emerg-information',
   imports: [Card, InfoItem],
   template: `
-  <app-card title="Notfallkontakt">
-    <dl class="info-list">
-      <app-info-item
-        icon="person"
-        title="Name"
-        [description]="person().emergencyContact.firstName + ' ' + person().emergencyContact.lastName"
-      />
-      <app-info-item icon="phone_in_talk" title="Telefonnummer" [description]="person().emergencyContact.phoneNumber" />
-      <app-info-item icon="family_restroom" title="Beziehung" [description]="person().emergencyContact.relationship" />
-    </dl>
-  </app-card>
+    <app-card title="Notfallkontakt">
+      <dl class="info-list">
+        <app-info-item
+          icon="person"
+          title="Kontaktperson"
+          [description]="person().emergencyContact.firstName + ' ' + person().emergencyContact.lastName"
+        />
+        <app-info-item
+          icon="phone_in_talk"
+          title="Telefonnummer"
+          [description]="person().emergencyContact.phoneNumber"
+        />
+        <app-info-item
+          icon="family_restroom"
+          title="Beziehung / Rolle"
+          [description]="person().emergencyContact.relationship"
+        />
+      </dl>
+    </app-card>
   `,
-  styles: ``,
+  styles: `
+    .info-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.25rem;
+      margin: 0;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmergInformation {

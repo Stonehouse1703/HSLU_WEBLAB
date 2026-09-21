@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { Button } from '../../../../components/button/button';
+import { InputFieldError } from '../../../../components/input-field-error/input-field-error';
 
 @Component({
   selector: 'app-login-form',
-  imports: [ReactiveFormsModule, RouterLink, Button],
+  imports: [ReactiveFormsModule, RouterLink, Button, InputFieldError],
   template: `
     <form [formGroup]="loginForm" (ngSubmit)="submitForm()" novalidate>
       <div class="field">
@@ -15,17 +16,12 @@ import { Button } from '../../../../components/button/button';
           type="email"
           formControlName="email"
           placeholder="z.B. colin@muster.ch"
-          [class.input-error]="isInvalid('email')"
+          [class.has-error]="isInvalid('email')"
         >
-        @if (isInvalid('email')) {
-          <span class="field-error">
-            @if (loginForm.get('email')?.hasError('required')) {
-              Bitte eine E-Mail-Adresse eingeben.
-            } @else if (loginForm.get('email')?.hasError('email')) {
-              Bitte eine gültige E-Mail-Adresse eingeben.
-            }
-          </span>
-        }
+        <app-input-field-error
+          [formField]="loginForm.get('email')"
+          [submitted]="submitted()"
+        />
       </div>
 
       <div class="field">
@@ -35,11 +31,12 @@ import { Button } from '../../../../components/button/button';
           type="password"
           formControlName="password"
           placeholder="Dein Passwort"
-          [class.input-error]="isInvalid('password')"
+          [class.has-error]="isInvalid('password')"
         >
-        @if (isInvalid('password')) {
-          <span class="field-error">Bitte Passwort eingeben.</span>
-        }
+        <app-input-field-error
+          [formField]="loginForm.get('password')"
+          [submitted]="submitted()"
+        />
       </div>
 
       <div class="actions">
@@ -47,7 +44,7 @@ import { Button } from '../../../../components/button/button';
           type="submit"
           text="Anmelden"
           variant="primary"
-          [disabled]="isSubmitting() || loginForm.invalid"
+          [disabled]="isSubmitting() || (submitted() && loginForm.invalid)"
         />
 
         <a routerLink="/register" class="register-switch-link">
@@ -70,50 +67,40 @@ import { Button } from '../../../../components/button/button';
     .field {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      gap: 0.35rem;
     }
 
     .field label {
-      color: #253c38;
-      font-weight: 600;
+      color: #25252d;
+      font-weight: 500;
+      font-size: 0.875rem;
     }
 
     .field input {
       width: 100%;
       box-sizing: border-box;
-      padding: 0.75rem 0.875rem;
-      border: 1px solid #d0d5dd;
-      border-radius: 10px;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid #c8c6d0;
+      border-radius: 8px;
       background: #fff;
       font: inherit;
-      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     .field input:focus {
       border-color: #4f46a5;
-      box-shadow: 0 0 0 3px rgb(79 70 165 / 10%);
-      outline: none;
-    }
-
-    .input-error {
-      border-color: #dc2626 !important;
-      background: #fff5f5;
-      box-shadow: 0 0 0 3px rgb(220 38 38 / 8%);
-    }
-
-    .field-error {
-      color: #dc2626;
-      font-size: 0.8rem;
-      font-weight: 500;
+      box-shadow: 0 0 0 3px rgba(79, 70, 165, 0.12);
     }
 
     .actions {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      flex-wrap: wrap;
       gap: 1rem;
       margin-top: 0.5rem;
+      flex-wrap: wrap;
     }
 
     .register-switch-link {
@@ -127,6 +114,11 @@ import { Button } from '../../../../components/button/button';
     .register-switch-link:hover {
       text-decoration: underline;
     }
+
+    .has-error {
+      border-color: #b3261e !important;
+      background: #fff8f8;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -136,7 +128,7 @@ export class LoginForm {
   readonly isSubmitting = input(false);
   readonly onFormSubmit = output<{ email: string; password: string }>();
 
-  submitted = false;
+  readonly submitted = signal(false);
 
   readonly loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -145,7 +137,7 @@ export class LoginForm {
 
   isInvalid(controlName: string): boolean {
     const control = this.loginForm.get(controlName);
-    return !!control && control.invalid && (control.touched || this.submitted);
+    return !!control && control.invalid && (control.touched || this.submitted());
   }
 
   submitForm(): void {
@@ -153,7 +145,7 @@ export class LoginForm {
       return;
     }
 
-    this.submitted = true;
+    this.submitted.set(true);
     this.loginForm.markAllAsTouched();
 
     if (this.loginForm.invalid) {

@@ -17,7 +17,6 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
-    # Documents the internal API Port of the container - does not publish it to the host
     expose:
       - "4566"
     environment:
@@ -31,18 +30,15 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-    # Enable if needed: Exposes the containers internal Port 4566 to the host system through port 8080
-    #ports:
-    #  - "8080:4566" # if internal port needs to be mapped to a port on the host system
+
 
   frontend:
     container_name: HSLU_WEBLAB_frontend
     build:
       context: .
       dockerfile: frontend/Dockerfile
-    # Exposes the containers internal Port 80 (right) to the host system through port 80 (left)
     ports:
-      - "80:80" # exposes port 80 to the host system
+      - "80:80"
     depends_on:
       backend:
         condition: service_healthy

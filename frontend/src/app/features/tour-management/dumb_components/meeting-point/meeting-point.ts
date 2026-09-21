@@ -5,55 +5,41 @@ import { InfoItem } from '../../../../components/info-item/info-item';
 
 @Component({
   selector: 'app-meeting-point',
-  imports: [
-    Card,
-    InfoItem
-  ],
+  imports: [Card, InfoItem],
   template: `
-    <app-card title="Treffpunkt">
-      <dl class="tour-info">   
-             
+    <app-card title="Treffpunkt & Zeit">
+      <dl class="tour-info">
         <app-info-item
           icon="date_range"
           title="Datum"
           [description]="tour().date"
         />
-
         <app-info-item
           icon="access_time"
           title="Zeit"
           [description]="tour().time"
         />
-
         <app-info-item
           icon="location_on"
-          title="Treffpunkt"
+          title="Ort"
           [description]="tour().location"
         />
       </dl>
     </app-card>
   `,
-  styles: `  
-
-    .info-item:nth-child(2) {
-      justify-items: center;
-      text-align: center;
-    }
-
-    .info-item:nth-child(3) {
-      justify-items: end;
-      text-align: right;
+  styles: `
+    .tour-info {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.25rem;
+      margin: 0;
+      align-items: center;
     }
 
     @media (max-width: 560px) {
       .tour-info {
         grid-template-columns: 1fr;
-      }
-
-      .info-item:nth-child(2),
-      .info-item:nth-child(3) {
-        justify-items: start;
-        text-align: left;
+        gap: 0.75rem;
       }
     }
   `,

@@ -18,11 +18,11 @@ export class UserService {
 
   getUserByIdResource(
     idSignal: Signal<string | null>,
-    tourIdSignal: Signal<string | null>,
+    tourIdSignal?: Signal<string | null>,
   ) {
     return httpResource<User>(() => {
       const id = idSignal();
-      const tourId = tourIdSignal();
+      const tourId = tourIdSignal ? tourIdSignal() : null;
       if (!id) return undefined;
       return tourId
         ? `/api/tours/${encodeURIComponent(tourId)}/users/${encodeURIComponent(id)}/emergency-contact`

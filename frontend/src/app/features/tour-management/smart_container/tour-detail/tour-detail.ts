@@ -1,38 +1,55 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { TourService } from '../../services/tour.api';
 import { UserService } from '../../../user/services/user.api';
+import { AuthService } from '../../../auth/services/auth.service';
 import { User } from '../../../user/user.types';
 import { UserRoleChange } from '../../../user/dumb_components/user-card/user-card';
-import { AuthService } from '../../../auth/services/auth.service';
 import { MeetingPoint } from '../../dumb_components/meeting-point/meeting-point';
 import { TourInformation } from '../../dumb_components/tour-information/tour-information';
 import { ParticipantInformation } from '../../dumb_components/participant/participant';
+import { LoadingSpinner } from '../../../../components/loading-spinner/loading-spinner';
 import { Button } from '../../../../components/button/button';
 import { isTourUpcoming } from '../../tour.types';
 
 @Component({
   selector: 'app-tour-detail-container',
-  imports: [MeetingPoint, TourInformation, ParticipantInformation, Button],
+  imports: [
+    MeetingPoint,
+    TourInformation,
+    ParticipantInformation,
+    LoadingSpinner,
+    Button,
+    RouterLink,
+  ],
   template: `
     @if (isRemoving()) {
-      <p role="status">Person wird aus der Tour entfernt ...</p>
+      <div class="status-banner" role="status">Person wird aus der Tour entfernt ...</div>
     } @else if (removeError()) {
-      <p role="alert">{{ removeError() }}</p>
+      <div class="error-banner" role="alert">{{ removeError() }}</div>
     } @else if (joinError()) {
-      <p role="alert">{{ joinError() }}</p>
+      <div class="error-banner" role="alert">{{ joinError() }}</div>
     }
 
     @if (tourResource.isLoading()) {
-      <p>Tour wird geladen ...</p>
+      <app-loading-spinner label="Tourdaten werden geladen..." />
     } @else if (tourResource.error()) {
-      <p>Die Tour konnte nicht geladen werden.</p>
+      <div class="error-banner" role="alert">
+        Die Tour konnte leider nicht geladen werden.
+      </div>
     } @else if (tourResource.value(); as selectedTour) {
       <header class="tour-header">
+        <div class="header-nav">
+          <a routerLink="/tour-management" class="back-link">
+            <span class="material-icons" aria-hidden="true">arrow_back</span>
+            Zurück zur Tourenübersicht
+          </a>
+        </div>
+
         <div class="tour-header-top">
           <div class="header-titles">
-            <span class="eyebrow">Tourdetails</span>
+            <span class="eyebrow">Tourdetails & Planung</span>
             <h2>{{ selectedTour.name }}</h2>
           </div>
 
@@ -70,7 +87,7 @@ import { isTourUpcoming } from '../../tour.types';
                 (clicked)="joinTour()"
               />
             } @else if (isJoining()) {
-              <p role="status">Tour wird beigetreten ...</p>
+              <span class="joining-indicator" role="status">Tour wird beigetreten ...</span>
             } @else if (isPastTour() && !isMember()) {
               <span class="past-tour-badge">Diese Tour ist bereits vergangen</span>
             }
@@ -97,7 +114,12 @@ import { isTourUpcoming } from '../../tour.types';
         />
       </div>
     } @else {
-      <p>Diese Tour wurde nicht gefunden.</p>
+      <div class="empty-state">
+        <p>Diese Tour wurde nicht gefunden.</p>
+        <a routerLink="/tour-management">
+          <app-button text="Zur Tourenübersicht" variant="secondary" />
+        </a>
+      </div>
     }
   `,
   styles: `
@@ -109,15 +131,55 @@ import { isTourUpcoming } from '../../tour.types';
       margin-bottom: 1.5rem;
     }
 
+    .header-nav {
+      margin-bottom: 0.75rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: #4f46a5;
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .back-link .material-icons {
+      font-size: 1.1rem;
+    }
+
     .tour-header-top {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 1rem;
+      flex-wrap: wrap;
     }
 
     .header-titles {
       min-width: 0;
+    }
+
+    .eyebrow {
+      display: block;
+      margin-bottom: 0.35rem;
+      color: #65636d;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      margin: 0;
+      color: #25252d;
+      font-size: clamp(1.6rem, 4vw, 2.25rem);
+      font-weight: 500;
     }
 
     .header-actions {
@@ -125,36 +187,7 @@ import { isTourUpcoming } from '../../tour.types';
       align-items: center;
       gap: 0.75rem;
       flex-shrink: 0;
-    }
-
-    .edit-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2.75rem;
-      height: 2.75rem;
-      border: 1px solid #c8c6d0;
-      border-radius: 8px;
-      background: #fff;
-      color: #4f46a5;
-      cursor: pointer;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-      transition:
-        background-color 0.15s ease,
-        border-color 0.15s ease,
-        box-shadow 0.15s ease,
-        transform 0.1s ease;
-    }
-
-    .edit-button:hover {
-      background: #f4f3ff;
-      border-color: #4f46a5;
-      box-shadow: 0 2px 6px rgb(79 70 165 / 15%);
-      transform: translateY(-1px);
-    }
-
-    .edit-button .material-icons {
-      font-size: 1.35rem;
+      flex-wrap: wrap;
     }
 
     .share-button {
@@ -201,21 +234,34 @@ import { isTourUpcoming } from '../../tour.types';
       }
     }
 
-    .eyebrow {
-      display: block;
-      margin-bottom: 0.35rem;
-      color: #65636d;
-      font-size: 0.8rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .edit-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      border: 1px solid #c8c6d0;
+      border-radius: 8px;
+      background: #fff;
+      color: #4f46a5;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease;
     }
 
-    h2 {
-      margin: 0;
-      color: #25252d;
-      font-size: clamp(1.6rem, 4vw, 2.25rem);
-      font-weight: 500;
+    .edit-button:hover {
+      background: #f4f3ff;
+      border-color: #4f46a5;
+      box-shadow: 0 2px 6px rgb(79 70 165 / 15%);
+      transform: translateY(-1px);
+    }
+
+    .edit-button .material-icons {
+      font-size: 1.35rem;
     }
 
     .past-tour-badge {
@@ -230,9 +276,43 @@ import { isTourUpcoming } from '../../tour.types';
       border: 1px solid #c8c6d0;
     }
 
+    .joining-indicator {
+      color: #4f46a5;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
     .detail-grid {
       display: grid;
-      gap: 0.5rem;
+      gap: 1.25rem;
+    }
+
+    .status-banner {
+      margin-bottom: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      color: #1e3a8a;
+      background: #dbeafe;
+      border: 1px solid #93c5fd;
+      font-size: 0.875rem;
+    }
+
+    .error-banner {
+      margin-bottom: 1rem;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      color: #991b1b;
+      background-color: #fee2e2;
+      border: 1px solid #f87171;
+      font-size: 0.875rem;
+    }
+
+    .empty-state {
+      padding: 3rem 1rem;
+      text-align: center;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid #e2e1e8;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -264,12 +344,14 @@ export class TourDetailContainer {
     this.findUsers(this.tourResource.value()?.tourManagerIds ?? []),
   );
   readonly currentUserId = computed(() => this.authService.currentUser()?.id);
+
   readonly canChangeRoles = computed(() => {
     const currentUser = this.authService.currentUser();
     const tour = this.tourResource.value();
 
     return !!currentUser && !!tour?.tourManagerIds.includes(currentUser.id);
   });
+
   readonly isMember = computed(() => {
     const currentUser = this.authService.currentUser();
     const tour = this.tourResource.value();
@@ -279,10 +361,12 @@ export class TourDetailContainer {
       tour.participantIds.includes(currentUser.id)
     );
   });
+
   readonly isPastTour = computed(() => {
     const tour = this.tourResource.value();
     return !!tour && !isTourUpcoming(tour.date);
   });
+
   readonly canJoinTour = computed(() => {
     const currentUser = this.authService.currentUser();
     const tour = this.tourResource.value();
@@ -302,7 +386,7 @@ export class TourDetailContainer {
       .filter((user): user is User => user !== undefined);
   }
 
-  openEmergencyContact(user: User) {
+  openEmergencyContact(user: User): void {
     this.router.navigate(['/user', user.id], {
       queryParams: { tourId: this.tourId() },
     });

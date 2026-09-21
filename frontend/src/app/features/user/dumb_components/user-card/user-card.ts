@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Button } from '../../../../components/button/button';
+import { Badge } from '../../../../components/badge/badge';
 import { User } from '../../user.types';
 
 export type UserRole = 'admin' | 'participant';
@@ -10,110 +12,152 @@ export interface UserRoleChange {
 
 @Component({
   selector: 'app-user-card',
-  imports: [Button],
+  imports: [Button, Badge, RouterLink],
   template: `
-    <div class="user-summary">
+    <div class="user-row">
+      <div class="user-identity">
         <span class="material-icons user-icon" aria-hidden="true">
-        {{ isTourManager() ? 'record_voice_over' : 'person' }}
+          {{ isTourManager() ? 'record_voice_over' : 'person' }}
         </span>
-        <span class="user-name">{{ user().firstName }} {{ user().lastName }}</span>
-        <span class="role">{{ isTourManager() ? 'Tourleitung' : '' }}</span>
-        <span class="phone-number">{{ user().phoneNumber }}</span>
-        <span class="birthday">{{ user().birthday }}</span>
+        <a [routerLink]="['/user', user().id]" class="user-name">
+          {{ user().firstName }} {{ user().lastName }}
+        </a>
+        <app-badge
+          [color]="isTourManager() ? 'primary' : 'light'"
+          [text]="isTourManager() ? 'Tourleitung' : 'Teilnehmer'"
+        />
+      </div>
+
+      <div class="user-meta">
+        <span class="meta-item">
+          <span class="material-icons meta-icon" aria-hidden="true">phone</span>
+          {{ user().phoneNumber }}
+        </span>
+        <span class="meta-item">
+          <span class="material-icons meta-icon" aria-hidden="true">cake</span>
+          {{ user().birthday }}
+        </span>
+      </div>
+
+      <div class="user-actions">
         @if (canViewEmergencyContact()) {
           <app-button
-              class="preview-action"
-              text="Notfallkontakt"
-              variant="danger"
-              [ariaLabel]="'Notfallkontakt von ' + user().firstName"
-              (clicked)="emergencyContactSelected.emit(user())"
-          />
-        }
-        @if (canRemoveUser()) {
-          <app-button
-              class="preview-action"
-              text="X"
-              variant="danger"
-              [ariaLabel]="user().firstName + ' entfernen'"
-              (clicked)="removeUser.emit(user())"
+            text="Notfallkontakt"
+            variant="secondary"
+            [ariaLabel]="'Notfallkontakt von ' + user().firstName"
+            (clicked)="emergencyContactSelected.emit(user())"
           />
         }
         @if (canChangeRole()) {
           @if (!isTourManager()) {
             <app-button
-              class="preview-action"
-              text="Tourleiter ernennen"
+              text="Zu Leitung ernennen"
               variant="primary"
               [ariaLabel]="user().firstName + ' zur Tourleitung ernennen'"
               (clicked)="setUserRole.emit({ user: user(), role: 'admin' })"
             />
           } @else {
             <app-button
-              class="preview-action"
-              text="Als Teilnehmer zurückstufen"
+              text="Zurückstufen"
               variant="secondary"
               [ariaLabel]="user().firstName + ' als Teilnehmer zurückstufen'"
               (clicked)="setUserRole.emit({ user: user(), role: 'participant' })"
             />
           }
         }
+        @if (canRemoveUser()) {
+          <app-button
+            text="Entfernen"
+            variant="danger"
+            [ariaLabel]="user().firstName + ' aus Tour entfernen'"
+            (clicked)="removeUser.emit(user())"
+          />
+        }
+      </div>
     </div>
   `,
   styles: `
-    .user-summary {
-      display: grid;
-      grid-template-columns: 1.5rem minmax(10rem, 1.4fr) minmax(6rem, 0.8fr) minmax(8rem, 1fr) minmax(6.5rem, 0.8fr) minmax(6.5rem, 0.8fr);
+    .user-row {
+      display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      column-gap: 0.75rem;
-      row-gap: 0.25rem;
-      min-width: 0;
-      color: #65636d;
-      padding: 0.5rem;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid #e2e1e8;
+      border-radius: 8px;
+      background: #fff;
+      transition: background-color 0.15s ease;
     }
 
-    .user-name {
-      min-width: 0;
-      overflow: hidden;
-      color: #25252d;
-      font-weight: 500;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    .user-row:hover {
+      background: #fdfdfd;
     }
 
-    .phone-number {
-      color: #898792;
-      font-size: 0.875rem;
-    }
-
-    .role {
-      color: #4f46a5;
-      font-size: 0.875rem;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-
-    .phone-number,
-    .birthday {
-      color: #898792;
-      font-size: 0.875rem;
-      white-space: nowrap;
+    .user-identity {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      min-width: 14rem;
+      flex: 1 1 auto;
     }
 
     .user-icon {
-      width: 1.25rem;
-      height: 1.25rem;
       color: #4f46a5;
-      font-size: 1.25rem;
-    }   
+      font-size: 1.35rem;
+    }
 
-    @media (max-width: 700px) {
-      .user-summary {
-        grid-template-columns: 1.5rem minmax(0, 1fr) auto;
+    .user-name {
+      color: #25252d;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .user-name:hover {
+      color: #4f46a5;
+      text-decoration: underline;
+    }
+
+    .user-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      color: #65636d;
+      font-size: 0.875rem;
+      flex: 1 1 auto;
+    }
+
+    .meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      white-space: nowrap;
+    }
+
+    .meta-icon {
+      color: #898792;
+      font-size: 1rem;
+    }
+
+    .user-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-left: auto;
+    }
+
+    @media (max-width: 768px) {
+      .user-row {
+        flex-direction: column;
+        align-items: flex-start;
       }
 
-      .phone-number,
-      .birthday {
-        grid-column: 2 / -1;
+      .user-actions {
+        width: 100%;
+        justify-content: flex-start;
+        margin-left: 0;
       }
     }
   `,

@@ -1,0 +1,66 @@
+### Base URL
+@baseUrl = http://localhost:4566/api
+
+### 1. Root Ping / Hello
+GET http://localhost:4566/api
+
+### 2. Login as Demo User (Colin)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "colin@muster.ch",
+  "password": "password123"
+}
+
+### Store Token from login response
+@authToken = {{login.response.body.token}}
+
+### 3. Get Current User Profile (with Token)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{authToken}}
+
+### 4. Get All Users
+GET {{baseUrl}}/users
+Authorization: Bearer {{authToken}}
+
+### 5. Get Single User By ID
+GET {{baseUrl}}/users/7f4d1c8e-2f1a-4c6d-9a12-8b4e5d7c1234
+Authorization: Bearer {{authToken}}
+
+### 6. Get My Tours (Authorized)
+GET {{baseUrl}}/tours/my-tours
+Authorization: Bearer {{authToken}}
+
+### 7. Get Tour By ID
+GET {{baseUrl}}/tours/7f4d1c8e-2f1a-4c6d-9a12-8b4e5d7c1234
+Authorization: Bearer {{authToken}}
+
+### 8. Create a New Tour
+# @name createTour
+POST {{baseUrl}}/tours
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "name": "Pazolastock Skitour",
+  "date": "2026-04-12",
+  "time": "07:30",
+  "location": "Andermatt Bahnhof",
+  "difficulty": "mittel",
+  "altitude": "1450m"
+}
+
+### 9. Change Participant Role on Tour
+PATCH {{baseUrl}}/tours/7f4d1c8e-2f1a-4c6d-9a12-8b4e5d7c1234/users/1a2b3c4d-1111-4444-8888-123456789abc/role
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "role": "admin"
+}
+
+### 10. Remove User from Tour
+DELETE {{baseUrl}}/tours/7f4d1c8e-2f1a-4c6d-9a12-8b4e5d7c1234/users/3c4d5e6f-3333-4444-8888-987654abcdef
+Authorization: Bearer {{authToken}}

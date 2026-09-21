@@ -1,9 +1,9 @@
-import {Route} from '@angular/router';
-import {PATHS} from './paths.config';
-import {TourManagement} from '../features/tour-management/pages/tour-overview/tour-overview';
-import {TourDetail} from '../features/tour-management/pages/tour-detail/tour-detail';
-import {UserDetail} from '../features/user/pages/user-detail/user-detail';
-import {Home} from '../pages/home/home';
+import { Route } from '@angular/router';
+import { PATHS } from './paths.config';
+import { TourOverviewPage } from '../features/tour-management/pages/tour-overview/tour-overview';
+import { TourDetail } from '../features/tour-management/pages/tour-detail/tour-detail';
+import { UserDetail } from '../features/user/pages/user-detail/user-detail';
+import { Home } from '../pages/home/home';
 import { TourEditor } from '../features/tour-editor/pages/tour-editor/tour-editor';
 import { LoginPage } from '../features/auth/pages/login/login';
 import { RegisterPage } from '../features/auth/pages/register/register';
@@ -27,7 +27,7 @@ export const routes: Route[] = [
     children: [
       {
         path: '',
-        component: TourManagement,
+        component: TourOverviewPage,
       },
       {
         path: ':id',
@@ -64,5 +64,5 @@ export const routes: Route[] = [
   {
     path: '**',
     redirectTo: HOME.path,
-  }
+  },
 ];

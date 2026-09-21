@@ -9,6 +9,10 @@ export const PATHS: { [key: string]: NavigationItem } = {
     path: 'tour-management',
     label: 'Touren',
   },
+  TOUR_EDITOR: {
+    path: 'tour-editor',
+    label: 'Tour erfassen',
+  },
   LOGIN: {
     path: 'login',
     label: 'Anmelden',
