@@ -9,7 +9,7 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
 
 @Component({
   selector: 'app-tour-list',
-  imports: [TourPreview, RouterLink, Button, LoadingSpinner],
+  imports: [TourPreview, Button, LoadingSpinner],
   template: `
     <div class="list-header">
       <h2>Deine bevorstehenden Touren</h2>
