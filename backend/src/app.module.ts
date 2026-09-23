@@ -11,9 +11,11 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      process.env.MONGO_URI ?? 'mongodb://localhost:27017/nest',
-    ),
+    MongooseModule.forRootAsync({
+      useFactory: () => ({
+        uri: process.env.MONGO_URI ?? 'mongodb://localhost:27017/nest',
+      }),
+    }),
     UsersModule,
     ToursModule,
     AuthModule,
