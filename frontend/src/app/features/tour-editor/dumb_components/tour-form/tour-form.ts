@@ -95,6 +95,8 @@ export function notInPastValidator(
           type="submit"
           [text]="submitButtonText()"
           variant="primary"
+          data-testid="TOUR_SUBMIT_BUTTON"
+          (clicked)="submitForm()"
           [disabled]="isSubmitting() || (submitted() && tourForm.invalid)"
         />
         @if (showCancelButton()) {

@@ -12,7 +12,11 @@ import { ShortenerPipe } from '../../../../pipes/shortener-pipe';
   selector: 'app-tour-preview',
   imports: [Card, InfoItem, Badge, RouterLink, DatePipe, ShortenerPipe],
   template: `
-    <a [routerLink]="['/tour-management', tour().id]" class="tour-card-link">
+    <a
+      [routerLink]="['/tour-management', tour().id]"
+      class="tour-card-link"
+      [attr.data-testid]="'TOUR_CARD_' + (tour().id || tour().name)"
+    >
       <app-card [title]="(tour().name | shortIt: 45)">
         <div class="card-top-bar">
           <app-badge [color]="difficultyColor()" [text]="'Schwierigkeit: ' + tour().difficulty" />

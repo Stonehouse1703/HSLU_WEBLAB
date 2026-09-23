@@ -16,6 +16,7 @@ import { InputFieldError } from '../../../../components/input-field-error/input-
           type="email"
           formControlName="email"
           placeholder="z.B. colin@muster.ch"
+          data-testid="LOGIN_EMAIL_INPUT"
           [class.has-error]="isInvalid('email')"
         >
         <app-input-field-error
@@ -31,6 +32,7 @@ import { InputFieldError } from '../../../../components/input-field-error/input-
           type="password"
           formControlName="password"
           placeholder="Dein Passwort"
+          data-testid="LOGIN_PASSWORD_INPUT"
           [class.has-error]="isInvalid('password')"
         >
         <app-input-field-error
@@ -44,6 +46,8 @@ import { InputFieldError } from '../../../../components/input-field-error/input-
           type="submit"
           text="Anmelden"
           variant="primary"
+          data-testid="LOGIN_SUBMIT_BUTTON"
+          (clicked)="submitForm()"
           [disabled]="isSubmitting() || (submitted() && loginForm.invalid)"
         />
 

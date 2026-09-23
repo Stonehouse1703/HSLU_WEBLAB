@@ -50,6 +50,16 @@ cd frontend
 npm test
 ```
 
+### Frontend End-to-End (E2E) Tests (Cypress)
+```bash
+cd frontend
+# Headless E2E Tests ausführen:
+npm run cypress:run
+
+# Interaktiver Cypress Test Runner:
+npm run cypress:open
+```
+
 ### Backend Unit & E2E Tests
 ```bash
 cd backend

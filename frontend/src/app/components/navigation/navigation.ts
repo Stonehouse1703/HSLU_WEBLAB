@@ -21,10 +21,10 @@ import { AuthUser } from '../../features/auth/services/auth.service';
               Angemeldet als <strong>{{ user.firstName }} {{ user.lastName }}</strong>
             </span>
           </a>
-          <button class="logout-btn" (click)="logout.emit()">Abmelden</button>
+          <button class="logout-btn" (click)="logout.emit()" data-testid="NAV_LOGOUT_BUTTON">Abmelden</button>
         } @else {
-          <a routerLink="/login" class="login-link" routerLinkActive="active">Anmelden</a>
-          <a routerLink="/register" class="register-link" routerLinkActive="active">Registrieren</a>
+          <a routerLink="/login" class="login-link" routerLinkActive="active" data-testid="NAV_LOGIN_LINK">Anmelden</a>
+          <a routerLink="/register" class="register-link" routerLinkActive="active" data-testid="NAV_REGISTER_LINK">Registrieren</a>
         }
       </div>
     </nav>
