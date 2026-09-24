@@ -3,7 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UsersService, User } from '../users/users.service.js';
+import { UsersService } from '../users/users.service.js';
 import { LoginDto } from './dto/login.dto.js';
 import { RegisterDto } from './dto/register.dto.js';
 import {
@@ -86,8 +86,14 @@ export class AuthService {
       email,
       passwordHash,
       birthday: registerDto.birthday ?? '',
-      phoneNumber: registerDto.phoneNumber ?? '',
-      emergencyContact: registerDto.emergencyContact,
+      emergencyContact: registerDto.emergencyContact
+        ? {
+            firstName: registerDto.emergencyContact.firstName?.trim() ?? '',
+            lastName: registerDto.emergencyContact.lastName?.trim() ?? '',
+            phoneNumber: registerDto.emergencyContact.phoneNumber?.trim() ?? '',
+            relationship: registerDto.emergencyContact.relationship?.trim() ?? '',
+          }
+        : undefined,
     });
 
     const payload: TokenPayload = {

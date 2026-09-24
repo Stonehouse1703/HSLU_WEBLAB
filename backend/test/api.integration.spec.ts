@@ -208,5 +208,51 @@ describe('Backend API Integration Tests (In-Memory MongoDB & Supertest)', () => 
         .expect(400);
     });
   });
+
+  describe('DTO Validation Pipeline (ValidationPipe & class-validator)', () => {
+    it('POST /api/auth/register - should reject invalid email format with 400', async () => {
+      const res = await request(app.getHttpServer())
+        .post('/api/auth/register')
+        .send({
+          firstName: 'Max',
+          lastName: 'Muster',
+          email: 'not-an-email',
+          password: 'securepassword123',
+        })
+        .expect(400);
+
+      expect(res.body.message).toBeDefined();
+    });
+
+    it('POST /api/auth/register - should reject short password with 400', async () => {
+      await request(app.getHttpServer())
+        .post('/api/auth/register')
+        .send({
+          firstName: 'Max',
+          lastName: 'Muster',
+          email: 'max@valid.ch',
+          password: '123',
+        })
+        .expect(400);
+    });
+
+    it('POST /api/tours - should reject tour with missing required fields with 400', async () => {
+      await request(app.getHttpServer())
+        .post('/api/tours')
+        .set('Authorization', `Bearer ${userOneToken}`)
+        .send({
+          name: 'Unvollständige Tour',
+        })
+        .expect(400);
+    });
+
+    it('PATCH /api/tours/:id/users/:userId/role - should reject invalid role with 400', async () => {
+      await request(app.getHttpServer())
+        .patch(`/api/tours/${createdTourId}/users/${userTwoId}/role`)
+        .set('Authorization', `Bearer ${userOneToken}`)
+        .send({ role: 'unauthorized_role' })
+        .expect(400);
+    });
+  });
 });
 
