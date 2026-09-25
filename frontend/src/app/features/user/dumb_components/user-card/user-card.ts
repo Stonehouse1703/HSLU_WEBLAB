@@ -89,14 +89,14 @@ export interface UserRoleChange {
       justify-content: space-between;
       gap: 1rem;
       padding: 0.85rem 1rem;
-      border: 1px solid #e2e1e8;
-      border-radius: 8px;
-      background: #fff;
-      transition: background-color 0.15s ease;
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-surface);
+      transition: background-color var(--transition-fast);
     }
 
     .user-row:hover {
-      background: #fdfdfd;
+      background: var(--color-bg-surface-subtle);
     }
 
     .user-identity {
@@ -108,19 +108,19 @@ export interface UserRoleChange {
     }
 
     .user-icon {
-      color: #4f46a5;
+      color: var(--color-primary);
       font-size: 1.35rem;
     }
 
     .user-name {
-      color: #25252d;
+      color: var(--color-text-main);
       font-weight: 500;
       text-decoration: none;
-      transition: color 0.15s ease;
+      transition: color var(--transition-fast);
     }
 
     .user-name:hover {
-      color: #4f46a5;
+      color: var(--color-primary);
       text-decoration: underline;
     }
 
@@ -128,7 +128,7 @@ export interface UserRoleChange {
       display: flex;
       align-items: center;
       gap: 1.25rem;
-      color: #65636d;
+      color: var(--color-text-muted);
       font-size: 0.875rem;
       flex: 1 1 auto;
     }
@@ -141,7 +141,7 @@ export interface UserRoleChange {
     }
 
     .meta-icon {
-      color: #898792;
+      color: var(--color-text-subtle);
       font-size: 1rem;
     }
 

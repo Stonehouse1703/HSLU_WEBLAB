@@ -17,7 +17,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       justify-content: center;
       gap: 0.75rem;
       min-height: 5rem;
-      color: #4f46a5;
+      color: var(--color-primary);
       font-size: 0.95rem;
       font-weight: 500;
     }
@@ -25,9 +25,9 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     .spinner {
       width: 1.75rem;
       height: 1.75rem;
-      border: 3px solid #dedaf4;
-      border-top-color: #4f46a5;
-      border-radius: 50%;
+      border: 3px solid var(--color-primary-muted);
+      border-top-color: var(--color-primary);
+      border-radius: var(--radius-full);
       animation: spin 0.8s linear infinite;
     }
 

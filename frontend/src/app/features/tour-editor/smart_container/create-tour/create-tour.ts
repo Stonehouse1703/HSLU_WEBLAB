@@ -54,10 +54,10 @@ import { TourForm } from '../../dumb_components/tour-form/tour-form';
     .error-banner {
       margin-bottom: 1rem;
       padding: 0.75rem 1rem;
-      border-radius: 8px;
-      color: #991b1b;
-      background-color: #fee2e2;
-      border: 1px solid #f87171;
+      border-radius: var(--radius-md);
+      color: var(--color-danger-text);
+      background-color: var(--color-danger-bg);
+      border: 1px solid var(--color-danger-border);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,10 +1,11 @@
 /* Font and theme foundation */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import './styles/colors.css';
 
 :root {
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #25252d;
-  background: #f6f6fa;
+  color: var(--color-text-main);
+  background: var(--color-bg-app);
   font-synthesis: none;
 }
 
@@ -19,15 +20,15 @@ body {
   margin: 0;
   min-width: 320px;
   font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  color: #25252d;
-  background: #f6f6fa;
+  color: var(--color-text-main);
+  background: var(--color-bg-app);
   line-height: 1.5;
 }
 
 pre {
   margin: 0.5rem 0 0;
   overflow-x: auto;
-  color: #65636d;
+  color: var(--color-text-muted);
   font-size: 0.75rem;
 }
 
@@ -38,7 +39,7 @@ h3,
 h4 {
   margin-top: 0;
   font-weight: 500;
-  color: #25252d;
+  color: var(--color-text-main);
 }
 
 h1 {
@@ -72,7 +73,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 a:focus-visible {
-  outline: 3px solid rgb(79 70 165 / 25%);
+  outline: 3px solid var(--color-primary-focus);
   outline-offset: 2px;
 }
 
@@ -80,7 +81,7 @@ label {
   display: block;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #25252d;
+  color: var(--color-text-main);
 }
 
 input,
@@ -88,16 +89,49 @@ select {
   width: 100%;
   min-height: 2.75rem;
   padding: 0.65rem 0.75rem;
-  border: 1px solid #c8c6d0;
-  border-radius: 8px;
+  border: 1px solid var(--color-border-input);
+  border-radius: var(--radius-md);
   color: inherit;
-  background: #fff;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  background: var(--color-bg-surface);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 input:focus,
 select:focus {
-  border-color: #4f46a5;
+  border-color: var(--color-primary);
   outline: none;
-  box-shadow: 0 0 0 3px rgb(79 70 165 / 15%);
+  box-shadow: var(--shadow-focus);
+}
+
+/* Unified Feedback Banners & State Cards */
+.error-banner,
+.state-message.error {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  color: var(--color-danger-text);
+  background-color: var(--color-danger-bg);
+  border: 1px solid var(--color-danger-border);
+  font-size: 0.875rem;
+}
+
+.success-banner {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  color: var(--color-success-text);
+  background-color: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+  font-size: 0.875rem;
+}
+
+.status-banner,
+.info-banner {
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  color: var(--color-info-text);
+  background-color: var(--color-info-bg);
+  border: 1px solid var(--color-info-border);
+  font-size: 0.875rem;
 }

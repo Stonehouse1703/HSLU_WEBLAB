@@ -25,42 +25,57 @@ export type ButtonType = 'button' | 'submit' | 'reset';
 
     button {
       width: fit-content;
-      padding: .65rem 1rem;
+      min-height: 2.5rem;
+      padding: 0.65rem 1rem;
       border: 0;
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       font: inherit;
+      font-weight: 500;
       cursor: pointer;
+      touch-action: manipulation;
+      transition: background-color var(--transition-fast), border-color var(--transition-fast), opacity var(--transition-fast);
     }
 
     .primary {
-      color: #fff;
-      background: #4f46a5;
+      color: var(--color-text-inverse);
+      background: var(--color-primary);
+    }
+
+    .primary:hover:not(:disabled) {
+      background: var(--color-primary-hover);
     }
 
     .secondary {
-      border: 1px solid #c8c6d0;
-      color: #65636d;
-      background: #fff;
+      border: 1px solid var(--color-border-input);
+      color: var(--color-text-muted);
+      background: var(--color-bg-surface);
     }
 
-    .secondary:hover {
-      background: #f6f6fa;
+    .secondary:hover:not(:disabled) {
+      background: var(--color-bg-app);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
     }
 
     .danger {
-      color: #fff;
-      background: #b3261e;
+      color: var(--color-text-inverse);
+      background: var(--color-danger);
+    }
+
+    .danger:hover:not(:disabled) {
+      background: var(--color-danger-hover);
     }
 
     button:focus-visible {
-      outline: 3px solid rgb(79 70 165 / 25%);
+      outline: 3px solid var(--color-primary-focus);
       outline-offset: 2px;
     }
 
     button:disabled {
-      color: #777680;
-      background: #e1e0e7;
+      color: var(--color-text-disabled);
+      background: var(--color-border-default);
       cursor: not-allowed;
+      opacity: 0.7;
     }
   `
 })

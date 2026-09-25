@@ -17,7 +17,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: #65636d;
+      color: var(--color-text-muted);
       font-size: 0.875rem;
       white-space: nowrap;
     }
@@ -25,13 +25,14 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
     dd {
       margin: 0;
       font-weight: 500;
+      color: var(--color-text-main);
       overflow-wrap: anywhere;
     }
 
     .material-icons {
       width: 1.25rem;
       height: 1.25rem;
-      color: #4f46a5;
+      color: var(--color-primary);
       font-size: 1.25rem;
     }
 

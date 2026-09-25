@@ -111,7 +111,7 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
 
     .list-header h2 {
       margin: 0;
-      color: #25252d;
+      color: var(--color-text-main);
       font-size: clamp(1.4rem, 3.5vw, 1.85rem);
       font-weight: 500;
     }
@@ -130,17 +130,17 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
     .join-panel {
       margin-bottom: 1.5rem;
       padding: 1.25rem;
-      border: 1px solid #c8c6d0;
-      border-radius: 12px;
-      background: #fdfcff;
-      box-shadow: 0 2px 8px rgba(79, 70, 165, 0.08);
+      border: 1px solid var(--color-border-input);
+      border-radius: var(--radius-lg);
+      background: var(--color-bg-surface-subtle);
+      box-shadow: var(--shadow-card);
     }
 
     .join-panel-header {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      color: #4f46a5;
+      color: var(--color-primary);
       margin-bottom: 0.35rem;
       font-size: 1.05rem;
     }
@@ -151,7 +151,7 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
 
     .join-description {
       margin: 0 0 0.85rem 0;
-      color: #65636d;
+      color: var(--color-text-muted);
       font-size: 0.875rem;
     }
 
@@ -166,17 +166,17 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
       flex: 1;
       min-width: 260px;
       padding: 0.65rem 0.85rem;
-      border: 1px solid #c8c6d0;
-      border-radius: 8px;
+      border: 1px solid var(--color-border-input);
+      border-radius: var(--radius-md);
       font: inherit;
       font-size: 0.9rem;
       outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     }
 
     .join-input:focus {
-      border-color: #4f46a5;
-      box-shadow: 0 0 0 3px rgba(79, 70, 165, 0.15);
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-focus);
     }
 
     .join-buttons {
@@ -186,13 +186,13 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
 
     .join-status {
       margin: 0.65rem 0 0 0;
-      color: #4f46a5;
+      color: var(--color-primary);
       font-size: 0.875rem;
     }
 
     .join-error {
       margin: 0.65rem 0 0 0;
-      color: #b3261e;
+      color: var(--color-danger);
       font-size: 0.875rem;
       font-weight: 500;
     }
@@ -206,15 +206,15 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
     .state-message {
       padding: 2.5rem 1.5rem;
       text-align: center;
-      border-radius: 12px;
-      background: #fff;
-      border: 1px solid #e2e1e8;
+      border-radius: var(--radius-lg);
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border-default);
     }
 
     .state-message.error {
-      color: #b3261e;
-      border-color: #f87171;
-      background: #fff5f5;
+      color: var(--color-danger);
+      border-color: var(--color-danger-border);
+      background: var(--color-danger-bg-subtle);
     }
 
     .state-message.empty {
@@ -222,7 +222,7 @@ import { getTodayDateString, isTourUpcoming } from '../../tour.types';
       flex-direction: column;
       align-items: center;
       gap: 1rem;
-      color: #65636d;
+      color: var(--color-text-muted);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

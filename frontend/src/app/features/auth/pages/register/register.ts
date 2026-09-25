@@ -27,7 +27,7 @@ import { RegisterContainer } from '../../smart_container/register/register';
     .eyebrow {
       display: block;
       margin-bottom: 0.35rem;
-      color: #65636d;
+      color: var(--color-text-muted);
       font-size: 0.8rem;
       font-weight: 500;
       letter-spacing: 0.08em;
@@ -36,7 +36,7 @@ import { RegisterContainer } from '../../smart_container/register/register';
 
     h1 {
       margin: 0;
-      color: #25252d;
+      color: var(--color-text-main);
       font-size: clamp(1.6rem, 4vw, 2.25rem);
       font-weight: 500;
     }

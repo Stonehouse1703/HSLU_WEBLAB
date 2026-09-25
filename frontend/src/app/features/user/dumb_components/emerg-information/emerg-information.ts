@@ -46,7 +46,7 @@ import { User } from '../../user.types';
     }
 
     .empty-note {
-      color: #65636d;
+      color: var(--color-text-muted);
       font-size: 0.875rem;
       margin: 0;
       line-height: 1.5;

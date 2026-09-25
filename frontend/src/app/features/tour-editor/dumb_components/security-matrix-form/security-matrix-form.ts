@@ -227,14 +227,14 @@ type MultiChoiceField = 'dangerSources' | 'dangerLocations' | 'otherHazards';
 
     h4 {
       margin: 0;
-      color: #4f46a5;
+      color: var(--color-primary);
       font-size: 1.05rem;
       font-weight: 600;
     }
 
     .matrix-subtitle {
       margin: 0;
-      color: #636173;
+      color: var(--color-text-muted);
       font-size: 0.85rem;
       line-height: 1.4;
     }
@@ -247,25 +247,25 @@ type MultiChoiceField = 'dangerSources' | 'dangerLocations' | 'otherHazards';
     }
 
     .matrix-cell {
-      background: #fafafc;
-      border: 1px solid #e2e1ea;
-      border-radius: 10px;
+      background: var(--color-bg-surface-alt);
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-md);
       padding: 0.85rem;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
-      transition: border-color 0.15s ease;
+      transition: border-color var(--transition-fast);
     }
 
     .matrix-cell:focus-within {
-      border-color: #837bbb;
-      background: #fff;
+      border-color: var(--color-primary-muted);
+      background: var(--color-bg-surface);
     }
 
     .cell-label {
       font-weight: 600;
       font-size: 0.85rem;
-      color: #2b2847;
+      color: var(--color-primary-active);
       display: flex;
       align-items: center;
       gap: 0.35rem;
@@ -274,7 +274,7 @@ type MultiChoiceField = 'dangerSources' | 'dangerLocations' | 'otherHazards';
 
     .cell-icon {
       font-size: 1.1rem;
-      color: #4f46a5;
+      color: var(--color-primary);
     }
 
     select,
@@ -282,19 +282,19 @@ type MultiChoiceField = 'dangerSources' | 'dangerLocations' | 'otherHazards';
       width: 100%;
       box-sizing: border-box;
       padding: 0.55rem 0.75rem;
-      border: 1px solid #c8c6d0;
-      border-radius: 8px;
-      background: #fff;
+      border: 1px solid var(--color-border-input);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-surface);
       font: inherit;
       font-size: 0.88rem;
       outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     }
 
     select:focus,
     input:focus {
-      border-color: #4f46a5;
-      box-shadow: 0 0 0 3px rgba(79, 70, 165, 0.12);
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-focus);
     }
 
     .input-with-unit {
@@ -310,7 +310,7 @@ type MultiChoiceField = 'dangerSources' | 'dangerLocations' | 'otherHazards';
     .unit-addon {
       position: absolute;
       right: 0.75rem;
-      color: #727080;
+      color: var(--color-text-subtle);
       font-size: 0.85rem;
       font-weight: 500;
       pointer-events: none;
@@ -329,12 +329,12 @@ type MultiChoiceField = 'dangerSources' | 'dangerLocations' | 'otherHazards';
       align-items: center;
       justify-content: center;
       padding: 0.45rem 0.2rem;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       border: 1.5px solid transparent;
       cursor: pointer;
       font: inherit;
-      transition: all 0.15s ease;
-      background: #fff;
+      transition: all var(--transition-fast);
+      background: var(--color-bg-surface);
     }
 
     .danger-num {
@@ -351,63 +351,63 @@ type MultiChoiceField = 'dangerSources' | 'dangerLocations' | 'otherHazards';
 
     /* SLF Standard Colors */
     .level-1 {
-      border-color: #a5d6a7;
-      color: #2e7d32;
-      background: #f1f8e9;
+      border-color: var(--matrix-level-1-border);
+      color: var(--matrix-level-1);
+      background: var(--matrix-level-1-bg);
     }
     .level-1.selected {
-      background: #2e7d32;
-      color: #fff;
-      border-color: #1b5e20;
-      box-shadow: 0 2px 6px rgba(46, 125, 50, 0.35);
+      background: var(--matrix-level-1-solid);
+      color: var(--color-text-inverse);
+      border-color: var(--matrix-level-1-solid-border);
+      box-shadow: 0 2px 6px var(--matrix-level-1-shadow);
     }
 
     .level-2 {
-      border-color: #fff59d;
-      color: #9e7a00;
-      background: #fffde7;
+      border-color: var(--matrix-level-2-border);
+      color: var(--matrix-level-2);
+      background: var(--matrix-level-2-bg);
     }
     .level-2.selected {
-      background: #fbc02d;
-      color: #212121;
-      border-color: #f57f17;
-      box-shadow: 0 2px 6px rgba(251, 192, 45, 0.35);
+      background: var(--matrix-level-2-solid);
+      color: var(--matrix-level-2-solid-text);
+      border-color: var(--matrix-level-2-solid-border);
+      box-shadow: 0 2px 6px var(--matrix-level-2-shadow);
     }
 
     .level-3 {
-      border-color: #ffcc80;
-      color: #e65100;
-      background: #fff3e0;
+      border-color: var(--matrix-level-3-border);
+      color: var(--matrix-level-3);
+      background: var(--matrix-level-3-bg);
     }
     .level-3.selected {
-      background: #f57c00;
-      color: #fff;
-      border-color: #bf360c;
-      box-shadow: 0 2px 6px rgba(245, 124, 0, 0.35);
+      background: var(--matrix-level-3-solid);
+      color: var(--color-text-inverse);
+      border-color: var(--matrix-level-3-solid-border);
+      box-shadow: 0 2px 6px var(--matrix-level-3-shadow);
     }
 
     .level-4 {
-      border-color: #ef9a9a;
-      color: #c62828;
-      background: #ffebee;
+      border-color: var(--matrix-level-4-border);
+      color: var(--matrix-level-4);
+      background: var(--matrix-level-4-bg);
     }
     .level-4.selected {
-      background: #d32f2f;
-      color: #fff;
-      border-color: #b71c1c;
-      box-shadow: 0 2px 6px rgba(211, 47, 47, 0.35);
+      background: var(--matrix-level-4-solid);
+      color: var(--color-text-inverse);
+      border-color: var(--matrix-level-4-solid-border);
+      box-shadow: 0 2px 6px var(--matrix-level-4-shadow);
     }
 
     .level-5 {
-      border-color: #ef9a9a;
-      color: #c62828;
-      background: #fdc4cd;
+      border-color: var(--matrix-level-5-border);
+      color: var(--matrix-level-4);
+      background: var(--matrix-level-5-bg);
     }
     .level-5.selected {
-      background: #ff0e0e;
-      color: #fff;
-      border-color: #ff0808;
-      box-shadow: 0 2px 6px rgba(38, 50, 56, 0.4);
+      background: var(--matrix-level-5-solid);
+      color: var(--color-text-inverse);
+      border-color: var(--matrix-level-5-solid-border);
+      box-shadow: 0 2px 6px var(--matrix-level-5-shadow);
     }
 
     /* Multichoice Chips */
@@ -437,42 +437,42 @@ type MultiChoiceField = 'dangerSources' | 'dangerLocations' | 'otherHazards';
       align-items: center;
       gap: 0.4rem;
       padding: 0.4rem 0.65rem;
-      border-radius: 6px;
-      border: 1px solid #c8c6d0;
-      background: #fff;
-      color: #3b3947;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-border-input);
+      background: var(--color-bg-surface);
+      color: var(--color-text-main);
       font: inherit;
       font-size: 0.8rem;
       text-align: left;
       cursor: pointer;
-      transition: all 0.15s ease;
+      transition: all var(--transition-fast);
     }
 
     .chip-toggle:hover {
-      border-color: #4f46a5;
-      background: #e6e5e7;
+      border-color: var(--color-primary);
+      background: var(--color-bg-surface-hover);
     }
 
     .chip-toggle.active {
-      border-color: #3d2aee;
-      background: #eeedfc;
-      color: #1a1548;
+      border-color: var(--color-primary);
+      background: var(--color-primary-light);
+      color: var(--color-primary-hover);
       font-weight: 500;
     }
 
     .chip-toggle.active:hover {
-      border-color: #3d2aee;
-      background: #e2e0fb;
+      border-color: var(--color-primary);
+      background: var(--color-primary-muted);
     }
 
     .chip-toggle.active .chip-icon,
     .chip-toggle.active .chip-check {
-      color: #3d2aee;
+      color: var(--color-primary);
     }
 
     .chip-check {
       font-size: 1rem;
-      color: #727080;
+      color: var(--color-text-subtle);
     }
 
     .chip-label {

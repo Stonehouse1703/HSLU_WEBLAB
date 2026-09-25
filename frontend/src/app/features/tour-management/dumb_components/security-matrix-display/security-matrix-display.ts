@@ -116,15 +116,15 @@ interface StandardMatrixField {
       flex-direction: column;
       gap: 0.35rem;
       padding: 0.75rem 0.85rem;
-      background: #f8f7fb;
-      border: 1px solid #e5e4ee;
-      border-radius: 8px;
+      background: var(--color-bg-surface-subtle);
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-md);
     }
 
     .item-label {
       font-size: 0.8rem;
       font-weight: 600;
-      color: #636173;
+      color: var(--color-text-muted);
       display: flex;
       align-items: center;
       gap: 0.35rem;
@@ -134,13 +134,13 @@ interface StandardMatrixField {
 
     .item-icon {
       font-size: 1rem;
-      color: #4f46a5;
+      color: var(--color-primary);
     }
 
     .item-value {
       font-size: 0.92rem;
       font-weight: 500;
-      color: #1f1d2b;
+      color: var(--color-text-main);
       text-transform: capitalize;
     }
 
@@ -149,36 +149,36 @@ interface StandardMatrixField {
       display: inline-flex;
       align-items: center;
       padding: 0.25rem 0.6rem;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       font-size: 0.85rem;
       font-weight: 600;
       width: fit-content;
     }
 
     .level-1 {
-      background: #e8f5e9;
-      color: #2e7d32;
-      border: 1px solid #a5d6a7;
+      background: var(--matrix-level-1-bg);
+      color: var(--matrix-level-1);
+      border: 1px solid var(--matrix-level-1-border);
     }
     .level-2 {
-      background: #fffde7;
-      color: #9e7a00;
-      border: 1px solid #fff59d;
+      background: var(--matrix-level-2-bg);
+      color: var(--matrix-level-2);
+      border: 1px solid var(--matrix-level-2-border);
     }
     .level-3 {
-      background: #fff3e0;
-      color: #e65100;
-      border: 1px solid #ffcc80;
+      background: var(--matrix-level-3-bg);
+      color: var(--matrix-level-3);
+      border: 1px solid var(--matrix-level-3-border);
     }
     .level-4 {
-      background: #ffebee;
-      color: #c62828;
-      border: 1px solid #ef9a9a;
+      background: var(--matrix-level-4-bg);
+      color: var(--matrix-level-4);
+      border: 1px solid var(--matrix-level-4-border);
     }
     .level-5 {
-      background: #ff0e0e;
-      color: #fff;
-      border: 1px solid #ff0808;
+      background: var(--matrix-level-5-solid);
+      color: var(--color-text-inverse);
+      border: 1px solid var(--matrix-level-5-solid-border);
     }
 
     .badge-wrap {
@@ -191,10 +191,10 @@ interface StandardMatrixField {
     .hazard-badge {
       display: inline-flex;
       align-items: center;
-      background: #ebe9f5;
-      color: #38326a;
-      border: 1px solid #d4d0e6;
-      border-radius: 6px;
+      background: var(--color-primary-light);
+      color: var(--color-primary-hover);
+      border: 1px solid var(--color-primary-muted);
+      border-radius: var(--radius-sm);
       padding: 0.2rem 0.5rem;
       font-size: 0.78rem;
       font-weight: 500;

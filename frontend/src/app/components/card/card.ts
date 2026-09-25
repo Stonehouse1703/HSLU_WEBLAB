@@ -11,16 +11,16 @@ import {ChangeDetectionStrategy, Component, input} from '@angular/core';
     :host {
       display: block;
       padding: 1.5rem;
-      border: 1px solid #e2e1e8;
-      border-radius: 12px;
-      background: #fff;
-      box-shadow: 0 2px 8px rgb(30 25 60 / 6%);
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-lg);
+      background: var(--color-bg-surface);
+      box-shadow: var(--shadow-card);
     }
 
     h3 {
-      padding-bottom: .75rem;
-      border-bottom: 1px solid #e2e1e8;
-      color: #4f46a5;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--color-border-default);
+      color: var(--color-primary);
     }
 
     @media (max-width: 600px) {

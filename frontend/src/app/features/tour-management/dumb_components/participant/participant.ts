@@ -67,7 +67,7 @@ import { UserCard, UserRoleChange } from '../../../user/dumb_components/user-car
     }
 
     .copy-success {
-      color: #166534;
+      color: var(--color-success-text);
       font-size: 0.875rem;
       font-weight: 500;
     }

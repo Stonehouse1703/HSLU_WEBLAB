@@ -29,20 +29,20 @@ import { LoginForm } from '../../dumb_components/login-form/login-form';
     .error-banner {
       margin-bottom: 1rem;
       padding: 0.75rem 1rem;
-      border-radius: 8px;
-      color: #991b1b;
-      background-color: #fee2e2;
-      border: 1px solid #f87171;
+      border-radius: var(--radius-md);
+      color: var(--color-danger-text);
+      background-color: var(--color-danger-bg);
+      border: 1px solid var(--color-danger-border);
     }
 
     .hint-box {
       margin-top: 1.5rem;
       padding: 1rem;
-      border-radius: 8px;
-      background-color: #f6f6fa;
-      border: 1px solid #e2e1e8;
+      border-radius: var(--radius-md);
+      background-color: var(--color-bg-app);
+      border: 1px solid var(--color-border-default);
       font-size: 0.875rem;
-      color: #65636d;
+      color: var(--color-text-muted);
     }
 
     .hint-box p {

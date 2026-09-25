@@ -171,14 +171,14 @@ import { User } from '../../user.types';
 
     .section-title {
       margin: 0 0 0.5rem 0;
-      color: #253c38;
+      color: var(--color-alpine-dark);
       font-size: 1.1rem;
       font-weight: 600;
     }
 
     .section-hint {
       margin: 0 0 1rem 0;
-      color: #65636d;
+      color: var(--color-text-muted);
       font-size: 0.85rem;
       line-height: 1.4;
     }
@@ -202,7 +202,7 @@ import { User } from '../../user.types';
     }
 
     .field label {
-      color: #253c38;
+      color: var(--color-alpine-dark);
       font-weight: 600;
       font-size: 0.9rem;
     }
@@ -211,35 +211,35 @@ import { User } from '../../user.types';
       width: 100%;
       box-sizing: border-box;
       padding: 0.75rem 0.875rem;
-      border: 1px solid #d0d5dd;
-      border-radius: 10px;
-      background: #fff;
+      border: 1px solid var(--color-border-input);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-surface);
       font: inherit;
       transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
+        border-color var(--transition-normal),
+        box-shadow var(--transition-normal);
     }
 
     .field input:focus {
-      border-color: #4f46a5;
-      box-shadow: 0 0 0 3px rgb(79 70 165 / 10%);
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-focus);
       outline: none;
     }
 
     .divider {
       border: none;
-      border-top: 1px solid #e5e7eb;
+      border-top: 1px solid var(--color-divider);
       margin: 1.5rem 0;
     }
 
     .input-error {
-      border-color: #dc2626 !important;
-      background: #fff5f5;
-      box-shadow: 0 0 0 3px rgb(220 38 38 / 8%);
+      border-color: var(--color-danger) !important;
+      background: var(--color-danger-bg-subtle);
+      box-shadow: var(--shadow-focus-danger);
     }
 
     .field-error {
-      color: #dc2626;
+      color: var(--color-danger);
       font-size: 0.8rem;
       font-weight: 500;
     }

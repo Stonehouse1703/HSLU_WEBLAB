@@ -1,0 +1,126 @@
+:root {
+  --color-primary: #4f46a5;
+  --color-primary-hover: #383273;
+  --color-primary-active: #2b2847;
+  --color-primary-light: #eeecf9;
+  --color-primary-subtle: #f4f3ff;
+  --color-primary-muted: #dedaf4;
+  --color-primary-focus: rgba(79, 70, 165, 0.25);
+  --color-primary-focus-subtle: rgba(79, 70, 165, 0.15);
+  --color-primary-tint: rgba(79, 70, 165, 0.08);
+
+
+  --color-bg-app: #f6f6fa;
+  --color-bg-surface: #ffffff;
+  --color-bg-surface-subtle: #f8f7fb;
+  --color-bg-surface-alt: #fafafc;
+  --color-bg-surface-hover: #f1f0f7;
+
+
+  --color-text-main: #25252d;
+  --color-text-muted: #65636d;
+  --color-text-subtle: #898792;
+  --color-text-disabled: #777680;
+  --color-text-inverse: #ffffff;
+
+
+  --color-border-subtle: #f0eff4;
+  --color-border-default: #e2e1e8;
+  --color-border-input: #c8c6d0;
+  --color-border-hover: #a19fad;
+  --color-divider: #e8e7ec;
+
+
+  --color-danger: #b3261e;
+  --color-danger-hover: #8f1d17;
+  --color-danger-text: #991b1b;
+  --color-danger-bg: #fee2e2;
+  --color-danger-bg-subtle: #fff5f5;
+  --color-danger-border: #f87171;
+  --color-danger-border-subtle: #fca5a5;
+  --color-danger-focus: rgba(179, 38, 30, 0.25);
+
+
+  --color-success: #16a34a;
+  --color-success-hover: #15803d;
+  --color-success-text: #166534;
+  --color-success-bg: #dcfce7;
+  --color-success-border: #86efac;
+
+
+  --color-warning: #f57c00;
+  --color-warning-text: #9a3412;
+  --color-warning-bg: #fff3e0;
+  --color-warning-border: #fed7aa;
+
+  --color-info: #0284c7;
+  --color-info-text: #0369a1;
+  --color-info-bg: #e0f2fe;
+  --color-info-border: #bae6fd;
+
+
+  --matrix-level-1: #2e7d32;
+  --matrix-level-1-bg: #e8f5e9;
+  --matrix-level-1-border: #a5d6a7;
+  --matrix-level-1-solid: #2e7d32;
+  --matrix-level-1-solid-border: #1b5e20;
+  --matrix-level-1-shadow: rgba(46, 125, 50, 0.35);
+
+  --matrix-level-2: #9e7a00;
+  --matrix-level-2-bg: #fffde7;
+  --matrix-level-2-border: #fff59d;
+  --matrix-level-2-solid: #fbc02d;
+  --matrix-level-2-solid-border: #f57f17;
+  --matrix-level-2-solid-text: #212121;
+  --matrix-level-2-shadow: rgba(251, 192, 45, 0.35);
+
+  --matrix-level-3: #e65100;
+  --matrix-level-3-bg: #fff3e0;
+  --matrix-level-3-border: #ffcc80;
+  --matrix-level-3-solid: #f57c00;
+  --matrix-level-3-solid-border: #bf360c;
+  --matrix-level-3-shadow: rgba(245, 124, 0, 0.35);
+
+  --matrix-level-4: #c62828;
+  --matrix-level-4-bg: #ffebee;
+  --matrix-level-4-border: #ef9a9a;
+  --matrix-level-4-solid: #d32f2f;
+  --matrix-level-4-solid-border: #b71c1c;
+  --matrix-level-4-shadow: rgba(211, 47, 47, 0.35);
+
+  --matrix-level-5: #ff0808;
+  --matrix-level-5-bg: #fdc4cd;
+  --matrix-level-5-border: #ff0e0e;
+  --matrix-level-5-solid: #ff0e0e;
+  --matrix-level-5-solid-border: #ff0808;
+  --matrix-level-5-shadow: rgba(255, 14, 14, 0.35);
+
+
+  --color-alpine-dark: #253c38;
+  --color-alpine-primary: #41685c;
+  --color-alpine-muted: #626b67;
+  --color-alpine-border: #d6e0d9;
+  --color-alpine-badge-bg: #fffaf0;
+  --color-alpine-badge-text: #8b6c2d;
+  --color-alpine-badge-border: #c08b30;
+  --color-gold: #e4b86a;
+
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-full: 9999px;
+
+  --shadow-sm: 0 1px 3px rgba(37, 37, 45, 0.05);
+  --shadow-card: 0 2px 8px rgba(30, 25, 60, 0.06);
+  --shadow-hover: 0 4px 12px rgba(30, 25, 60, 0.1);
+  --shadow-focus: 0 0 0 3px rgba(79, 70, 165, 0.15);
+  --shadow-focus-danger: 0 0 0 3px rgba(179, 38, 30, 0.15);
+  --shadow-alpine: 0 4px 20px rgba(37, 60, 56, 0.15);
+  --shadow-pin: 0 1px 4px rgba(0, 0, 0, 0.4);
+
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.2s ease;
+}

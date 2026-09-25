@@ -16,34 +16,34 @@ import { BadgeColor } from './badge.type';
       display: inline-block;
       width: fit-content;
       padding: 0.25rem 0.625rem;
-      border-radius: 999px;
+      border-radius: var(--radius-full);
       font-size: 0.75rem;
       font-weight: 500;
       line-height: 1.2;
 
       &.primary {
-        color: #fff;
-        background: #4f46a5;
+        color: var(--color-text-inverse);
+        background: var(--color-primary);
       }
 
       &.secondary {
-        color: #383273;
-        background: #dedaf4;
+        color: var(--color-primary-hover);
+        background: var(--color-primary-muted);
       }
 
       &.light {
-        color: #4e4c56;
-        background: #e8e7ec;
+        color: var(--color-text-muted);
+        background: var(--color-border-subtle);
       }
 
       &.danger {
-        color: #fff;
-        background: #b3261e;
+        color: var(--color-text-inverse);
+        background: var(--color-danger);
       }
 
       &.success {
-        color: #1b5e20;
-        background: #d4edda;
+        color: var(--color-success-text);
+        background: var(--color-success-bg);
       }
     }
   `,

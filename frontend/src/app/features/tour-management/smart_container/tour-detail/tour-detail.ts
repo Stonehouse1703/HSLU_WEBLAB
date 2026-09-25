@@ -146,7 +146,7 @@ import { isTourUpcoming } from '../../tour.types';
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      color: #4f46a5;
+      color: var(--color-primary);
       font-size: 0.875rem;
       font-weight: 500;
       text-decoration: none;
@@ -175,7 +175,7 @@ import { isTourUpcoming } from '../../tour.types';
     .eyebrow {
       display: block;
       margin-bottom: 0.35rem;
-      color: #65636d;
+      color: var(--color-text-muted);
       font-size: 0.8rem;
       font-weight: 600;
       letter-spacing: 0.08em;
@@ -184,7 +184,7 @@ import { isTourUpcoming } from '../../tour.types';
 
     h2 {
       margin: 0;
-      color: #25252d;
+      color: var(--color-text-main);
       font-size: clamp(1.6rem, 4vw, 2.25rem);
       font-weight: 500;
     }
@@ -203,26 +203,26 @@ import { isTourUpcoming } from '../../tour.types';
       gap: 0.4rem;
       padding: 0 0.85rem;
       height: 2.75rem;
-      border: 1px solid #c8c6d0;
-      border-radius: 8px;
-      background: #fff;
-      color: #4f46a5;
+      border: 1px solid var(--color-border-input);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-surface);
+      color: var(--color-primary);
       font: inherit;
       font-size: 0.875rem;
       font-weight: 500;
       cursor: pointer;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow-sm);
       transition:
-        background-color 0.15s ease,
-        border-color 0.15s ease,
-        box-shadow 0.15s ease,
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
         transform 0.1s ease;
     }
 
     .share-button:hover {
-      background: #f4f3ff;
-      border-color: #4f46a5;
-      box-shadow: 0 2px 6px rgb(79 70 165 / 15%);
+      background: var(--color-primary-subtle);
+      border-color: var(--color-primary);
+      box-shadow: 0 2px 6px var(--color-primary-focus-subtle);
       transform: translateY(-1px);
     }
 
@@ -247,23 +247,23 @@ import { isTourUpcoming } from '../../tour.types';
       justify-content: center;
       width: 2.75rem;
       height: 2.75rem;
-      border: 1px solid #c8c6d0;
-      border-radius: 8px;
-      background: #fff;
-      color: #4f46a5;
+      border: 1px solid var(--color-border-input);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-surface);
+      color: var(--color-primary);
       cursor: pointer;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow-sm);
       transition:
-        background-color 0.15s ease,
-        border-color 0.15s ease,
-        box-shadow 0.15s ease,
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
         transform 0.1s ease;
     }
 
     .edit-button:hover {
-      background: #f4f3ff;
-      border-color: #4f46a5;
-      box-shadow: 0 2px 6px rgb(79 70 165 / 15%);
+      background: var(--color-primary-subtle);
+      border-color: var(--color-primary);
+      box-shadow: 0 2px 6px var(--color-primary-focus-subtle);
       transform: translateY(-1px);
     }
 
@@ -275,16 +275,16 @@ import { isTourUpcoming } from '../../tour.types';
       display: inline-flex;
       align-items: center;
       padding: 0.4rem 0.85rem;
-      border-radius: 9999px;
+      border-radius: var(--radius-full);
       font-size: 0.85rem;
       font-weight: 500;
-      color: #65636d;
-      background: #f0eff4;
-      border: 1px solid #c8c6d0;
+      color: var(--color-text-muted);
+      background: var(--color-border-subtle);
+      border: 1px solid var(--color-border-input);
     }
 
     .joining-indicator {
-      color: #4f46a5;
+      color: var(--color-primary);
       font-size: 0.875rem;
       font-weight: 500;
     }
@@ -297,29 +297,29 @@ import { isTourUpcoming } from '../../tour.types';
     .status-banner {
       margin-bottom: 1rem;
       padding: 0.75rem 1rem;
-      border-radius: 8px;
-      color: #1e3a8a;
-      background: #dbeafe;
-      border: 1px solid #93c5fd;
+      border-radius: var(--radius-md);
+      color: var(--color-info-text);
+      background: var(--color-info-bg);
+      border: 1px solid var(--color-info-border);
       font-size: 0.875rem;
     }
 
     .error-banner {
       margin-bottom: 1rem;
       padding: 0.75rem 1rem;
-      border-radius: 8px;
-      color: #991b1b;
-      background-color: #fee2e2;
-      border: 1px solid #f87171;
+      border-radius: var(--radius-md);
+      color: var(--color-danger-text);
+      background-color: var(--color-danger-bg);
+      border: 1px solid var(--color-danger-border);
       font-size: 0.875rem;
     }
 
     .empty-state {
       padding: 3rem 1rem;
       text-align: center;
-      border-radius: 12px;
-      background: #fff;
-      border: 1px solid #e2e1e8;
+      border-radius: var(--radius-lg);
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border-default);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

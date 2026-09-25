@@ -34,10 +34,10 @@ import { AuthUser } from '../../features/auth/services/auth.service';
     :host {
       position: sticky;
       top: 0;
-      z-index: 1;
+      z-index: 10;
       display: block;
-      border-bottom: 1px solid #e2e1e8;
-      background: #fff;
+      border-bottom: 1px solid var(--color-border-default);
+      background: var(--color-bg-surface);
     }
 
     nav {
@@ -68,72 +68,74 @@ import { AuthUser } from '../../features/auth/services/auth.service';
       text-decoration: none;
       color: inherit;
       padding: 0.35rem 0.5rem;
-      border-radius: 8px;
-      transition: background-color 0.15s ease;
+      border-radius: var(--radius-md);
+      transition: background-color var(--transition-fast);
     }
 
     .user-greeting-link:hover {
-      background: #f4f3ff;
+      background: var(--color-primary-subtle);
     }
 
     .user-greeting-link:hover strong {
-      color: #4f46a5;
+      color: var(--color-primary);
     }
 
     .user-greeting {
       font-size: 0.875rem;
-      color: #65636d;
+      color: var(--color-text-muted);
     }
 
     .user-greeting strong {
-      color: #25252d;
+      color: var(--color-text-main);
     }
 
     a {
       padding: 0.625rem 0.75rem;
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       text-decoration: none;
-      color: #4e4c56;
+      color: var(--color-text-muted);
       font-weight: 500;
+      transition: background-color var(--transition-fast), color var(--transition-fast);
     }
 
     a.active {
-      color: #4f46a5;
-      background: #eeecf9;
+      color: var(--color-primary);
+      background: var(--color-primary-light);
     }
 
     .login-link {
-      background: #eeecf9;
-      color: #4f46a5;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
     }
 
     .register-link {
-      border: 1px solid #d0d5dd;
-      color: #253c38;
-      background: #fff;
+      border: 1px solid var(--color-border-input);
+      color: var(--color-text-main);
+      background: var(--color-bg-surface);
     }
 
     .register-link:hover {
-      background: #f6f6fa;
-      border-color: #4f46a5;
-      color: #4f46a5;
+      background: var(--color-bg-app);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
     }
 
     .logout-btn {
       padding: 0.45rem 0.75rem;
-      border: 1px solid #d0d5dd;
-      border-radius: 8px;
-      background: #fff;
-      color: #65636d;
+      border: 1px solid var(--color-border-input);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-surface);
+      color: var(--color-text-muted);
       font: inherit;
       font-size: 0.875rem;
       cursor: pointer;
-      transition: background-color 0.2s ease, border-color 0.2s ease;
+      transition: background-color var(--transition-normal), border-color var(--transition-normal);
     }
 
     .logout-btn:hover {
-      background: #f6f6fa;
-      border-color: #c8c6d0;
+      background: var(--color-bg-app);
+      border-color: var(--color-border-input);
+      color: var(--color-primary);
     }
 
     @media (max-width: 600px) {

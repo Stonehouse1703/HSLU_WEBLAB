@@ -75,7 +75,7 @@ import { InputFieldError } from '../../../../components/input-field-error/input-
     }
 
     .field label {
-      color: #25252d;
+      color: var(--color-text-main);
       font-weight: 500;
       font-size: 0.875rem;
     }
@@ -84,18 +84,18 @@ import { InputFieldError } from '../../../../components/input-field-error/input-
       width: 100%;
       box-sizing: border-box;
       padding: 0.65rem 0.85rem;
-      border: 1px solid #c8c6d0;
-      border-radius: 8px;
-      background: #fff;
+      border: 1px solid var(--color-border-input);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-surface);
       font: inherit;
       font-size: 0.9rem;
       outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     }
 
     .field input:focus {
-      border-color: #4f46a5;
-      box-shadow: 0 0 0 3px rgba(79, 70, 165, 0.12);
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-focus);
     }
 
     .actions {
@@ -108,11 +108,11 @@ import { InputFieldError } from '../../../../components/input-field-error/input-
     }
 
     .register-switch-link {
-      color: #4f46a5;
+      color: var(--color-primary);
       font-size: 0.875rem;
       text-decoration: none;
       font-weight: 500;
-      transition: text-decoration 0.2s ease;
+      transition: text-decoration var(--transition-normal);
     }
 
     .register-switch-link:hover {
@@ -120,8 +120,8 @@ import { InputFieldError } from '../../../../components/input-field-error/input-
     }
 
     .has-error {
-      border-color: #b3261e !important;
-      background: #fff8f8;
+      border-color: var(--color-danger) !important;
+      background: var(--color-danger-bg-subtle);
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

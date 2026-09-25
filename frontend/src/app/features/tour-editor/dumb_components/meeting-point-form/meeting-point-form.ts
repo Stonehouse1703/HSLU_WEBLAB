@@ -64,7 +64,7 @@ import { InputFieldError } from '../../../../components/input-field-error/input-
     h4 {
       margin-top: 0;
       margin-bottom: 1rem;
-      color: #4f46a5;
+      color: var(--color-primary);
       font-size: 1.05rem;
     }
 
@@ -85,8 +85,8 @@ import { InputFieldError } from '../../../../components/input-field-error/input-
     }
 
     .has-error {
-      border-color: #b3261e !important;
-      background: #fff8f8;
+      border-color: var(--color-danger) !important;
+      background: var(--color-danger-bg-subtle);
     }
 
     @media (max-width: 560px) {

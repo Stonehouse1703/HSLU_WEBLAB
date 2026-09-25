@@ -82,30 +82,30 @@ import 'leaflet-gpx';
       align-items: center;
       gap: 0.35rem;
       padding: 0.35rem 0.65rem;
-      background: #f1f5f9;
-      color: #334155;
-      border: 1px solid #e2e8f0;
-      border-radius: 9999px;
+      background: var(--color-bg-surface-subtle);
+      color: var(--color-text-main);
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-full);
     }
 
     .stat-name {
-      background: #e0f2fe;
-      color: #0369a1;
-      border-color: #bae6fd;
+      background: var(--color-info-bg);
+      color: var(--color-info-text);
+      border-color: var(--color-info-border);
       font-weight: 500;
     }
 
     .map-container {
       width: 100%;
-      border-radius: 12px;
+      border-radius: var(--radius-lg);
       overflow: hidden;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--color-border-default);
+      box-shadow: var(--shadow-sm);
       z-index: 0;
     }
 
     .error-note {
-      color: #dc2626;
+      color: var(--color-danger);
       font-size: 0.85rem;
       margin: 0;
     }
@@ -194,17 +194,21 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     const startIcon = L.divIcon({
       className: 'gpx-marker gpx-start-marker',
-      html: '<div style="background-color:#16a34a;width:14px;height:14px;border-radius:50%;border:2px solid #ffffff;box-shadow:0 1px 4px rgba(0,0,0,0.4);" title="Start"></div>',
+      html: '<div style="background-color:var(--color-success);width:14px;height:14px;border-radius:50%;border:2px solid var(--color-bg-surface);box-shadow:var(--shadow-pin);" title="Start"></div>',
       iconSize: [14, 14],
       iconAnchor: [7, 7],
     });
 
     const endIcon = L.divIcon({
       className: 'gpx-marker gpx-end-marker',
-      html: '<div style="background-color:#dc2626;width:14px;height:14px;border-radius:50%;border:2px solid #ffffff;box-shadow:0 1px 4px rgba(0,0,0,0.4);" title="Ziel"></div>',
+      html: '<div style="background-color:var(--color-danger);width:14px;height:14px;border-radius:50%;border:2px solid var(--color-bg-surface);box-shadow:var(--shadow-pin);" title="Ziel"></div>',
       iconSize: [14, 14],
       iconAnchor: [7, 7],
     });
+
+    const routeColor = typeof window !== 'undefined'
+      ? getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim() || '#4f46a5'
+      : '#4f46a5';
 
     try {
       const gpxLayer = new (L as any).GPX(gpxContent, {
@@ -215,7 +219,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           wptIcons: {},
         },
         polyline_options: {
-          color: '#2563eb',
+          color: routeColor,
           weight: 4,
           opacity: 0.85,
           lineCap: 'round',

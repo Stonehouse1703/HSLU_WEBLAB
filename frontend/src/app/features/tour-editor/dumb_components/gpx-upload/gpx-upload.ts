@@ -97,7 +97,7 @@ export interface GpxLoadedEvent {
 
     h3 {
       margin: 0;
-      color: #253c38;
+      color: var(--color-alpine-dark);
       font-size: 1.1rem;
       font-weight: 600;
     }
@@ -108,18 +108,18 @@ export interface GpxLoadedEvent {
       align-items: center;
       justify-content: center;
       padding: 2rem 1.5rem;
-      border: 2px dashed #cbd5e1;
-      border-radius: 12px;
-      background: #f8fafc;
+      border: 2px dashed var(--color-border-input);
+      border-radius: var(--radius-lg);
+      background: var(--color-bg-surface-subtle);
       cursor: pointer;
       text-align: center;
-      transition: border-color 0.2s ease, background-color 0.2s ease;
+      transition: border-color var(--transition-normal), background-color var(--transition-normal);
     }
 
     .dropzone:hover,
     .dropzone.drag-over {
-      border-color: #4f46a5;
-      background: #f5f3ff;
+      border-color: var(--color-primary);
+      background: var(--color-primary-subtle);
     }
 
     .hidden-input {
@@ -135,13 +135,13 @@ export interface GpxLoadedEvent {
       margin: 0;
       font-size: 0.95rem;
       font-weight: 500;
-      color: #334155;
+      color: var(--color-text-main);
     }
 
     .secondary-text {
       margin: 0.25rem 0 0;
       font-size: 0.8rem;
-      color: #64748b;
+      color: var(--color-text-muted);
     }
 
     .file-card {
@@ -149,9 +149,9 @@ export interface GpxLoadedEvent {
       flex-direction: column;
       gap: 0.75rem;
       padding: 1rem;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      background: #f8fafc;
+      border: 1px solid var(--color-border-default);
+      border-radius: var(--radius-lg);
+      background: var(--color-bg-surface-subtle);
     }
 
     .file-info-header {
@@ -172,30 +172,30 @@ export interface GpxLoadedEvent {
 
     .file-name {
       font-weight: 600;
-      color: #1e293b;
+      color: var(--color-text-main);
       font-size: 0.95rem;
     }
 
     .file-size {
-      color: #64748b;
+      color: var(--color-text-muted);
       font-size: 0.85rem;
       margin-left: 0.35rem;
     }
 
     .remove-button {
       padding: 0.35rem 0.75rem;
-      border: 1px solid #fca5a5;
-      background: #fff;
-      color: #dc2626;
-      border-radius: 6px;
+      border: 1px solid var(--color-danger-border-subtle);
+      background: var(--color-bg-surface);
+      color: var(--color-danger);
+      border-radius: var(--radius-sm);
       font-size: 0.85rem;
       font-weight: 500;
       cursor: pointer;
-      transition: background-color 0.15s ease;
+      transition: background-color var(--transition-fast);
     }
 
     .remove-button:hover {
-      background: #fef2f2;
+      background: var(--color-danger-bg);
     }
 
     .map-preview-wrap {
@@ -208,11 +208,11 @@ export interface GpxLoadedEvent {
     .preview-label {
       font-size: 0.85rem;
       font-weight: 500;
-      color: #475569;
+      color: var(--color-text-muted);
     }
 
     .error-message {
-      color: #dc2626;
+      color: var(--color-danger);
       font-size: 0.85rem;
       margin: 0;
     }

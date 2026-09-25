@@ -125,7 +125,7 @@ import { InputFieldError } from '../../../../components/input-field-error/input-
     h4 {
       margin-top: 0;
       margin-bottom: 1rem;
-      color: #4f46a5;
+      color: var(--color-primary);
       font-size: 1.05rem;
     }
 
@@ -146,7 +146,7 @@ import { InputFieldError } from '../../../../components/input-field-error/input-
     }
 
     .field label {
-      color: #25252d;
+      color: var(--color-text-main);
       font-size: 0.875rem;
       font-weight: 500;
     }
@@ -156,24 +156,24 @@ import { InputFieldError } from '../../../../components/input-field-error/input-
       width: 100%;
       box-sizing: border-box;
       padding: 0.65rem 0.85rem;
-      border: 1px solid #c8c6d0;
-      border-radius: 8px;
-      background: #fff;
+      border: 1px solid var(--color-border-input);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-surface);
       font: inherit;
       font-size: 0.9rem;
       outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
     }
 
     .field input:focus,
     .field select:focus {
-      border-color: #4f46a5;
-      box-shadow: 0 0 0 3px rgba(79, 70, 165, 0.12);
+      border-color: var(--color-primary);
+      box-shadow: var(--shadow-focus);
     }
 
     .has-error {
-      border-color: #b3261e !important;
-      background: #fff8f8;
+      border-color: var(--color-danger) !important;
+      background: var(--color-danger-bg-subtle);
     }
 
     @media (max-width: 560px) {

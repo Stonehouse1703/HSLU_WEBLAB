@@ -31,14 +31,14 @@ import { JsonPipe } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
     .error {
-      color: #b3261e;
+      color: var(--color-danger);
       font-size: 0.8rem;
       margin-top: 0.25rem;
     }
 
     pre {
       margin: 0.25rem 0 0;
-      color: #65636d;
+      color: var(--color-text-muted);
       font-size: 0.75rem;
     }
   `,

@@ -94,11 +94,11 @@ import { RouterLink } from '@angular/router';
       gap: 2rem;
       min-height: 21rem;
       padding: clamp(2rem, 5vw, 4.5rem);
-      border-radius: 20px;
-      color: #fff;
-      background: #253c38;
+      border-radius: var(--radius-2xl);
+      color: var(--color-text-inverse);
+      background: var(--color-alpine-dark);
       overflow: hidden;
-      box-shadow: 0 4px 20px rgb(37 60 56 / 15%);
+      box-shadow: var(--shadow-alpine);
     }
 
     .intro-copy {
@@ -108,7 +108,7 @@ import { RouterLink } from '@angular/router';
     .eyebrow {
       display: block;
       margin-bottom: 0.65rem;
-      color: #e4b86a;
+      color: var(--color-gold);
       font-size: 0.76rem;
       font-weight: 600;
       letter-spacing: 0.12em;
@@ -128,13 +128,13 @@ import { RouterLink } from '@angular/router';
       font-size: clamp(2.2rem, 5vw, 4.5rem);
       font-weight: 500;
       line-height: 1.04;
-      color: #fff;
+      color: var(--color-text-inverse);
     }
 
     .intro p {
       max-width: 35rem;
       margin-bottom: 1.75rem;
-      color: #d6e0d9;
+      color: var(--color-alpine-border);
       line-height: 1.7;
     }
 
@@ -143,16 +143,16 @@ import { RouterLink } from '@angular/router';
       display: inline-flex;
       align-items: center;
       gap: 0.5rem;
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       font-weight: 500;
       text-decoration: none;
-      transition: filter 0.15s ease, transform 0.1s ease;
+      transition: filter var(--transition-fast), transform 0.1s ease;
     }
 
     .primary-action {
       padding: 0.8rem 1.1rem;
-      color: #253c38;
-      background: #e4b86a;
+      color: var(--color-alpine-dark);
+      background: var(--color-gold);
     }
 
     .primary-action:hover,
@@ -165,7 +165,7 @@ import { RouterLink } from '@angular/router';
       display: grid;
       justify-items: center;
       gap: 0.75rem;
-      color: #e4b86a;
+      color: var(--color-gold);
     }
 
     .intro-mark .material-icons {
@@ -174,7 +174,7 @@ import { RouterLink } from '@angular/router';
     }
 
     .mark-label {
-      color: #d6e0d9;
+      color: var(--color-alpine-border);
       font-size: 0.8rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -187,7 +187,7 @@ import { RouterLink } from '@angular/router';
 
     .section-heading h2 {
       margin-bottom: 0;
-      color: #253c38;
+      color: var(--color-alpine-dark);
       font-size: clamp(1.6rem, 3vw, 2.4rem);
       font-weight: 500;
     }
@@ -204,30 +204,30 @@ import { RouterLink } from '@angular/router';
       gap: 1.25rem;
       min-height: 15rem;
       padding: 1.5rem;
-      border: 1px solid #d9ded8;
-      border-radius: 12px;
-      background: #fff;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      border: 1px solid var(--color-alpine-border);
+      border-radius: var(--radius-lg);
+      background: var(--color-bg-surface);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
     }
 
     .feature-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgb(30 25 60 / 6%);
+      box-shadow: var(--shadow-card);
     }
 
     .feature-card--accent {
-      border-color: #e4b86a;
-      background: #fffaf0;
+      border-color: var(--color-gold);
+      background: var(--color-alpine-badge-bg);
     }
 
     .feature-icon {
-      color: #4f7468;
+      color: var(--color-alpine-primary);
       font-size: 2rem;
     }
 
     .feature-card h3 {
       margin-bottom: 0.6rem;
-      color: #253c38;
+      color: var(--color-alpine-dark);
       font-size: 1.15rem;
       font-weight: 600;
     }
@@ -235,13 +235,13 @@ import { RouterLink } from '@angular/router';
     .feature-card p {
       min-height: 4.5rem;
       margin-bottom: 1rem;
-      color: #626b67;
+      color: var(--color-alpine-muted);
       font-size: 0.92rem;
       line-height: 1.6;
     }
 
     .feature-card a {
-      color: #41685c;
+      color: var(--color-alpine-primary);
       font-size: 0.9rem;
       font-weight: 600;
       text-decoration: none;
@@ -256,7 +256,7 @@ import { RouterLink } from '@angular/router';
     }
 
     .feature-note {
-      color: #8b6c2d;
+      color: var(--color-alpine-badge-text);
       font-size: 0.85rem;
       font-weight: 600;
     }
@@ -267,8 +267,8 @@ import { RouterLink } from '@angular/router';
       justify-content: space-between;
       gap: 1.5rem;
       padding: 1.5rem 1.75rem;
-      border-top: 1px solid #d9ded8;
-      border-bottom: 1px solid #d9ded8;
+      border-top: 1px solid var(--color-alpine-border);
+      border-bottom: 1px solid var(--color-alpine-border);
     }
 
     .next-step > div {
@@ -278,28 +278,28 @@ import { RouterLink } from '@angular/router';
     }
 
     .next-step > div > .material-icons {
-      color: #c08b30;
+      color: var(--color-alpine-badge-border);
       font-size: 2rem;
     }
 
     .next-step h2 {
       margin-bottom: 0.35rem;
-      color: #253c38;
+      color: var(--color-alpine-dark);
       font-size: 1.1rem;
       font-weight: 600;
     }
 
     .next-step p {
       margin-bottom: 0;
-      color: #626b67;
+      color: var(--color-alpine-muted);
       font-size: 0.9rem;
     }
 
     .secondary-action {
       flex-shrink: 0;
       padding: 0.75rem 1rem;
-      color: #fff;
-      background: #41685c;
+      color: var(--color-text-inverse);
+      background: var(--color-alpine-primary);
     }
 
     @media (max-width: 800px) {
@@ -322,7 +322,7 @@ import { RouterLink } from '@angular/router';
       }
 
       .intro {
-        border-radius: 12px;
+        border-radius: var(--radius-lg);
       }
 
       .next-step {

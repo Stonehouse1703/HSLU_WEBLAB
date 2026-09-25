@@ -109,7 +109,7 @@ import { User } from '../../user.types';
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      color: #4f46a5;
+      color: var(--color-primary);
       font-size: 0.875rem;
       font-weight: 500;
       text-decoration: none;
@@ -138,7 +138,7 @@ import { User } from '../../user.types';
     .eyebrow {
       display: block;
       margin-bottom: 0.35rem;
-      color: #65636d;
+      color: var(--color-text-muted);
       font-size: 0.8rem;
       font-weight: 600;
       letter-spacing: 0.08em;
@@ -147,7 +147,7 @@ import { User } from '../../user.types';
 
     h2 {
       margin: 0;
-      color: #25252d;
+      color: var(--color-text-main);
       font-size: clamp(1.6rem, 4vw, 2.25rem);
       font-weight: 500;
     }
@@ -162,29 +162,29 @@ import { User } from '../../user.types';
     .error-banner {
       margin-bottom: 1rem;
       padding: 0.75rem 1rem;
-      border-radius: 8px;
-      color: #991b1b;
-      background-color: #fee2e2;
-      border: 1px solid #f87171;
+      border-radius: var(--radius-md);
+      color: var(--color-danger-text);
+      background-color: var(--color-danger-bg);
+      border: 1px solid var(--color-danger-border);
       font-size: 0.875rem;
     }
 
     .success-banner {
       margin-bottom: 1rem;
       padding: 0.75rem 1rem;
-      border-radius: 8px;
-      color: #166534;
-      background-color: #dcfce7;
-      border: 1px solid #86efac;
+      border-radius: var(--radius-md);
+      color: var(--color-success-text);
+      background-color: var(--color-success-bg);
+      border: 1px solid var(--color-success-border);
       font-size: 0.875rem;
     }
 
     .empty-state {
       padding: 3rem 1rem;
       text-align: center;
-      border-radius: 12px;
-      background: #fff;
-      border: 1px solid #e2e1e8;
+      border-radius: var(--radius-lg);
+      background: var(--color-bg-surface);
+      border: 1px solid var(--color-border-default);
     }
 
     @media (max-width: 700px) {
