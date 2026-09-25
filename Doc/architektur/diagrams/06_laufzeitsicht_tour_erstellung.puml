@@ -1,0 +1,41 @@
+@startuml 06_laufzeitsicht_tour_erstellung
+!theme plain
+autonumber
+skinparam defaultFontName "Liberation Sans", Arial, sans-serif
+skinparam roundcorner 6
+skinparam shadowing false
+
+actor "Tourenleiter/in" as Leiter
+participant "TourEditor / Formulare\n(Dumb UI)" as Form
+participant "CreateTourContainer\n(Smart)" as Container
+participant "TourService\n(Frontend)" as FE_Tour
+participant "authInterceptor\n(Frontend)" as Interceptor
+participant "JwtAuthGuard\n(NestJS)" as Guard
+participant "ToursController\n(NestJS)" as BE_Ctrl
+participant "ToursService\n(Backend)" as BE_Svc
+database "MongoDB\n(tours)" as DB
+
+Leiter -> Form : Erfasst Tourendaten\n(Datum, Ort, Höhenmeter, GPX-Track)
+Leiter -> Form : Füllt 3x3 Sicherheitsmatrix aus\n(Gefahrenstufe, Wind, Bewölkung, Gefahrenquellen)
+Leiter -> Container : Klickt "Tour speichern"
+Container -> FE_Tour : createTour(tourInput)
+FE_Tour -> Interceptor : HTTP POST /api/tours (Payload)
+Interceptor -> Interceptor : Fügt Authorization: Bearer <token> hinzu
+Interceptor -> Guard : HTTP Request mit JWT Header
+
+Guard -> Guard : verifyToken(token)\n[Signaturprüfung via HMAC & Expiration-Check]
+Guard -> BE_Ctrl : Zugriff gewährt (CurrentUser: { id, email, ... })
+
+BE_Ctrl -> BE_Ctrl : Datumsprüfung (date >= today)
+BE_Ctrl -> BE_Svc : create(createTourDto, user.id)
+
+BE_Svc -> BE_Svc : Setzt UUID, tourManagerIds = [user.id],\nparticipantIds = [], bettet securityMatrix ein
+BE_Svc -> DB : tourModel.create(tourDocument)
+DB --> BE_Svc : Tour persistiert
+BE_Svc --> BE_Ctrl : Gespeicherte Tour
+BE_Ctrl --> FE_Tour : 201 Created (Tour JSON)
+
+FE_Tour --> Container : Observable Response OK
+Container -> Leiter : Navigation zu /tour-management/:id
+
+@enduml

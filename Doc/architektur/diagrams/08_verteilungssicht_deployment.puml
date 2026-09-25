@@ -1,0 +1,46 @@
+@startuml 08_verteilungssicht_deployment
+!theme plain
+skinparam defaultFontName "Liberation Sans", Arial, sans-serif
+skinparam roundcorner 6
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+node "Client Endgerät\n(Desktop / Smartphone Browser)" as Client #FFFFFF
+
+node "Docker Host (Linux Server / Lokale Entwicklungsmaschine)" {
+
+    package "Docker Compose Netzwerk (default bridge)" {
+
+        node "Container: HSLU_WEBLAB_frontend\n[Image: nginx:alpine]" as C_Frontend #E1D5E7 {
+            artifact "Angular 19 SPA\n(Produktions-Build dist/)" as SPA_Build
+            component "Nginx 1.25 Webserver\n& Reverse Proxy\n(nginx.conf)" as NginxServer
+        }
+
+        node "Container: backend\n[Image: node:24-slim]" as C_Backend #D5E8D4 {
+            component "NestJS Application\n(Node.js Runtime / dist/main.js)" as NestApp
+        }
+
+        node "Container: hslu_weblab_mongo\n[Image: mongo:8]" as C_Mongo #FFE6CC {
+            database "MongoDB Daemon\n(mongod :27017)" as MongoDaemon
+        }
+
+        node "Container: hslu_weblab_mongo_express\n[Image: mongo-express:1]" as C_Express #F8CECC {
+            component "Mongo Express UI\n(Web-Admin Tool)" as ExpressApp
+        }
+    }
+
+    storage "Docker Named Volume\n[mongo-data]" as VolMongo #FFF2CC
+}
+
+Client --> NginxServer : "HTTP Port 80\n(Webseitenaufruf & API Anfragen)"
+Client ..> ExpressApp : "HTTP Port 8081\n(Entwickler DB-Einsicht)"
+
+NginxServer --> SPA_Build : "location / : Statische Bereitstellung\n(try_files $uri /index.html)"
+NginxServer --> NestApp : "location /api/ : Reverse Proxy\nhttp://backend:4566"
+
+NestApp --> MongoDaemon : "Mongoose Wire Protocol\nmongodb://mongo:27017/nest"
+ExpressApp --> MongoDaemon : "mongodb://mongo:27017/"
+
+MongoDaemon --> VolMongo : "Persistierung der BSON-Dateien\nMount: /data/db"
+
+@enduml

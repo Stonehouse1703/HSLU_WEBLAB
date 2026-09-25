@@ -1,0 +1,38 @@
+@startuml 02_bausteinsicht_level1
+!theme plain
+skinparam defaultFontName "Liberation Sans", Arial, sans-serif
+skinparam roundcorner 8
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+actor "Benutzer (Client Browser)" as User
+
+rectangle "Docker Host / Container Umgebung" {
+    node "Nginx Reverse Proxy & Static Host\n(Container: HSLU_WEBLAB_frontend, Port 80)" as Nginx #E1D5E7;line:9673A6
+
+    package "Client-Side SPA" {
+        component "Angular 19 Standalone SPA\n(Browser Runtime, Signals, httpResource)" as AngularSPA #DAE8FC;line:1C4587
+    }
+
+    package "Backend Subsystem" {
+        component "NestJS REST API Backend\n(Container: backend, Node.js 24, Port 4566)\n[Global Prefix: /api]" as Backend #D5E8D4;line:274E13
+    }
+
+    package "Persistenz Subsystem" {
+        database "MongoDB 8.0\n(Container: mongo, Port 27017)\n[Volume: mongo-data]" as Mongo #FFE6CC;line:D79B00
+    }
+
+    component "Mongo Express UI\n(Container: mongo-express, Port 8081)\n[Dev Admin Tool]" as MongoExpress #F8CECC;line:B85E15
+}
+
+User --> Nginx : "1. Ruft Anwendung auf (HTTP :80)"
+Nginx --> AngularSPA : "2. Liefert statische Assets\n(HTML, JS, CSS)"
+User ..> AngularSPA : "3. Führt SPA im Browser aus"
+
+AngularSPA --> Nginx : "4. API Requests (/api/*)"
+Nginx --> Backend : "5. Reverse Proxy Weiterleitung\n(http://backend:4566/api/*)"
+Backend --> Mongo : "6. Mongoose ODM / Wire Protocol\n(mongodb://mongo:27017/nest)"
+
+MongoExpress --> Mongo : "DB Inspection"
+
+@enduml

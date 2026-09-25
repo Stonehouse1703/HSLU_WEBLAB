@@ -1,0 +1,97 @@
+@startuml 03_frontend_architektur
+!theme plain
+skinparam defaultFontName "Liberation Sans", Arial, sans-serif
+skinparam roundcorner 6
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+package "Angular 19 Frontend (Standalone Architecture)" {
+
+    package "Routing & Guards" {
+        component "App Routing\n(routes.config.ts)" as Routing #E1D5E7
+        component "AuthGuard\n(auth.guard.ts)" as AuthGuard #E1D5E7
+    }
+
+    package "Page Layer (Lazy Loaded Routing Targets)" {
+        component "TourOverviewPage" as P_Overview #D5E8D4
+        component "TourDetailPage" as P_Detail #D5E8D4
+        component "TourEditorPage" as P_Editor #D5E8D4
+        component "UserDetailPage" as P_User #D5E8D4
+        component "LoginPage / RegisterPage" as P_Auth #D5E8D4
+    }
+
+    package "Smart Container Layer (State & Business Logic)" {
+        component "TourListContainer" as C_TourList #FFF2CC
+        component "TourDetailContainer" as C_TourDetail #FFF2CC
+        component "CreateTourContainer" as C_CreateTour #FFF2CC
+        component "UserDetailContainer" as C_UserDetail #FFF2CC
+        component "LoginContainer / RegisterContainer" as C_Auth #FFF2CC
+    }
+
+    package "Dumb Components Layer (Pure UI & Presentation)" {
+        component "TourInformation" as D_TourInfo #F8CECC
+        component "SecurityMatrixDisplay" as D_MatrixDisp #F8CECC
+        component "ParticipantInformation" as D_PartInfo #F8CECC
+        component "SecurityMatrixForm" as D_MatrixForm #F8CECC
+        component "TourPlanningForm / GpxUpload" as D_TourForm #F8CECC
+        component "EmergInformation / UserCard" as D_UserCards #F8CECC
+        component "LoginForm / RegisterForm" as D_AuthForms #F8CECC
+    }
+
+    package "Reusable UI Kit & Components" {
+        component "Button / Card / Badge" as UI_Shared #E0E0E0
+        component "LoadingSpinner / InputError" as UI_Feedback #E0E0E0
+    }
+
+    package "Service & State Layer (Angular Signals & Resources)" {
+        component "TourService\n(httpResource, Signals)" as S_Tour #DAE8FC
+        component "UserService\n(httpResource, Signals)" as S_User #DAE8FC
+        component "AuthService\n(Signals: currentUser, isLoggedIn)" as S_Auth #DAE8FC
+        component "authInterceptor\n(HttpInterceptorFn: Bearer Token)" as Interceptor #DAE8FC
+    }
+}
+
+cloud "Backend REST API (/api/*)" as BackendAPI
+
+Routing --> AuthGuard : "Schützt Routen"
+Routing --> P_Overview : "loadComponent"
+Routing --> P_Detail : "loadComponent"
+Routing --> P_Editor : "loadComponent"
+Routing --> P_User : "loadComponent"
+Routing --> P_Auth : "loadComponent"
+
+P_Overview *-- C_TourList
+P_Detail *-- C_TourDetail
+P_Editor *-- C_CreateTour
+P_User *-- C_UserDetail
+P_Auth *-- C_Auth
+
+C_TourDetail --> D_TourInfo : "[tour] (Input)"
+C_TourDetail --> D_MatrixDisp : "[matrix] (Input)"
+C_TourDetail --> D_PartInfo : "[participants] (Input)\n(removeUser, setUserRole) (Output)"
+
+C_CreateTour --> D_TourForm : "[formState] (Input)\n(save) (Output)"
+C_CreateTour --> D_MatrixForm : "[matrixState] (Input)\n(matrixChange) (Output)"
+
+C_UserDetail --> D_UserCards : "[user] (Input)\n(updateUser) (Output)"
+C_Auth --> D_AuthForms : "(submitLogin / submitRegister) (Output)"
+
+D_TourInfo ..> UI_Shared
+D_MatrixDisp ..> UI_Shared
+D_PartInfo ..> UI_Shared
+D_TourForm ..> UI_Shared
+C_TourDetail ..> UI_Feedback
+
+C_TourList --> S_Tour : "getMyTours()"
+C_TourDetail --> S_Tour : "getTourByIdResource()\njoinTour(), removeUser()"
+C_CreateTour --> S_Tour : "createTour(), updateTour()"
+C_UserDetail --> S_User : "getUserByIdResource(), updateUser()"
+C_Auth --> S_Auth : "login(), register()"
+C_TourDetail --> S_Auth : "currentUser Signal"
+
+S_Tour --> Interceptor
+S_User --> Interceptor
+S_Auth --> Interceptor
+Interceptor --> BackendAPI : "HTTP Anfragen mit\nAuthorization: Bearer <token>"
+
+@enduml

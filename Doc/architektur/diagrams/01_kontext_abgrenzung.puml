@@ -1,0 +1,30 @@
+@startuml 01_kontext_abgrenzung
+!theme plain
+skinparam defaultFontName "Liberation Sans", Arial, sans-serif
+skinparam roundcorner 8
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+actor "Tourenleiter/in" as Leiter #D5E8D4;line:274E13
+actor "Teilnehmende Person" as Teilnehmer #DAE8FC;line:1C4587
+
+rectangle "HSLU_WEBLAB Systemgrenze" {
+    component "Webapplikation\n(Tourenverwaltung & 3x3 Matrix)" as App #FFF2CC;line:D6B656
+}
+
+database "MongoDB Persistenz" as DB #F8CECC;line:B85E15
+
+cloud "Externe Einflüsse & Quellen" {
+    node "SLF Lawinenbulletin /\nWetterdienste" as Wetter #E1D5E7;line:9673A6
+    file "GPX-Track Datei\n(Lokales Dateisystem)" as GPX #E1D5E7;line:9673A6
+}
+
+Leiter --> App : "Erstellt Touren, erfasst 3x3 Matrix,\nverwaltet Rollen & sieht Notfallkontakte"
+Teilnehmer --> App : "Sucht Touren, tritt bei,\npflegt persönliches Profil & Notfallkontakt"
+
+App --> DB : "Liest & speichert Touren,\nBenutzerprofile & Notfallkontakte"
+
+Wetter ..> Leiter : "Liefert Gefahrenstufe, Neuschnee,\nWind & Temperaturdaten (manuelle Erfassung)"
+GPX ..> App : "Wird als Route / Track\nin Tour hochgeladen"
+
+@enduml

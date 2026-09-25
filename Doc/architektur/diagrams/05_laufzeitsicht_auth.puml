@@ -1,0 +1,45 @@
+@startuml 05_laufzeitsicht_auth
+!theme plain
+autonumber
+skinparam defaultFontName "Liberation Sans", Arial, sans-serif
+skinparam roundcorner 6
+skinparam shadowing false
+
+actor "Benutzer" as User
+participant "RegisterForm\n(Dumb UI)" as Form
+participant "RegisterContainer\n(Smart)" as Container
+participant "AuthService\n(Angular Signal)" as FE_Auth
+participant "AuthController\n(NestJS)" as BE_Ctrl
+participant "AuthService\n(Backend)" as BE_Auth
+participant "UsersService\n(Backend)" as BE_Users
+database "MongoDB\n(people)" as DB
+
+User -> Form : Füllt Formular aus\n(Name, E-Mail, Passwort, Notfallkontakt)
+User -> Form : Klickt "Konto erstellen"
+Form -> Container : emit submitRegister(data)
+Container -> FE_Auth : register(data)
+
+FE_Auth -> BE_Ctrl : POST /api/auth/register (JSON Payload)
+note over BE_Ctrl : ValidationPipe prüft RegisterDto\n(Passwortlänge >= 6, E-Mail-Format)
+
+BE_Ctrl -> BE_Auth : register(registerDto)
+BE_Auth -> BE_Users : findByEmail(email)
+BE_Users -> DB : findOne({ email })
+DB --> BE_Users : null (E-Mail noch nicht registriert)
+BE_Users --> BE_Auth : null
+
+BE_Auth -> BE_Auth : bcrypt.hash(password, 10)\n[bcrypt Salt-Rounds: 10]
+BE_Auth -> BE_Users : create({ firstName, lastName, email, passwordHash, emergencyContact })
+BE_Users -> DB : create(personDoc)
+DB --> BE_Users : PersonDocument gespeichert
+BE_Users --> BE_Auth : user
+
+BE_Auth -> BE_Auth : jwtService.sign(payload)\n[@nestjs/jwt, 1h Gültigkeit]
+BE_Auth --> BE_Ctrl : { token, user }
+BE_Ctrl --> FE_Auth : 201 Created: { token, user }
+
+FE_Auth -> FE_Auth : localStorage.setItem(token)\ncurrentUser.set(user)
+FE_Auth --> Container : Observable Response OK
+Container -> User : Weiterleitung zu /tour-management
+
+@enduml

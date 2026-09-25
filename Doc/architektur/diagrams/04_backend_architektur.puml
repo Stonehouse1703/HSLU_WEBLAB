@@ -1,0 +1,77 @@
+@startuml 04_backend_architektur
+!theme plain
+skinparam defaultFontName "Liberation Sans", Arial, sans-serif
+skinparam roundcorner 6
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+package "NestJS Backend (Modular Monolith)" {
+
+    package "App Core Layer" {
+        component "AppModule\n(MongooseModule, ObserveModule)" as AppModule #E1D5E7
+        component "Global ValidationPipe\n(whitelist: true, transform: true)" as Pipe #E1D5E7
+    }
+
+    package "AuthModule (@nestjs/jwt, @nestjs/passport)" {
+        component "AuthController\n(/api/auth)" as AuthCtrl #FFF2CC
+        component "AuthService" as AuthSvc #FFF2CC
+        component "JwtService\n(@nestjs/jwt)" as JwtSvc #FFF2CC
+        component "JwtStrategy\n(passport-jwt)" as JwtStrat #FFF2CC
+        component "JwtAuthGuard\n(extends AuthGuard('jwt'))" as JwtGuard #FFF2CC
+        component "AuthUtils / bcrypt\n(hash, compare)" as AuthUtils #FFF2CC
+        component "RegisterDto / LoginDto" as AuthDTO #FFF2CC
+    }
+
+    package "UsersModule" {
+        component "UsersController\n(/api/users)" as UsersCtrl #DAE8FC
+        component "UsersService" as UsersSvc #DAE8FC
+        component "UpdateUserDto" as UsersDTO #DAE8FC
+        component "Person Schema\n(Mongoose Model)" as PersonSchema #DAE8FC
+        component "EmergencyContact Schema" as EmergSchema #DAE8FC
+    }
+
+    package "ToursModule" {
+        component "ToursController\n(/api/tours)" as ToursCtrl #D5E8D4
+        component "ToursService" as ToursSvc #D5E8D4
+        component "CreateTourDto / UpdateTourDto\nSecurityMatrixDto / SetUserRoleDto" as ToursDTO #D5E8D4
+        component "Tour Schema\n(Mongoose Model)" as TourSchema #D5E8D4
+    }
+}
+
+database "MongoDB (Database: nest)" {
+    collections "people" as ColPeople #FFE6CC
+    collections "tours" as ColTours #FFE6CC
+}
+
+cloud "HTTP Request (from Angular Frontend)" as HTTPReq
+
+HTTPReq --> Pipe : "1. Request Data Validation"
+Pipe --> AuthCtrl : "/api/auth/*"
+Pipe --> UsersCtrl : "/api/users/*"
+Pipe --> ToursCtrl : "/api/tours/*"
+
+UsersCtrl ..> JwtGuard : "Geschützt durch Guard"
+ToursCtrl ..> JwtGuard : "Geschützt durch Guard"
+JwtGuard ..> JwtStrat : "Passport JWT-Strategie"
+JwtStrat ..> JwtSvc : "Validiert Signatur"
+
+AuthCtrl --> AuthSvc
+AuthSvc --> JwtSvc : "sign(payload)"
+AuthSvc --> AuthUtils : "bcrypt.compare(), bcrypt.hash()"
+AuthSvc --> UsersSvc : "findByEmail(), create()"
+
+UsersCtrl --> UsersSvc
+UsersSvc --> PersonSchema : "CRUD / MongoDB Query"
+PersonSchema *-- EmergSchema : "Eingebettetes Dokument"
+PersonSchema --> ColPeople
+
+ToursCtrl --> ToursSvc
+ToursCtrl --> UsersSvc : "findTourMembers(), getEmergencyContact()"
+ToursSvc --> TourSchema : "CRUD / MongoDB Query"
+TourSchema --> ColTours
+
+AppModule ..> AuthCtrl
+AppModule ..> UsersCtrl
+AppModule ..> ToursCtrl
+
+@enduml

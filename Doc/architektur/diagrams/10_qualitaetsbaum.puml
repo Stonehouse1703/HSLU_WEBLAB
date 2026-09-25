@@ -1,0 +1,24 @@
+@startwbs 10_qualitaetsbaum
+!theme plain
+skinparam defaultFontName "Liberation Sans", Arial, sans-serif
+skinparam shadowing false
+skinparam roundcorner 6
+
+* Qualitätsanforderungen
+** Sicherheit & Vertraulichkeit (ISO 25010)
+*** Q1: Datenschutz Notfallkontakt (nur Tourenleiter)
+*** NoSQL-Schutz via ValidationPipe (whitelist)
+*** Passwort-Hashing via scrypt & timingSafeEqual
+** Benutzbarkeit & Performance
+*** Q2: Schnelle 3x3-Erfassung (< 200 ms)
+*** Visuelle Lawinen-Gefahrenstufen 1–5
+*** 1-Klick Notfallkontakt-Zugriff
+** Wartbarkeit & Testbarkeit
+*** Q4: Schemalose Matrix-Erweiterung ohne SQL-Migration
+*** Smart Container / Dumb Component Entkopplung
+*** Hohe Testabdeckung (Unit, Integration & Cypress E2E)
+** Betrieb & Zuverlässigkeit
+*** Q3: Ablehnung vergangener Touren (date >= today)
+*** Q5: 1-Befehl-Start via Docker Compose
+*** Zero-CORS Architektur via Nginx Reverse Proxy
+@endwbs

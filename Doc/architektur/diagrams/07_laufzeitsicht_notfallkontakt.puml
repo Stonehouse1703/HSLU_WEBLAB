@@ -1,0 +1,52 @@
+@startuml 07_laufzeitsicht_notfallkontakt
+!theme plain
+autonumber
+skinparam defaultFontName "Liberation Sans", Arial, sans-serif
+skinparam roundcorner 6
+skinparam shadowing false
+
+actor "Teilnehmer/in" as User
+actor "Tourenleiter/in" as Leiter
+participant "TourDetailContainer\n(Angular)" as FE_Detail
+participant "UserDetailContainer\n(Angular)" as FE_User
+participant "ToursController\n(NestJS)" as BE_Tours
+participant "ToursService\n(NestJS)" as Svc_Tours
+participant "UsersService\n(NestJS)" as Svc_Users
+database "MongoDB" as DB
+
+== Phase 1: Tour-Beitritt durch Teilnehmer ==
+User -> FE_Detail : Klickt "Tour beitreten"
+FE_Detail -> BE_Tours : POST /api/tours/:tourId/join\n[Authorization: Bearer <Teilnehmer-Token>]
+BE_Tours -> Svc_Tours : joinTour(tourId, userId)
+Svc_Tours -> DB : findOneAndUpdate({ id: tourId },\n  { $addToSet: { participantIds: userId } })\n[Atomares Hinzufügen]
+DB --> Svc_Tours : Aktualisierte Tour
+Svc_Tours --> BE_Tours : Tour mit neuem Teilnehmer
+BE_Tours --> FE_Detail : 200 OK (Tour JSON)
+FE_Detail -> User : Zeigt Status "Beigetreten"
+
+== Phase 2: Notfallkontakt-Abfrage im Ernstfall ==
+Leiter -> FE_Detail : Öffnet Teilnehmerliste der Tour
+Leiter -> FE_Detail : Klickt "Notfallkontakt" bei Teilnehmer
+FE_Detail -> FE_User : Navigation zu /user/:userId?tourId=:tourId
+FE_User -> BE_Tours : GET /api/tours/:tourId/users/:userId/emergency-contact\n[Authorization: Bearer <Leiter-Token>]
+
+BE_Tours -> Svc_Tours : getUserRoleByTour(tourId, leiterId)
+Svc_Tours -> DB : findOne({ id: tourId, tourManagerIds: leiterId })
+
+alt Leiter ist autorisiert (tourManagerIds enthält leiterId)
+    DB --> Svc_Tours : Match gefunden (isAdmin = true)
+    Svc_Tours --> BE_Tours : true
+    BE_Tours -> Svc_Users : findByIdWithEmergencyContact(userId)
+    Svc_Users -> DB : findOne({ id: userId }).select('-_id -__v -passwordHash')
+    DB --> Svc_Users : Person inkl. Notfallkontakt
+    Svc_Users --> BE_Tours : User-Objekt mit EmergencyContact
+    BE_Tours --> FE_User : 200 OK (Name, Notfallkontakt & Telefon)
+    FE_User -> Leiter : Zeigt Notfallkontakt sofort an
+else Nicht berechtigt (z. B. normaler Teilnehmer)
+    DB --> Svc_Tours : null (isAdmin = false)
+    Svc_Tours --> BE_Tours : false
+    BE_Tours --> FE_User : 403 Forbidden ("Keine Administratorrechte")
+    FE_User -> Leiter : Fehlermeldung / Zugriff verweigert
+end
+
+@enduml

@@ -1,0 +1,63 @@
+@startuml 09_datenmodell_persistenz
+!theme plain
+skinparam defaultFontName "Liberation Sans", Arial, sans-serif
+skinparam roundcorner 6
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+
+class Person <<Mongoose Document: people>> {
+    + id: string <<UUID, unique>>
+    + firstName: string
+    + lastName: string
+    + email: string <<unique, sparse>>
+    + passwordHash: string <<salt:hash>>
+    + birthday: string
+    + phoneNumber: string
+    + emergencyContact: EmergencyContact
+}
+
+class EmergencyContact <<Embedded Subdocument>> {
+    + firstName: string
+    + lastName: string
+    + phoneNumber: string
+    + relationship: string
+}
+
+class Tour <<Mongoose Document: tours>> {
+    + id: string <<UUID, unique>>
+    + name: string
+    + date: string <<YYYY-MM-DD>>
+    + time: string
+    + location: string
+    + difficulty: string
+    + altitude: string
+    + distance: string
+    + cost: number
+    + travelRoute: string
+    + requirements: string
+    + gpxData: string
+    + securityMatrix: SecurityMatrix
+    + tourManagerIds: string[] <<UUID Ref>>
+    + participantIds: string[] <<UUID Ref>>
+}
+
+class SecurityMatrix <<Embedded Object (3x3 Matrix)>> {
+    + participants: string
+    + cloudCover: string
+    + precipitation: string
+    + visibility: string
+    + wind: string
+    + temperature2000m: string
+    + avalancheDanger: number <<1..5>>
+    + dangerSources: string[]
+    + dangerLocations: string[]
+    + otherHazards: string[]
+}
+
+Person *-- "1" EmergencyContact : "eingebettet (_id: false)"
+Tour *-- "0..1" SecurityMatrix : "eingebettet (dynamische Felder)"
+
+Tour o-- "1..*" Person : "tourManagerIds\n(Referenz per UUID)"
+Tour o-- "0..*" Person : "participantIds\n(Referenz per UUID)"
+
+@enduml
