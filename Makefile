@@ -1,6 +1,14 @@
-.PHONY: all architektur fazit journal projekt watch-architektur watch-fazit watch-journal watch-projekt clean help
+.PHONY: all architektur fazit journal projekt watch-architektur watch-fazit watch-journal watch-projekt clean test help
 
 all: architektur fazit journal projekt
+
+test:
+	npm --prefix backend run lint
+	npm --prefix backend run build
+	npm --prefix backend test
+	npm --prefix backend run test:e2e
+	npm --prefix frontend test -- --watch=false
+	npm --prefix frontend run build
 
 architektur:
 	typst compile --root . Doc/architektur/main.typ Doc/architektur.pdf
@@ -31,6 +39,7 @@ clean:
 
 help:
 	@echo "Verfügbare Befehle:"
+	@echo "  make test               Führt alle Tests (Backend & Frontend) lokal aus"
 	@echo "  make all                Kompiliert alle Dokumente"
 	@echo "  make architektur        Kompiliert Doc/architektur/main.typ"
 	@echo "  make fazit              Kompiliert Doc/fazit-reflexion/main.typ"
