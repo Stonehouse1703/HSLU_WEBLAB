@@ -12,6 +12,16 @@ import {
 import * as L from 'leaflet';
 import 'leaflet-gpx';
 
+function getGpxConstructor(): any {
+  if (typeof (L as any)?.GPX === 'function') {
+    return (L as any).GPX;
+  }
+  if (typeof window !== 'undefined' && typeof (window as any).L?.GPX === 'function') {
+    return (window as any).L.GPX;
+  }
+  return null;
+}
+
 @Component({
   selector: 'app-map',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -211,7 +221,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       : '#4f46a5';
 
     try {
-      const gpxLayer = new (L as any).GPX(gpxContent, {
+      const GpxClass = getGpxConstructor();
+      if (!GpxClass) {
+        throw new Error('Leaflet GPX plugin (L.GPX) ist weder auf dem Leaflet-Namespace noch auf window.L verfügbar.');
+      }
+
+      const gpxLayer = new GpxClass(gpxContent, {
         async: true,
         marker_options: {
           startIcon,

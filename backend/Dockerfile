@@ -6,7 +6,7 @@ COPY backend/package*.json ./
 RUN npm ci
 
 COPY backend/ ./
-RUN npm run build
+RUN rm -f *.tsbuildinfo && npm run build
 
 FROM node:24-slim
 
