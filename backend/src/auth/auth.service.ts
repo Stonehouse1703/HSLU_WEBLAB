@@ -3,16 +3,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service.js';
 import { LoginDto } from './dto/login.dto.js';
 import { RegisterDto } from './dto/register.dto.js';
-import {
-  generateToken,
-  hashPassword,
-  TokenPayload,
-  verifyPassword,
-  verifyToken,
-} from './auth.utils.js';
+import { TokenPayload } from './auth.utils.js';
 
 export interface AuthResult {
   token: string;
@@ -26,7 +22,10 @@ export interface AuthResult {
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async login(loginDto: LoginDto): Promise<AuthResult> {
     const email = loginDto.email?.toLowerCase().trim();
@@ -39,7 +38,7 @@ export class AuthService {
       throw new UnauthorizedException('Ungültige E-Mail-Adresse oder Passwort.');
     }
 
-    const isValid = verifyPassword(loginDto.password, userDoc.passwordHash);
+    const isValid = await bcrypt.compare(loginDto.password, userDoc.passwordHash);
     if (!isValid) {
       throw new UnauthorizedException('Ungültige E-Mail-Adresse oder Passwort.');
     }
@@ -51,7 +50,7 @@ export class AuthService {
       lastName: userDoc.lastName,
     };
 
-    const token = generateToken(payload);
+    const token = this.jwtService.sign(payload);
 
     return {
       token,
@@ -79,7 +78,7 @@ export class AuthService {
       throw new BadRequestException('Diese E-Mail-Adresse wird bereits verwendet.');
     }
 
-    const passwordHash = hashPassword(registerDto.password);
+    const passwordHash = await bcrypt.hash(registerDto.password, 10);
     const createdUser = await this.usersService.create({
       firstName: registerDto.firstName,
       lastName: registerDto.lastName,
@@ -103,7 +102,7 @@ export class AuthService {
       lastName: createdUser.lastName,
     };
 
-    const token = generateToken(payload);
+    const token = this.jwtService.sign(payload);
 
     return {
       token,
@@ -114,13 +113,5 @@ export class AuthService {
         email: createdUser.email ?? email,
       },
     };
-  }
-
-  extractUserFromHeader(authHeader?: string): TokenPayload | null {
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return null;
-    }
-    const token = authHeader.substring(7).trim();
-    return verifyToken(token);
   }
 }

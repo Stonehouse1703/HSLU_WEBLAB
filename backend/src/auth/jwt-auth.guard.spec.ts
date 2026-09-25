@@ -1,10 +1,17 @@
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { JwtAuthGuard } from './jwt-auth.guard.js';
+import { JwtStrategy } from './jwt.strategy.js';
 import { generateToken, TokenPayload } from './auth.utils.js';
 
 describe('JwtAuthGuard', () => {
-  const guard = new JwtAuthGuard();
+  let guard: JwtAuthGuard;
+  let strategy: JwtStrategy;
+
+  beforeEach(() => {
+    strategy = new JwtStrategy();
+    guard = new JwtAuthGuard();
+  });
 
   const mockPayload: TokenPayload = {
     id: 'user-123',
@@ -29,11 +36,11 @@ describe('JwtAuthGuard', () => {
     } as unknown as ExecutionContext;
   };
 
-  it('should allow access and attach user to request when token is valid', () => {
+  it('should allow access and attach user to request when token is valid', async () => {
     const token = generateToken(mockPayload);
     const context = createMockContext(`Bearer ${token}`);
 
-    const result = guard.canActivate(context);
+    const result = await (guard.canActivate(context) as Promise<boolean>);
 
     expect(result).toBe(true);
     const req = context.switchToHttp().getRequest();
@@ -42,17 +49,25 @@ describe('JwtAuthGuard', () => {
     expect(req.user.email).toBe('test@example.ch');
   });
 
-  it('should throw UnauthorizedException when no Authorization header is provided', () => {
+  it('should throw UnauthorizedException when no Authorization header is provided', async () => {
     const context = createMockContext(undefined);
 
-    expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
-    expect(() => guard.canActivate(context)).toThrow('Nicht authentifiziert.');
+    await expect(guard.canActivate(context) as Promise<boolean>).rejects.toThrow(
+      UnauthorizedException,
+    );
+    await expect(guard.canActivate(context) as Promise<boolean>).rejects.toThrow(
+      'Nicht authentifiziert.',
+    );
   });
 
-  it('should throw UnauthorizedException when token is invalid or malformed', () => {
+  it('should throw UnauthorizedException when token is invalid or malformed', async () => {
     const context = createMockContext('Bearer invalid.jwt.token');
 
-    expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
-    expect(() => guard.canActivate(context)).toThrow('Nicht authentifiziert.');
+    await expect(guard.canActivate(context) as Promise<boolean>).rejects.toThrow(
+      UnauthorizedException,
+    );
+    await expect(guard.canActivate(context) as Promise<boolean>).rejects.toThrow(
+      'Nicht authentifiziert.',
+    );
   });
 });

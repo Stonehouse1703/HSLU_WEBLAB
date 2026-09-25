@@ -10,12 +10,10 @@ import {
 
 describe('Auth Utils', () => {
   describe('hashPassword and verifyPassword', () => {
-    it('should generate a salt and hash separated by colon', () => {
+    it('should generate a valid bcrypt hash format', () => {
       const hash = hashPassword('my-secret-password');
-      expect(hash).toContain(':');
-      const [salt, key] = hash.split(':');
-      expect(salt.length).toBe(32); // 16 bytes hex
-      expect(key.length).toBe(128); // 64 bytes hex
+      expect(hash).toMatch(/^\$2[ab]\$\d+\$/);
+      expect(hash.length).toBeGreaterThan(50);
     });
 
     it('should verify correct password successfully', () => {
@@ -31,8 +29,7 @@ describe('Auth Utils', () => {
 
     it('should return false for invalid or corrupted hash format', () => {
       expect(verifyPassword('password', '')).toBe(false);
-      expect(verifyPassword('password', 'invalid-hash-without-colon')).toBe(false);
-      expect(verifyPassword('password', 'salt:invalid-hex-length')).toBe(false);
+      expect(verifyPassword('password', 'invalid-hash-format')).toBe(false);
     });
   });
 

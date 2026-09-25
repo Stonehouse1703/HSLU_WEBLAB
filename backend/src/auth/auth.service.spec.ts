@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { AuthService } from './auth.service.js';
 import { UsersService } from '../users/users.service.js';
@@ -10,6 +11,9 @@ describe('AuthService', () => {
   let usersService: {
     findByEmail: ReturnType<typeof vi.fn>;
     create: ReturnType<typeof vi.fn>;
+  };
+  let jwtService: {
+    sign: ReturnType<typeof vi.fn>;
   };
 
   const mockUser = {
@@ -34,10 +38,15 @@ describe('AuthService', () => {
       create: vi.fn(),
     };
 
+    jwtService = {
+      sign: vi.fn().mockReturnValue('mock-jwt-token-xyz'),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
         { provide: UsersService, useValue: usersService },
+        { provide: JwtService, useValue: jwtService },
       ],
     }).compile();
 
@@ -137,10 +146,10 @@ describe('AuthService', () => {
           firstName: 'Hans',
           lastName: 'Meier',
           email: 'hans@meier.ch',
-          passwordHash: expect.stringContaining(':'),
+          passwordHash: expect.stringMatching(/^\$2[ab]\$/),
         }),
       );
-      expect(result.token).toBeDefined();
+      expect(result.token).toBe('mock-jwt-token-xyz');
       expect(result.user.id).toBe('new-user-id');
     });
   });
