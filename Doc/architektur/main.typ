@@ -260,6 +260,19 @@ Ablauf für Beitritt und Berechtigungsprüfung im Notfall:
   [Q3], [Beitrittsversuch zu einer vergangenen Tour.], [Backend prüft `date < today` und lehnt den Beitritt ab.], [HTTP 400 Bad Request.],
   [Q4], [Matrix wird später um neue Gefahrenfelder erweitert.], [Da MongoDB schemalos speichert, muss nur das DTO angepasst werden.], [Keine SQL-Migration nötig.],
   [Q5], [Start auf einem frischen Entwicklungsrechner mit Docker.], [Startet Frontend, Backend und Datenbank ohne manuelle Vorarbeit.], [`docker compose up` auf Port 80.],
+  [Q6], [Bewertung der Web-Performance und Qualität mit Google Lighthouse (Mobile & Desktop).], [Die Anwendung lädt effizient, ist barrierefrei, suchmaschinenoptimiert und erfüllt Web-Best-Practices.], [Scores für Performance, Accessibility, Best Practices und SEO betragen jeweils $> 90$[cite: 2, 3].],
+)
+
+== Lighthouse 
+
+#figure(
+  grid(
+    columns: (1fr, 1fr),
+    gutter: 10pt,
+    image("assets/mobile.png", width: 100%),
+    image("assets/desktop.png", width: 100%)
+  ),
+  caption: [Lighthouse-Reports: Mobile (links) und Desktop (rechts) zeigen in allen Qualitätsmetriken Scores von über 90[cite: 2, 3].]
 )
 
 = Risiken & technische Schulden
