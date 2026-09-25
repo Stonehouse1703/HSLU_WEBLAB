@@ -11,7 +11,7 @@
   show-declaration: false,
 )
 
-= Introduction & Goals
+= Einführung & Ziele
 
 Wer eine Skitour für eine Gruppe leitet, trägt viel Verantwortung. Kommt es zu einem Notfall am Berg, muss die Tourenleitung sofort die Notfallkontakte der Teilnehmenden griffbereit haben. Zudem fordert die Rechtsprechung im Ernstfall den Nachweis einer sorgfältigen Tourenplanung nach anerkannten Standards, insbesondere der 3x3-Sicherheitsmatrix (Verhältnisse, Gelände, Mensch).
 
@@ -38,7 +38,7 @@ Notfallkontakte fehlen oder sind unauffindbar, und die 3x3-Planung kann nirgends
   [Dozent / Experte], [Dominik Witschard (HSLU)], [Klare Softwarearchitektur, nachvollziehbar begründete Technologiewahl, Testabdeckung und verständlicher Code.],
 )
 
-= Context & Scope
+= Kontext & Abgrenzung
 
 == Fachlicher Kontext
 Das System fokussiert sich auf die Planung, Durchführung und rechtliche Absicherung von Touren. Externe Daten (SLF-Lawinenbulletin, Wetterdaten) werden vom Tourenleiter manuell in die 3x3-Matrix übertragen. GPX-Routentracks können als Datei hochgeladen werden.
@@ -55,10 +55,11 @@ Das System fokussiert sich auf die Planung, Durchführung und rechtliche Absiche
 
 == In Scope
 #list(marker: "+",
-  [*Touren-CRUD*: Erstellen, Bearbeiten, Löschen und Detailansicht von Touren.],
+  [*Touren-CRUD*: Vollständiges Erstellen, Anzeigen, Bearbeiten und Löschen von Touren (Mindestanforderung).],
+  [*Unterschiedliche Darstellungsformen*: Präsentation der Tourendaten in drei inhaltlich eigenständigen Darstellungsformen (Mindestanforderung): Kachel-/Katalogansicht (`TourPreview`), interaktive geografische Karte (`Map` mit Leaflet & GPX-Visualisierung) und strukturierte 3x3-Risikomatrix (`SecurityMatrixDisplay`).],
   [*Digitale 3x3-Sicherheitsmatrix*: Strukturierte Risikobeurteilung nach Werner Munter (Verhältnisse, Gelände, Mensch).],
   [*Notfallkontakt-Erfassung*: Hinterlegung bei der Registrierung und Bearbeitung im Profil.],
-  [*Geschützter Notfallkontakt-Zugriff*: Zugriff auf Notfalldaten ausschliesslich für autorisierte Tourenleiter der jeweiligen Tour.],
+  [*Geschützter Notfallkontakt-Zugriff*: Zugriff auf Notfalldaten ausschliesslich für autorisierte Tourenleiter der jeweiligen Tour (Principle of Least Privilege).],
   [*Teilnehmer- und Rollenverwaltung*: Beitritt per Link und Verwaltung von Leiter- und Teilnehmerrollen.],
   [*GPX-Routenupload*: Hochladen und Anzeigen von GPX-Tracks direkt in der Tour.],
 )
@@ -71,21 +72,26 @@ Das System fokussiert sich auf die Planung, Durchführung und rechtliche Absiche
   [*Live-GPS-Tracking*: Keine Turn-by-Turn-Navigation oder Live-Ortung während der Tour.],
 )
 
-= Solution Strategy
+= Lösungsstrategie
 
-Da wir im Modul WebLab freie Technologiewahl hatten, fasst die folgende Tabelle die gewählten Kerntechnologien und die Gründe dafür kurz und bündig zusammen:
+Die Lösungsstrategie beschreibt die grundlegenden architektonischen Leitlinien und Ansätze, mit denen die in Kapitel 1 definierten Qualitätsziele (Datenschutz, Schnelligkeit/Usability, Wartbarkeit/Testbarkeit, 1-Befehl-Start) realisiert werden:
 
-#table(
-  columns: (1.1fr, 1.4fr, 2.5fr, auto),
-  [*Bereich*], [*Gewählte Technologie*], [*Warum gewählt? (Begründung)*], [*ADR*],
-  [Backend], [NestJS 11 (TypeScript)], [Klare Schichtenarchitektur (Controller, Service, Modul). Gleiche Denkweise wie Angular und automatische Validierung via `class-validator`.], [ADR-01],[Frontend], [Angular 19 (Standalone & Signals)], [Alles aus einer Hand (Routing, Forms, HTTP). Standalone Components und Signals sparen Modul-Boilerplate und bieten direkte Reaktivität.], [ADR-02],
-  [Datenbank], [MongoDB 8.0 & Mongoose], [Hierarchische 3x3-Matrix und Notfallkontakte direkt als BSON einbettbar; keine zeitraubenden SQL-Joins für dynamische Matrixfelder.], [ADR-03],
-  [Auth], [`@nestjs/jwt`, Passport & bcrypt], [Standard-Stack im NestJS-Ökosystem: Sicheres Passwort-Hashing via bcrypt und standardisierte JWT-Verwaltung mit Passport ohne fehleranfällige Eigenbau-Krypto.], [ADR-04],
-  [Deployment], [Docker Compose & Nginx], [1-Befehl-Start (`docker compose up --build`). Nginx serviert das Frontend und leitet `/api/` weiter; keine CORS-Probleme.], [ADR-05],
-  [Architektur], [Smart / Dumb Components], [Smart Container steuern State und API-Calls, Dumb Components zeigen nur an (`@Input`) und melden Events (`@Output`).], [ADR-02],
-)
+1. *Entkoppelter Fullstack-Webstack (Modularer Monolith REST API + Standalone SPA)*:
+   Das Gesamtsystem wird in ein typisiertes TypeScript-Frontend (Angular 19) und ein strukturiertes TypeScript-Backend (NestJS 11) getrennt, die über eine RESTful JSON-Schnittstelle kommunizieren. Im Backend sichert der Aufbau als Modularer Monolith (`auth`, `tours`, `users`) eine saubere Domänentrennung und hohe Testbarkeit ohne die Netzwerk- und Betriebs-Komplexität von Microservices (-> ADR-01).
 
-= Building Block View
+2. *Datenschutz & Least Privilege an der Servergrenze*:
+   Hochsensible Notfallkontakte werden serverseitig in allen Standard-DB-Abfragen per Mongoose-Projektion maskiert (`.select('-emergencyContact')`). Eine Einsicht erfolgt ausschliesslich über einen gesonderten Endpunkt, der die Tourenleiter-Rolle des anfragenden JWT-Nutzers zwingend prüft. Sensible Daten werden niemals unbefugt an den Browser ausgeliefert (-> ADR-04, ADR-06).
+
+3. *Dokumentenorientiertes Aggregat-Muster (MongoDB)*:
+   Die 3x3-Sicherheitsmatrix und Notfallkontakte bilden fachlich feste Aggregate mit ihrer jeweiligen Entität (Tour bzw. Person). Sie werden direkt als BSON-Subdokumente eingebettet. Dies verhindert teure Joins, sichert atomare Updates (`$addToSet`) und ermöglicht schemalose Felderweiterungen ohne SQL-Migrationen (-> ADR-03).
+
+4. *Framework-native Reaktivität (Signals & Smart/Dumb)*:
+   Im Frontend wird auf schwere externe State-Libraries (wie NgRx/Redux) verzichtet. Stattdessen etablieren Angular Signals (`signal`, `computed`, `httpResource`) und das Smart/Dumb-Komponentenmuster eine feingranulare, transparente Reaktivität mit minimalem Boilerplate und automatischer Change Detection (`OnPush`) (-> ADR-02).
+
+5. *Zero-CORS Reverse-Proxy & Container-Deployment*:
+   Ein schlanker Nginx-Container fungiert als einziger öffentlicher Einstiegspunkt (Port 80). Er liefert das statische Angular-Produktionsbundle aus und leitet API-Aufrufe (`/api/*`) intern an das NestJS-Backend weiter. Dies eliminiert CORS-Probleme vollständig und ermöglicht den reproduzierbaren 1-Befehl-Start via Docker Compose (-> ADR-05).
+
+= Bausteinsicht
 
 == Bausteinsicht Level 1: Gesamtsystem Whitebox
 Das System läuft vollständig isoliert in Docker Compose:
@@ -115,7 +121,7 @@ Das Frontend ist nach Features und dem Smart/Dumb-Muster strukturiert:
 #table(
   columns: (1.2fr, 2.8fr),
   [*Ordner / Bereich*], [*Inhalt & Verantwortung*],
-  [`features/tour-management/`], [Tourenübersicht, Detailansicht, Teilnehmerliste, 3x3-Matrix-Anzeige (`TourInformation`, `SecurityMatrixDisplay`).],
+  [`features/tour-management/`], [Tourenverwaltung in verschiedenen Darstellungsformen: Katalogübersicht (`TourPreview`), interaktive Karte (`Map` mit Leaflet/GPX), Detailansicht (`TourInformation`), Teilnehmerliste und 3x3-Matrix (`SecurityMatrixDisplay`).],
   [`features/tour-editor/`], [Formulare zur Tourenerstellung und Bearbeitung der 3x3-Matrix, GPX-Upload (`TourForm`, `SecurityMatrixForm`).],
   [`features/user/`], [Benutzerprofil, Bearbeitung der Notfallkontakte, geschützte Notfallansicht (`UserCard`, `EmergInformation`).],
   [`features/auth/`], [Login- und Registrierungsformulare, `AuthService`, `authInterceptor`, `authGuard`.],
@@ -136,7 +142,7 @@ Das Backend ist als modularer Monolith organisiert:
 - *UsersModule*: Profilverwaltung; blendet sensible Notfallkontakte bei Standardabfragen immer aus (`.select('-emergencyContact')`).
 - *ToursModule*: Touren, 3x3-Sicherheitsmatrix, Rollen (`admin`/`participant`) und autorisierte Notfallkontakt-Abfrage.
 
-= Runtime View
+= Laufzeitsicht
 
 == Szenario 1: Registrierung & Login
 Ablauf bei der Registrierung eines neuen Benutzers mit Notfallkontakt:
@@ -180,7 +186,7 @@ Ablauf für Beitritt und Berechtigungsprüfung im Notfall:
    - *Ist Tourenleiter*: Gibt Notfallkontakt mit HTTP 200 zurück.
    - *Kein Tourenleiter*: Bricht sofort ab mit HTTP 403 Forbidden.
 
-= Deployment View
+= Verteilungssicht & Deployment
 
 #figure(
   image("diagrams/08_verteilungssicht_deployment.png", width: 92%),
@@ -192,7 +198,13 @@ Ablauf für Beitritt und Berechtigungsprüfung im Notfall:
 - *Backend*: Stage 1 kompiliert TypeScript. Stage 2 führt nur `dist/` mit Produktions-Dependencies aus.
 - *Nginx-Routing*: Serviert Angular per HTML5-Fallback (`try_files $uri /index.html`) und leitet `/api/` an das Backend weiter (`proxy_pass http://backend:4566`). Kein CORS nötig.
 
-= Crosscutting Concepts
+== Automatisierte CI/CD Pipeline (GitHub Actions)
+Neben dem reproduzierbaren 1-Befehl-Start via `docker compose up --build` wird die Codebasis bei jedem Push und Pull Request auf `main` über eine dreistufige GitHub Actions Pipeline (`.github/workflows/ci.yml`) automatisiert geprüft:
+- *Backend-Job*: Linter (`oxlint`/ESLint), TypeScript-Build, 51 Unit-Tests und 20 API-Integrationstests gegen `MongoMemoryServer`.
+- *Frontend-Job*: Dependency-Installation (`npm ci`), Multi-Stage Build und 121 Frontend-Unit-Tests via Vitest.
+- *E2E-Job*: Cypress-Integrationstests zur Validierung der Gesamtabläufe (Authentifizierung, Tourenverwaltung, Navigation).
+
+= Querschnittskonzepte
 
 == Ownership, Datenschutz & Sicherheit
 - *Datenschutz*: Standardabfragen filtern Notfallkontakte immer serverseitig aus (`.select('-emergencyContact')`).
@@ -219,8 +231,15 @@ Ablauf für Beitritt und Berechtigungsprüfung im Notfall:
   [Komponenten-Kommunikation], [Smart Container verwalten State; Dumb Components nutzen ausschliesslich `@Input` und `@Output`.],
   [Change Detection], [`ChangeDetectionStrategy.OnPush` auf allen Komponenten für gute Performance.],
   [Styling & Feedback], [CSS Design-System mit Farbcodes für Lawinenwarnstufen; Validierungsfeedback via `InputFieldError`.],
+  [Responsive Design], [Mobile-First via CSS Flexbox & Grid; grossflächige Touch-Bedienung für den Bergsport; dynamisches Leaflet-Resize. Nachgewiesen durch Lighthouse Mobile Score $> 90$.],
   [Offline-Strategie], [Tokens/User im `localStorage`. Für Notfallkontakte ohne Netz ist der Ausbau zur PWA konzipiert.],
 )
+
+== Bewusste Architektur-Abweichungen & Trade-offs
+Zur Erfüllung der Qualitätsziele und Vermeidung unnötiger Komplexität wurden bewusste architektonische Abweichungen von gängigen Standardmustern gewählt:
+- *Signals statt externem State-Management (NgRx/Redux)*: Für den Scope der Applikation bieten Angular Signals (`signal`, `computed`, `httpResource`) eine leichtgewichtige, performante Reaktivität ohne komplexen Action/Reducer-Boilerplate.
+- *UUIDs statt MongoDB ObjectIds & Service-Layer Resolving*: Domänen-IDs werden als UUIDs generiert. Referenzen (`tourManagerIds`, `participantIds`) werden im Service über `$in`-Queries aufgelöst statt über Mongoose-`populate()`, was die Domäne sauber von Datenbank-Interna entkoppelt.
+- *Eingebettete BSON-Dokumente statt Tabellen-Normalisierung*: Die 3x3-Sicherheitsmatrix und Notfallkontakte sind als Subdokumente direkt eingebettet. Dies verhindert teure Joins und garantiert atomare Konsistenz beim Speichern.
 
 == Testing
 #table(
@@ -234,16 +253,42 @@ Ablauf für Beitritt und Berechtigungsprüfung im Notfall:
 
 = Architekturentscheidungen (ADRs)
 
-#table(
-  columns: (auto, 1.1fr, 1.3fr, 2.6fr),
-  [*ADR*], [*Thema*], [*Entscheidung*], [*Begründung*],
-  [ADR-01], [Backend], [NestJS 11 (TypeScript)], [Klare Schichten, Dependency Injection, fühlt sich wie Angular an und spart Validierungscode via `class-validator`.],
-  [ADR-02], [Frontend], [Angular 19 Standalone], [Alles aus einer Hand (Routing, Forms, HTTP), kein altes Modul-Boilerplate, saubere Trennung durch Smart/Dumb-Muster.],
-  [ADR-03], [Datenbank], [MongoDB & Mongoose], [3x3-Matrix und Notfallkontakte lassen sich direkt als Dokument einbetten, ohne zeitraubende SQL-Joins und Tabellen.],
-  [ADR-04], [Auth], [`@nestjs/jwt` & bcrypt], [Standard-Ökosystem in NestJS: Etablierte JWT-Strategie mit Passport und robustes Bcrypt-Hashing statt wartungsintensiver Eigenbau-Kryptografie.],
-  [ADR-05], [Deployment], [Docker Compose & Nginx], [1-Befehl-Start (`docker compose up --build`); Nginx verhindert CORS-Probleme, da alles über Port 80 läuft.],
-  [ADR-06], [Datenschutz], [Restriktive Notfallkontakte], [Principle of Least Privilege: Notfallkontakte sind nur für den verifizierten Tourenleiter der jeweiligen Tour sichtbar.],
-)
+Architekturentscheidungen dokumentieren wesentliche Technologie- und Strukturwahlen inklusive des Entscheidungskontexts, der verworfenen Alternativen und der resultierenden Trade-offs:
+
+== ADR-01: Backend mit NestJS (Modularer Monolith)
+- *Kontext & Problem*: Gesucht war ein robustes Backend-Framework mit klarer Schichtenarchitektur, Dependency Injection und automatischer Request-Validierung.
+- *Entscheidung*: NestJS 11 auf Node.js 24 mit TypeScript. Modularer Monolith unterteilt in fachliche Domänen (`auth`, `tours`, `users`). Validierung über DTOs mit `class-validator`.
+- *Verworfene Alternativen*: *Express.js (barebone)*: Bietet keine strukturierte Schichtenarchitektur und keinen DI-Container, was bei wachsender Domänenlogik rasch zu unübersichtlichem Code führt. *Microservices*: Zu hoher Deployment-, Netzwerk- und Monitoring-Overhead für das Projekt.
+- *Konsequenzen & Trade-offs*: (+) Hohe Typsicherheit, klare Schichtentrennung (Controller, Service, Modul), identische Denkweise wie in Angular. (-) Einarbeitungsaufwand in TypeScript-Decorators und NestJS-Modul-Wiring.
+
+== ADR-02: Frontend mit Angular 19 Standalone & Signals
+- *Kontext & Problem*: Aufbau einer reaktiven Single Page Application mit schnellen Ladezeiten, klarer Trennung von UI und State sowie minimalem Boilerplate.
+- *Entscheidung*: Angular 19 mit Standalone Components, Angular Signals (`signal`, `computed`, `httpResource`) und Smart/Dumb-Muster.
+- *Verworfene Alternativen*: *React*: Kein integriertes Routing- oder Forms-System; erfordert viele heterogene Dritt-Bibliotheken. *Angular mit NgRx*: Hohe Boilerplate-Menge (Actions, Reducers, Effects, Selectors), die für die Projektgrösse unverhältnismässig gewesen wäre.
+- *Konsequenzen & Trade-offs*: (+) Keine veralteten `NgModule`s, feingranulare Reaktivität ohne RxJS-Subscription-Leaks, optimale Performance durch `OnPush`. (-) Sehr neue APIs (`httpResource`), wenig historische Dokumentation.
+
+== ADR-03: Persistenz mit MongoDB & Mongoose (Embedded Aggregates)
+- *Kontext & Problem*: Speicherung von Touren mit hierarchischen, dynamischen 3x3-Matrixfeldern und Notfallkontakten.
+- *Entscheidung*: MongoDB 8.0 mit Mongoose ODM. Die 3x3-Sicherheitsmatrix und Notfallkontakte werden direkt als eingebettete BSON-Subdokumente abgelegt.
+- *Verworfene Alternativen*: *Relationale SQL-Datenbank (PostgreSQL/MySQL)*: Hätte für die 3x3-Matrix (Hangneigungen, Gefahrenquellen, Wetterzonen) 3–4 Join-Tabellen erfordert und bei späteren Schema-Anpassungen komplexe DDL-Migrationen bedingt.
+- *Konsequenzen & Trade-offs*: (+) Schnelle Lese- und Schreibzugriffe ohne Joins; atomare Updates via `$addToSet`; flexible Erweiterbarkeit. (-) Keine transaktionalen Fremdschlüssel auf Datenbankebene; relationale Integrität (z. B. User-IDs in Touren) muss im Service-Layer validiert werden.
+
+== ADR-04: Zustandsloses JWT mit Passport & bcrypt
+- *Kontext & Problem*: Absicherung der REST-Endpunkte ohne serverseitigen Session-State, um Skalierbarkeit und einfache Containerisierung zu gewährleisten.
+- *Entscheidung*: Zustandsloses JWT mit 1 Stunde Lebensdauer, signiert via `@nestjs/jwt` und validiert per Passport-Strategie (`JwtStrategy`). Passwörter werden mit `bcrypt` (10 Salt-Rounds) gehasht.
+- *Verworfene Alternativen*: *Stateful Sessions mit Redis-Store*: Hätte eine zusätzliche Datenbank erfordert und das Docker-Setup verkompliziert. *Eigenbau-Kryptografie*: Hohes Sicherheitsrisiko.
+- *Konsequenzen & Trade-offs*: (+) Völlig zustandslos, ideal für Container; Standard im NestJS-Ökosystem. (-) Logout invalidiert Tokens nur clientseitig im `localStorage` (Token-Blacklist als technische Schuld dokumentiert).
+
+== ADR-05: Deployment mit Docker Compose & Nginx Reverse Proxy
+- *Kontext & Problem*: Reproduzierbarer 1-Befehl-Start auf beliebigen Entwicklerrechnern ohne lokale Abhängigkeiten und Vermeidung von Cross-Origin Resource Sharing (CORS) Problemen.
+- *Entscheidung*: Docker Compose Stack mit Multi-Stage Dockerfiles. Ein Nginx-Reverse-Proxy lauscht auf Port 80, serviert das kompilierte Frontend und leitet `/api/*` intern an das Backend weiter.
+- *Konsequenzen & Trade-offs*: (+) Zuverlässiger Start mit `docker compose up --build`; vollständiges Zero-CORS-Routing. (-) Nginx-Konfiguration muss gepflegt werden.
+
+== ADR-06: Restriktiver Notfallkontakt-Zugriff (Least Privilege)
+- *Kontext & Problem*: Notfallkontakte sind hochsensible Personendaten. Unbefugte Teilnehmende dürfen keinesfalls Einsicht in private Notfallnummern anderer Gruppenmitglieder erhalten.
+- *Entscheidung*: Serverseitige Filterung per Default (`.select('-emergencyContact')`). Abruf ausschliesslich über den Endpunkt `/api/tours/:tourId/users/:userId/emergency-contact`, geschützt durch Prüfung der Leitungsrolle (`tourManagerIds`).
+- *Verworfene Alternativen*: *Clientseitiges Ausblenden*: Fatale Sicherheitslücke, da die Notfallkontakte im Browser-Netzwerk-Tab für alle lesbar gewesen wären.
+- *Konsequenzen & Trade-offs*: (+) Garantierter Datenschutz nach DSGVO/DSG (*Principle of Least Privilege*). (-) Erfordert einen separaten HTTP-Request im Ernstfall (durch Qualitätsszenario Q2 mit Ladezeit $< 200$ ms abgesichert).
 
 = Qualitätsanforderungen
 
@@ -260,7 +305,7 @@ Ablauf für Beitritt und Berechtigungsprüfung im Notfall:
   [Q3], [Beitrittsversuch zu einer vergangenen Tour.], [Backend prüft `date < today` und lehnt den Beitritt ab.], [HTTP 400 Bad Request.],
   [Q4], [Matrix wird später um neue Gefahrenfelder erweitert.], [Da MongoDB schemalos speichert, muss nur das DTO angepasst werden.], [Keine SQL-Migration nötig.],
   [Q5], [Start auf einem frischen Entwicklungsrechner mit Docker.], [Startet Frontend, Backend und Datenbank ohne manuelle Vorarbeit.], [`docker compose up` auf Port 80.],
-  [Q6], [Bewertung der Web-Performance und Qualität mit Google Lighthouse (Mobile & Desktop).], [Die Anwendung lädt effizient, ist barrierefrei, suchmaschinenoptimiert und erfüllt Web-Best-Practices.], [Scores für Performance, Accessibility, Best Practices und SEO betragen jeweils $> 90$[cite: 2, 3].],
+  [Q6], [Bewertung der Web-Performance und Qualität mit Google Lighthouse (Mobile & Desktop).], [Die Anwendung lädt effizient, ist barrierefrei, suchmaschinenoptimiert und erfüllt Web-Best-Practices.], [Scores für Performance, Accessibility, Best Practices und SEO betragen jeweils $> 90$.],
 )
 
 == Lighthouse 
@@ -272,7 +317,7 @@ Ablauf für Beitritt und Berechtigungsprüfung im Notfall:
     image("assets/mobile.png", width: 100%),
     image("assets/desktop.png", width: 100%)
   ),
-  caption: [Lighthouse-Reports: Mobile (links) und Desktop (rechts) zeigen in allen Qualitätsmetriken Scores von über 90[cite: 2, 3].]
+  caption: [Lighthouse-Reports: Mobile (links) und Desktop (rechts) zeigen in allen Qualitätsmetriken Scores von über 90.]
 )
 
 = Risiken & technische Schulden

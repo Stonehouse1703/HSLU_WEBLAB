@@ -8,7 +8,7 @@ skinparam roundcorner 6
 ** Sicherheit & Vertraulichkeit (ISO 25010)
 *** Q1: Datenschutz Notfallkontakt (nur Tourenleiter)
 *** NoSQL-Schutz via ValidationPipe (whitelist)
-*** Passwort-Hashing via scrypt & timingSafeEqual
+*** Passwort-Hashing via bcrypt (Salt-Rounds: 10)
 ** Benutzbarkeit & Performance
 *** Q2: Schnelle 3x3-Erfassung (< 200 ms)
 *** Visuelle Lawinen-Gefahrenstufen 1–5
