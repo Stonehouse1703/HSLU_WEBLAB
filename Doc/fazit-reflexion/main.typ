@@ -32,10 +32,13 @@ Rückblickend bin ich stolz darauf, wie stabil und ausgereift das Gesamtsystem g
 - *Backend-Modularität & strikte Validierung (NestJS & DTOs):* Im Backend habe ich den Code modular nach Domänen strukturiert (`auth`, `tours`, `users`). Sämtliche Payloads werden über DTOs mit `class-validator` typisiert und strikt validiert, wodurch ungültige Eingaben bereits an der API-Grenze deterministisch mit `400 Bad Request` abgefangen werden.
 - *Fachliche Domänenlogik (3x3-Sicherheitsmatrix & Leaflet-GPX):* Die digitale 3x3-Sicherheitsmatrix nach Werner Munter konnte ich exakt wie in der alpinen Praxis umsetzen, reaktiv berechnend und fachlich stimmig. Die interaktive Leaflet-Karte liest GPX-Dateien reaktiv ein, visualisiert die Route und berechnet Distanz sowie Höhenmeter dynamisch aus den Rohdaten.
 - *Zentrales Design-System:* Mit `colors.css` habe ich ein konsistentes Design-Token-System aufgebaut (Statusfarben für Lawinenstufen, Cards, Typografie), was spätere UI-Anpassungen zentralisiert und Styling-Inkonsistenzen verhindert.
+- *Inhaltlich unterschiedlichen Darstellungsformen:* Ich finde ich habe die Funktionale Anforderung, dass "Die Daten müssen in mindestens zwei inhaltlich unterschielidchen Darstellungsformen" präsentiert werden, besonders gut gemeistert, indem ich nich nur "app-cards darstelle " 
 
 === Im Entwicklungsprozess und beim Arbeiten
 - *Fehlerkultur & methodisches Debugging:* Bei der Leaflet-GPX-Einbindung trat ein Lifecycle-Timing-Problem im DOM auf. Statt unsauberer Workarounds habe ich den Angular-Lifecycle analysiert und die Initialisierung sauber in `ngAfterViewInit` mit anschliessendem `invalidateSize()` gelöst.
 - *Steile Lernkurve & beruflicher Wissenstransfer:* Der anfängliche Sprung ins kalte Wasser wandelte sich rasch in ein guetes Verständnis für Angular und NestJS. Welches mir im Beruf geholfen hat, für einen einfacheren einstieg, wie jedoch auch vom analysieren des Codes im Beruf auch für das Projekt.
+
+
 
 #pagebreak()
 == Wo lagen die Herausforderungen?

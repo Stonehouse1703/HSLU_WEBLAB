@@ -102,6 +102,16 @@ describe('TourService', () => {
     req.flush(mockTour);
   });
 
+  it('should call DELETE /api/tours/:id on deleteTour with encoded ID', () => {
+    service.deleteTour('tour/special-id').subscribe(res => {
+      expect(res).toEqual({ message: 'Tour erfolgreich gelöscht.' });
+    });
+
+    const req = httpMock.expectOne('/api/tours/tour%2Fspecial-id');
+    expect(req.request.method).toBe('DELETE');
+    req.flush({ message: 'Tour erfolgreich gelöscht.' });
+  });
+
   it('should construct httpResources with proper endpoint definitions', () => {
     TestBed.runInInjectionContext(() => {
       const idSignal = signal<string | null>(null);

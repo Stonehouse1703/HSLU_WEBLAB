@@ -25,7 +25,11 @@ import { isTourUpcoming } from '../../tour.types';
     RouterLink,
   ],
   template: `
-    @if (isRemoving()) {
+    @if (isDeleting()) {
+      <div class="status-banner" role="status">Tour wird gelöscht ...</div>
+    } @else if (deleteError()) {
+      <div class="error-banner" role="alert">{{ deleteError() }}</div>
+    } @else if (isRemoving()) {
       <div class="status-banner" role="status">Person wird aus der Tour entfernt ...</div>
     } @else if (removeError()) {
       <div class="error-banner" role="alert">{{ removeError() }}</div>
@@ -77,6 +81,16 @@ import { isTourUpcoming } from '../../tour.types';
                 aria-label="Tour bearbeiten"
               >
                 <span class="material-icons" aria-hidden="true">edit</span>
+              </button>
+              <button
+                type="button"
+                class="delete-button"
+                (click)="deleteTour()"
+                title="Tour löschen"
+                aria-label="Tour löschen"
+                [disabled]="isDeleting()"
+              >
+                <span class="material-icons" aria-hidden="true">delete</span>
               </button>
             }
 
@@ -271,6 +285,41 @@ import { isTourUpcoming } from '../../tour.types';
       font-size: 1.35rem;
     }
 
+    .delete-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      border: 1px solid var(--color-border-input);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-surface);
+      color: var(--color-danger);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        box-shadow var(--transition-fast),
+        transform 0.1s ease;
+    }
+
+    .delete-button:hover:not(:disabled) {
+      background: var(--color-danger-bg);
+      border-color: var(--color-danger);
+      box-shadow: 0 2px 6px rgba(220, 38, 38, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .delete-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .delete-button .material-icons {
+      font-size: 1.35rem;
+    }
+
     .past-tour-badge {
       display: inline-flex;
       align-items: center;
@@ -338,6 +387,8 @@ export class TourDetailContainer {
     computed(() => this.tourId()),
   );
 
+  readonly isDeleting = signal(false);
+  readonly deleteError = signal<string | null>(null);
   readonly isRemoving = signal(false);
   readonly removeError = signal<string | null>(null);
   readonly isJoining = signal(false);
@@ -442,6 +493,32 @@ export class TourDetailContainer {
     const id = this.tourId();
     if (id && this.canChangeRoles()) {
       this.router.navigate(['/tour-editor', id]);
+    }
+  }
+
+  async deleteTour(): Promise<void> {
+    const id = this.tourId();
+    if (!id || this.isDeleting() || !this.canChangeRoles()) return;
+
+    const confirmed = window.confirm(
+      'Möchten Sie diese Tour wirklich unwiderruflich löschen?',
+    );
+    if (!confirmed) return;
+
+    this.isDeleting.set(true);
+    this.deleteError.set(null);
+
+    try {
+      await firstValueFrom(this.tourService.deleteTour(id));
+      this.router.navigate(['/tour-management']);
+    } catch (err: any) {
+      if (err?.error?.message) {
+        this.deleteError.set(err.error.message);
+      } else {
+        this.deleteError.set('Die Tour konnte nicht gelöscht werden.');
+      }
+    } finally {
+      this.isDeleting.set(false);
     }
   }
 

@@ -226,4 +226,22 @@ export class ToursController {
 
     return updatedTour;
   }
+
+  @Delete(':id')
+  async delete(
+    @Param('id') id: string,
+    @CurrentUser() user: TokenPayload,
+  ) {
+    const isAdmin = await this.toursService.getUserRoleByTour(id, user.id);
+    if (!isAdmin) {
+      throw new ForbiddenException('Keine Administratorrechte für diese Tour.');
+    }
+
+    const deleted = await this.toursService.delete(id);
+    if (!deleted) {
+      throw new NotFoundException('Tour wurde nicht gefunden.');
+    }
+
+    return { message: 'Tour erfolgreich gelöscht.' };
+  }
 }

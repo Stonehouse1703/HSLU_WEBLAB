@@ -235,6 +235,42 @@ describe('Backend API Integration Tests (In-Memory MongoDB & Supertest)', () => 
         })
         .expect(400);
     });
+
+    it('DELETE /api/tours/:id - should forbid non-admin (403) from deleting the tour', async () => {
+      // Create a tour owned by userOne
+      const newTourRes = await request(app.getHttpServer())
+        .post('/api/tours')
+        .set('Authorization', `Bearer ${userOneToken}`)
+        .send({
+          name: 'Tour zum Löschen',
+          date: '2099-01-01',
+          time: '09:00',
+          location: 'Andermatt',
+          difficulty: 'mittel',
+          altitude: '1200m',
+        })
+        .expect(201);
+
+      const tempTourId = newTourRes.body.id;
+
+      // userTwo (not admin of tempTourId) attempts delete
+      await request(app.getHttpServer())
+        .delete(`/api/tours/${tempTourId}`)
+        .set('Authorization', `Bearer ${userTwoToken}`)
+        .expect(403);
+
+      // userOne (admin) deletes the tour successfully
+      await request(app.getHttpServer())
+        .delete(`/api/tours/${tempTourId}`)
+        .set('Authorization', `Bearer ${userOneToken}`)
+        .expect(200);
+
+      // Verify tour is deleted
+      await request(app.getHttpServer())
+        .get(`/api/tours/${tempTourId}`)
+        .set('Authorization', `Bearer ${userOneToken}`)
+        .expect(404);
+    });
   });
 
   describe('DTO Validation Pipeline (ValidationPipe & class-validator)', () => {

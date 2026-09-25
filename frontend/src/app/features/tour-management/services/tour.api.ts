@@ -57,6 +57,12 @@ export class TourService {
     );
   }
 
+  deleteTour(tourId: string) {
+    return this.http.delete<{ message: string }>(
+      `${this.tourUrl}/${encodeURIComponent(tourId)}`,
+    );
+  }
+
   getTourByIdResource(idSignal: Signal<string | null>) {
     return httpResource<Tour>(() => {
       const id = idSignal();

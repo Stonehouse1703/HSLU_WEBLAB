@@ -230,4 +230,11 @@ export class ToursService implements OnModuleInit {
       .lean<Tour>()
       .exec();
   }
+
+  delete(id: string): Promise<boolean> {
+    return this.tourModel
+      .deleteOne({ id })
+      .exec()
+      .then(res => (res.deletedCount ?? 0) > 0);
+  }
 }

@@ -156,4 +156,27 @@ describe('ToursService', () => {
       );
     });
   });
+
+  describe('delete', () => {
+    it('should delete a tour by id and return true if found and deleted', async () => {
+      mockTourModel.deleteOne = vi.fn().mockReturnValue({
+        exec: vi.fn().mockResolvedValue({ deletedCount: 1 }),
+      });
+
+      const result = await toursService.delete('tour-123');
+
+      expect(mockTourModel.deleteOne).toHaveBeenCalledWith({ id: 'tour-123' });
+      expect(result).toBe(true);
+    });
+
+    it('should return false if tour was not found to delete', async () => {
+      mockTourModel.deleteOne = vi.fn().mockReturnValue({
+        exec: vi.fn().mockResolvedValue({ deletedCount: 0 }),
+      });
+
+      const result = await toursService.delete('non-existent');
+
+      expect(result).toBe(false);
+    });
+  });
 });

@@ -84,6 +84,7 @@ describe('TourDetailContainer', () => {
     joinTour: vi.fn(),
     removeUser: vi.fn(),
     setUserRole: vi.fn(),
+    deleteTour: vi.fn(),
   };
 
   const mockAuthService = {
@@ -91,6 +92,7 @@ describe('TourDetailContainer', () => {
   };
 
   beforeEach(async () => {
+    vi.clearAllMocks();
     tourSignal.set(mockTour);
     membersSignal.set(mockMembers);
     currentUserSignal.set({ id: 'mgr-1', email: 'colin@leiter.ch' });
@@ -122,10 +124,12 @@ describe('TourDetailContainer', () => {
     expect(heading?.textContent).toContain('Pazolastock Rundtour');
   });
 
-  it('should recognize tour manager role and show edit button', () => {
+  it('should recognize tour manager role and show edit and delete buttons', () => {
     expect(component.canChangeRoles()).toBe(true);
     const editBtn = fixture.nativeElement.querySelector('.edit-button');
+    const deleteBtn = fixture.nativeElement.querySelector('.delete-button');
     expect(editBtn).toBeTruthy();
+    expect(deleteBtn).toBeTruthy();
   });
 
   it('should navigate to /tour-editor/:id when editTour is called by manager', () => {
@@ -133,13 +137,35 @@ describe('TourDetailContainer', () => {
     expect(navigateSpy).toHaveBeenCalledWith(['/tour-editor', 'tour-100']);
   });
 
-  it('should not show edit button when current user is only a participant', () => {
+  it('should not show edit or delete button when current user is only a participant', () => {
     currentUserSignal.set({ id: 'part-2', email: 'hans@teilnehmer.ch' });
     fixture.detectChanges();
 
     expect(component.canChangeRoles()).toBe(false);
     const editBtn = fixture.nativeElement.querySelector('.edit-button');
+    const deleteBtn = fixture.nativeElement.querySelector('.delete-button');
     expect(editBtn).toBeNull();
+    expect(deleteBtn).toBeNull();
+  });
+
+  it('should call deleteTour and navigate to /tour-management on confirmed delete', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    const { of } = await import('rxjs');
+    mockTourService.deleteTour.mockReturnValue(of({ message: 'Tour gelöscht.' }));
+
+    await component.deleteTour();
+
+    expect(mockTourService.deleteTour).toHaveBeenCalledWith('tour-100');
+    expect(navigateSpy).toHaveBeenCalledWith(['/tour-management']);
+  });
+
+  it('should not delete tour when user cancels confirmation dialog', async () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(false);
+
+    await component.deleteTour();
+
+    expect(mockTourService.deleteTour).not.toHaveBeenCalled();
+    expect(navigateSpy).not.toHaveBeenCalled();
   });
 
   it('should navigate to emergency contact view on openEmergencyContact', () => {
