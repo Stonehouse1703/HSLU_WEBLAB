@@ -5,39 +5,35 @@ import {
   Delete,
   ForbiddenException,
   Get,
-  Headers,
   NotFoundException,
   Param,
   Patch,
   Post,
   Put,
-  UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { ToursService } from './tours.service.js';
 import { CreateTourDto } from './dto/create-tour.dto.js';
 import { UpdateTourDto } from './dto/update-tour.dto.js';
 import { SetUserRoleDto } from './dto/set-user-role.dto.js';
-import { AuthService } from '../auth/auth.service.js';
 import { UsersService } from '../users/users.service.js';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard.js';
+import { CurrentUser } from '../auth/current-user.decorator.js';
+import type { TokenPayload } from '../auth/auth.utils.js';
 
 @Controller('tours')
+@UseGuards(JwtAuthGuard)
 export class ToursController {
   constructor(
     private readonly toursService: ToursService,
-    private readonly authService: AuthService,
     private readonly usersService: UsersService,
   ) {}
 
   @Post()
   create(
     @Body() body: CreateTourDto,
-    @Headers('authorization') authHeader?: string,
+    @CurrentUser() user: TokenPayload,
   ) {
-    const user = this.authService.extractUserFromHeader(authHeader);
-    if (!user) {
-      throw new UnauthorizedException('Nicht authentifiziert.');
-    }
-
     if (body.date) {
       const today = new Date();
       const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -52,24 +48,12 @@ export class ToursController {
   }
 
   @Get('my-tours')
-  findUserTours(@Headers('authorization') authHeader?: string) {
-    const user = this.authService.extractUserFromHeader(authHeader);
-    if (!user) {
-      throw new UnauthorizedException('Nicht authentifiziert.');
-    }
+  findUserTours(@CurrentUser() user: TokenPayload) {
     return this.toursService.findUserTours(user.id);
   }
 
   @Get(':id/members')
-  async findTourMembers(
-    @Param('id') id: string,
-    @Headers('authorization') authHeader?: string,
-  ) {
-    const user = this.authService.extractUserFromHeader(authHeader);
-    if (!user) {
-      throw new UnauthorizedException('Nicht authentifiziert.');
-    }
-
+  async findTourMembers(@Param('id') id: string) {
     const tour = await this.toursService.findById(id);
     if (!tour) {
       throw new NotFoundException('Tour wurde nicht gefunden.');
@@ -89,15 +73,7 @@ export class ToursController {
   }
 
   @Get(':id')
-  async findById(
-    @Param('id') id: string,
-    @Headers('authorization') authHeader?: string,
-  ) {
-    const user = this.authService.extractUserFromHeader(authHeader);
-    if (!user) {
-      throw new UnauthorizedException('Nicht authentifiziert.');
-    }
-
+  async findById(@Param('id') id: string) {
     const tour = await this.toursService.findById(id);
 
     if (!tour) {
@@ -110,13 +86,8 @@ export class ToursController {
   @Post(':tourId/join')
   async joinTour(
     @Param('tourId') tourId: string,
-    @Headers('authorization') authHeader?: string,
+    @CurrentUser() user: TokenPayload,
   ) {
-    const user = this.authService.extractUserFromHeader(authHeader);
-    if (!user) {
-      throw new UnauthorizedException('Bitte zuerst anmelden.');
-    }
-
     const existingTour = await this.toursService.findById(tourId);
     if (!existingTour) {
       throw new NotFoundException('Tour wurde nicht gefunden.');
@@ -147,13 +118,8 @@ export class ToursController {
   async getEmergencyContact(
     @Param('tourId') tourId: string,
     @Param('userId') userId: string,
-    @Headers('authorization') authHeader?: string,
+    @CurrentUser() user: TokenPayload,
   ) {
-    const user = this.authService.extractUserFromHeader(authHeader);
-    if (!user) {
-      throw new UnauthorizedException('Nicht authentifiziert.');
-    }
-
     const isAdmin = await this.toursService.getUserRoleByTour(
       tourId,
       user.id,
@@ -176,13 +142,8 @@ export class ToursController {
   async removeUser(
     @Param('tourId') tourId: string,
     @Param('userId') userId: string,
-    @Headers('authorization') authHeader?: string,
+    @CurrentUser() user: TokenPayload,
   ) {
-    const user = this.authService.extractUserFromHeader(authHeader);
-    if (!user) {
-      throw new UnauthorizedException('Nicht authentifiziert.');
-    }
-
     const isAdmin = await this.toursService.getUserRoleByTour(
       tourId,
       user.id,
@@ -211,14 +172,9 @@ export class ToursController {
     @Param('tourId') tourId: string,
     @Param('userId') userId: string,
     @Body() body: SetUserRoleDto,
-    @Headers('authorization') authHeader?: string,
+    @CurrentUser() user: TokenPayload,
   ) {
     const role = body.role;
-    const user = this.authService.extractUserFromHeader(authHeader);
-
-    if (!user) {
-      throw new UnauthorizedException('Nicht authentifiziert.');
-    }
 
     const isAdmin = await this.toursService.getUserRoleByTour(
       tourId,
@@ -256,14 +212,8 @@ export class ToursController {
   async update(
     @Param('id') id: string,
     @Body() body: UpdateTourDto,
-    @Headers('authorization') authHeader?: string,
+    @CurrentUser() user: TokenPayload,
   ) {
-    const user = this.authService.extractUserFromHeader(authHeader);
-
-    if (!user) {
-      throw new UnauthorizedException('Nicht authentifiziert.');
-    }
-
     const isAdmin = await this.toursService.getUserRoleByTour(id, user.id);
     if (!isAdmin) {
       throw new ForbiddenException('Keine Administratorrechte für diese Tour.');

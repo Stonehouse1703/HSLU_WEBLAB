@@ -36,7 +36,23 @@ describe('Backend API Integration Tests (In-Memory MongoDB & Supertest)', () => 
     delete process.env.MONGO_URI;
   });
 
+  describe('Health API (/api/health)', () => {
+    it('GET /api/health - should return status ok without authentication', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/api/health')
+        .expect(200);
+
+      expect(response.body).toEqual({ status: 'ok' });
+    });
+  });
+
   describe('Auth API (/api/auth)', () => {
+    it('GET /api/auth/me - should reject request without token with 401 Unauthorized via JwtAuthGuard', async () => {
+      await request(app.getHttpServer())
+        .get('/api/auth/me')
+        .expect(401);
+    });
+
     it('POST /api/auth/register - should register a new user in database and return JWT token', async () => {
       const response = await request(app.getHttpServer())
         .post('/api/auth/register')
@@ -154,6 +170,18 @@ describe('Backend API Integration Tests (In-Memory MongoDB & Supertest)', () => 
 
       expect(response.body.id).toBe(createdTourId);
       expect(response.body.participantIds).toContain(userTwoId);
+    });
+
+    it('GET /api/tours/my-tours - should reject unauthenticated request with 401 Unauthorized', async () => {
+      await request(app.getHttpServer())
+        .get('/api/tours/my-tours')
+        .expect(401);
+    });
+
+    it('GET /api/users - should reject unauthenticated request with 401 Unauthorized', async () => {
+      await request(app.getHttpServer())
+        .get('/api/users')
+        .expect(401);
     });
   });
 
