@@ -1,0 +1,186 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="JTUW6M589BXcyTGxY_5Q">
+    <mxGraphModel dx="1672" dy="1003" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <UserObject label="" plantUmlData="{&#xa;  &quot;data&quot;: &quot;@startuml 02_bausteinsicht_level1\n!theme plain\nskinparam defaultFontName \&quot;Liberation Sans\&quot;, Arial, sans-serif\nskinparam roundcorner 8\nskinparam shadowing false\nskinparam packageStyle rectangle\n\nactor \&quot;Benutzer (Client Browser)\&quot; as User\n\nrectangle \&quot;Docker Host / Container Umgebung\&quot; {\n    node \&quot;Nginx Reverse Proxy &amp; Static Host\\n(Container: HSLU_WEBLAB_frontend, Port 80)\&quot; as Nginx #E1D5E7;line:9673A6\n\n    package \&quot;Client-Side SPA\&quot; {\n        component \&quot;Angular 19 Standalone SPA\\n(Browser Runtime, Signals, httpResource)\&quot; as AngularSPA #DAE8FC;line:1C4587\n    }\n\n    package \&quot;Backend Subsystem\&quot; {\n        component \&quot;NestJS REST API Backend\\n(Container: backend, Node.js 24, Port 4566)\\n[Global Prefix: /api]\&quot; as Backend #D5E8D4;line:274E13\n    }\n\n    package \&quot;Persistenz Subsystem\&quot; {\n        database \&quot;MongoDB 8.0\\n(Container: mongo, Port 27017)\\n[Volume: mongo-data]\&quot; as Mongo #FFE6CC;line:D79B00\n    }\n\n    component \&quot;Mongo Express UI\\n(Container: mongo-express, Port 8081)\\n[Dev Admin Tool]\&quot; as MongoExpress #F8CECC;line:B85E15\n}\n\nUser --&gt; Nginx : \&quot;1. Ruft Anwendung auf (HTTP :80)\&quot;\nNginx --&gt; AngularSPA : \&quot;2. Liefert statische Assets\\n(HTML, JS, CSS)\&quot;\nUser ..&gt; AngularSPA : \&quot;3. Führt SPA im Browser aus\&quot;\n\nAngularSPA --&gt; Nginx : \&quot;4. API Requests (/api/*)\&quot;\nNginx --&gt; Backend : \&quot;5. Reverse Proxy Weiterleitung\\n(http://backend:4566/api/*)\&quot;\nBackend --&gt; Mongo : \&quot;6. Mongoose ODM / Wire Protocol\\n(mongodb://mongo:27017/nest)\&quot;\n\nMongoExpress --&gt; Mongo : \&quot;DB Inspection\&quot;\n\n@enduml\n&quot;,&#xa;  &quot;config&quot;: null&#xa;}" id="hE9NuiYFFXBtDPR_XjU9-1">
+          <mxCell connectable="0" parent="1" style="group;transparentBounds=1;editIcon=1;lockedGroup=0;groupPadding=10;" vertex="1">
+            <mxGeometry height="584" width="1120" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Docker Host / Container Umgebung" plantUmlId="c_0" plantUmlBaseStyle="swimlane;collapsible=0;startSize=26;fillColor=none;strokeColor=#181818;fontStyle=1;" plantUmlBaseValue="Docker Host / Container Umgebung" id="hE9NuiYFFXBtDPR_XjU9-2">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="swimlane;collapsible=0;startSize=26;fillColor=none;strokeColor=#181818;fontStyle=1;container=0;" vertex="1">
+            <mxGeometry height="408" width="860" x="30" y="166" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Mongo Express UI&#xa;[Dev Admin Tool]" plantUmlId="n_2" plantUmlBaseStyle="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#F1F1F1;strokeColor=#181818;fontSize=14;whiteSpace=wrap;" plantUmlBaseValue="Mongo Express UI&#xa;(Container: mongo-express, Port 8081)&#xa;[Dev Admin Tool]" id="hE9NuiYFFXBtDPR_XjU9-4">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-2" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;whiteSpace=wrap;container=0;" vertex="1">
+            <mxGeometry height="62" width="210" x="640" y="322" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="n_21" plantUmlBaseStyle="shape=umlActor;html=1;fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-23">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="shape=umlActor;html=1;fillColor=#F1F1F1;strokeColor=#181818;" vertex="1">
+            <mxGeometry height="54" width="36" x="222" y="40" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Benutzer (Client Browser)" plantUmlId="cap_22" plantUmlBaseStyle="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;fontSize=14;whiteSpace=wrap;" plantUmlBaseValue="Benutzer (Client Browser)" id="hE9NuiYFFXBtDPR_XjU9-24">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;fontSize=14;whiteSpace=wrap;" vertex="1">
+            <mxGeometry height="22" width="176" x="150" y="94" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="1. Ruft Anwendung auf&amp;nbsp;" plantUmlId="e_23" plantUmlBaseStyle="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;" plantUmlBaseValue="1. Ruft Anwendung auf (HTTP :80)" id="hE9NuiYFFXBtDPR_XjU9-25">
+          <mxCell edge="1" parent="hE9NuiYFFXBtDPR_XjU9-1" style="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;rounded=0;">
+            <mxGeometry relative="1" x="-0.3066" y="1" as="geometry">
+              <mxPoint as="offset" />
+              <mxPoint x="240" y="120" as="sourcePoint" />
+              <mxPoint x="239.33" y="206.33" as="targetPoint" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="3. Führt SPA im Browser aus" plantUmlId="e_25" plantUmlBaseStyle="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;dashed=1;dashPattern=2 2;" plantUmlBaseValue="3. Führt SPA im Browser aus" id="hE9NuiYFFXBtDPR_XjU9-27">
+          <mxCell edge="1" parent="hE9NuiYFFXBtDPR_XjU9-1" style="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;dashed=1;dashPattern=2 2;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="hE9NuiYFFXBtDPR_XjU9-9">
+            <mxGeometry relative="1" x="-0.4966" as="geometry">
+              <mxPoint as="offset" />
+              <Array as="points">
+                <mxPoint x="220" y="120" />
+                <mxPoint x="220" y="130" />
+                <mxPoint x="20" y="130" />
+                <mxPoint x="20" y="387" />
+              </Array>
+              <mxPoint x="220" y="120" as="sourcePoint" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Nginx Reverse Proxy &amp; Static Host" plantUmlId="n_1" plantUmlBaseStyle="shape=cube;size=10;fillColor=#F1F1F1;strokeColor=#181818;whiteSpace=wrap;" plantUmlBaseValue="Nginx Reverse Proxy &amp; Static Host&#xa;(Container: HSLU_WEBLAB_frontend, Port 80)" id="hE9NuiYFFXBtDPR_XjU9-3">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="shape=cube;size=10;fillColor=#e1d5e7;strokeColor=#9673a6;whiteSpace=wrap;container=0;" vertex="1">
+            <mxGeometry height="49" width="328" x="74" y="206.5" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="ci_3" plantUmlBaseStyle="rounded=0;fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-5">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="rounded=0;fillColor=#f8cecc;strokeColor=#b85450;container=0;" vertex="1">
+            <mxGeometry height="10" width="15" x="858" y="493" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="ci_4" plantUmlBaseStyle="fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-6">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="fillColor=#f8cecc;strokeColor=#b85450;container=0;" vertex="1">
+            <mxGeometry height="2" width="4" x="856" y="495" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="ci_5" plantUmlBaseStyle="fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-7">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="fillColor=#f8cecc;strokeColor=#b85450;container=0;" vertex="1">
+            <mxGeometry height="2" width="4" x="856" y="499" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="c_6" plantUmlBaseStyle="rounded=0;fillColor=none;strokeColor=#000000;strokeWidth=1.5;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-8">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="rounded=0;fillColor=none;strokeColor=#000000;strokeWidth=1.5;container=0;" vertex="1">
+            <mxGeometry height="95" width="343" x="45" y="328.5" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Client-Side SPA" plantUmlId="ct_7" plantUmlBaseStyle="rounded=0;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=0;fontSize=14;align=left;spacingLeft=6;verticalAlign=middle;" plantUmlBaseValue="Client-Side SPA" id="hE9NuiYFFXBtDPR_XjU9-13">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="rounded=0;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=0;fontSize=14;align=left;spacingLeft=6;verticalAlign=middle;container=0;" vertex="1">
+            <mxGeometry height="20" width="119" x="45" y="328.5" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="c_12" plantUmlBaseStyle="rounded=0;fillColor=none;strokeColor=#000000;strokeWidth=1.5;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-14">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="rounded=0;fillColor=none;strokeColor=#000000;strokeWidth=1.5;container=0;" vertex="1">
+            <mxGeometry height="108" width="351" x="412" y="322" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Backend Subsystem" plantUmlId="ct_13" plantUmlBaseStyle="rounded=0;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=0;fontSize=14;align=left;spacingLeft=6;verticalAlign=middle;" plantUmlBaseValue="Backend Subsystem" id="hE9NuiYFFXBtDPR_XjU9-19">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="rounded=0;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=0;fontSize=14;align=left;spacingLeft=6;verticalAlign=middle;container=0;" vertex="1">
+            <mxGeometry height="20" width="149" x="412" y="322" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="c_18" plantUmlBaseStyle="rounded=0;fillColor=none;strokeColor=#000000;strokeWidth=1.5;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-20">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="rounded=0;fillColor=none;strokeColor=#000000;strokeWidth=1.5;container=0;" vertex="1">
+            <mxGeometry height="108" width="272" x="268" y="454" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Persistenz Subsystem" plantUmlId="ct_19" plantUmlBaseStyle="rounded=0;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=0;fontSize=14;align=left;spacingLeft=6;verticalAlign=middle;" plantUmlBaseValue="Persistenz Subsystem" id="hE9NuiYFFXBtDPR_XjU9-22">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="rounded=0;fillColor=#FFFFFF;strokeColor=#000000;strokeWidth=1.5;fontStyle=0;fontSize=14;align=left;spacingLeft=6;verticalAlign=middle;container=0;" vertex="1">
+            <mxGeometry height="20" width="165" x="268" y="454" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="2. Liefert statische Assets&#xa;(HTML, JS, CSS)" plantUmlId="e_24" plantUmlBaseStyle="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;exitX=0.32;exitY=1;exitDx=0;exitDy=0;entryX=0.32;entryY=0;entryDx=0;entryDy=0;" plantUmlBaseValue="2. Liefert statische Assets&#xa;(HTML, JS, CSS)" id="hE9NuiYFFXBtDPR_XjU9-26">
+          <mxCell edge="1" parent="hE9NuiYFFXBtDPR_XjU9-1" source="hE9NuiYFFXBtDPR_XjU9-3" style="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;exitX=0.32;exitY=1;exitDx=0;exitDy=0;entryX=0.378;entryY=0.002;entryDx=0;entryDy=0;rounded=0;entryPerimeter=0;" target="hE9NuiYFFXBtDPR_XjU9-9">
+            <mxGeometry relative="1" x="-0.5415" y="-9" as="geometry">
+              <mxPoint as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="4. API Requests (/api/*)" plantUmlId="e_26" plantUmlBaseStyle="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;exitX=0.68;exitY=0;exitDx=0;exitDy=0;entryX=0.68;entryY=1;entryDx=0;entryDy=0;" plantUmlBaseValue="4. API Requests (/api/*)" id="hE9NuiYFFXBtDPR_XjU9-28">
+          <mxCell edge="1" parent="hE9NuiYFFXBtDPR_XjU9-1" source="hE9NuiYFFXBtDPR_XjU9-9" style="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;exitX=0.68;exitY=0;exitDx=0;exitDy=0;entryX=0.611;entryY=0.963;entryDx=0;entryDy=0;rounded=0;entryPerimeter=0;" target="hE9NuiYFFXBtDPR_XjU9-3">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="5. Reverse Proxy Weiterleitung" plantUmlId="e_27" plantUmlBaseStyle="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;" plantUmlBaseValue="5. Reverse Proxy Weiterleitung&#xa;(http://backend:4566/api/*)" id="hE9NuiYFFXBtDPR_XjU9-29">
+          <mxCell edge="1" parent="hE9NuiYFFXBtDPR_XjU9-1" source="hE9NuiYFFXBtDPR_XjU9-3" style="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;rounded=0;exitX=0;exitY=0;exitDx=328;exitDy=29.5;exitPerimeter=0;edgeStyle=orthogonalEdgeStyle;" target="hE9NuiYFFXBtDPR_XjU9-15">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="DB Inspection" plantUmlId="e_29" plantUmlBaseStyle="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;" plantUmlBaseValue="DB Inspection" id="hE9NuiYFFXBtDPR_XjU9-31">
+          <mxCell edge="1" parent="hE9NuiYFFXBtDPR_XjU9-1" source="hE9NuiYFFXBtDPR_XjU9-4" style="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;rounded=0;" target="hE9NuiYFFXBtDPR_XjU9-21">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="6. Mongoose ODM / Wire Protocol" plantUmlId="e_28" plantUmlBaseStyle="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;" plantUmlBaseValue="6. Mongoose ODM / Wire Protocol&#xa;(mongodb://mongo:27017/nest)" id="hE9NuiYFFXBtDPR_XjU9-30">
+          <mxCell edge="1" parent="hE9NuiYFFXBtDPR_XjU9-1" source="hE9NuiYFFXBtDPR_XjU9-15" style="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="hE9NuiYFFXBtDPR_XjU9-21">
+            <mxGeometry relative="1" x="-0.794" y="1" as="geometry">
+              <mxPoint as="offset" />
+              <Array as="points">
+                <mxPoint x="587.52" y="450" />
+                <mxPoint x="450" y="450" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Angular 19 Standalone SPA" plantUmlId="n_8" plantUmlBaseStyle="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#F1F1F1;strokeColor=#181818;fontSize=14;whiteSpace=wrap;" plantUmlBaseValue="Angular 19 Standalone SPA&#xa;(Browser Runtime, Signals, httpResource)" id="hE9NuiYFFXBtDPR_XjU9-9">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;whiteSpace=wrap;container=0;" vertex="1">
+            <mxGeometry height="49" width="313" x="60" y="362.5" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="ci_9" plantUmlBaseStyle="rounded=0;fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-10">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="rounded=0;fillColor=#dae8fc;strokeColor=#6c8ebf;container=0;" vertex="1">
+            <mxGeometry height="10" width="15" x="353" y="367.5" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="ci_10" plantUmlBaseStyle="fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-11">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="fillColor=#dae8fc;strokeColor=#6c8ebf;container=0;" vertex="1">
+            <mxGeometry height="2" width="4" x="351" y="369.5" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="ci_11" plantUmlBaseStyle="fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-12">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="fillColor=#dae8fc;strokeColor=#6c8ebf;container=0;" vertex="1">
+            <mxGeometry height="2" width="4" x="351" y="373.5" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="NestJS REST API Backend&#xa;[Global Prefix: /api]" plantUmlId="n_14" plantUmlBaseStyle="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#F1F1F1;strokeColor=#181818;fontSize=14;whiteSpace=wrap;" plantUmlBaseValue="NestJS REST API Backend&#xa;(Container: backend, Node.js 24, Port 4566)&#xa;[Global Prefix: /api]" id="hE9NuiYFFXBtDPR_XjU9-15">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;whiteSpace=wrap;container=0;" vertex="1">
+            <mxGeometry height="62" width="321" x="427" y="356" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="ci_15" plantUmlBaseStyle="rounded=0;fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-16">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;container=0;" vertex="1">
+            <mxGeometry height="10" width="15" x="728" y="361" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="ci_16" plantUmlBaseStyle="fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-17">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="fillColor=#d5e8d4;strokeColor=#82b366;container=0;" vertex="1">
+            <mxGeometry height="2" width="4" x="726" y="363" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="ci_17" plantUmlBaseStyle="fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="hE9NuiYFFXBtDPR_XjU9-18">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="fillColor=#d5e8d4;strokeColor=#82b366;container=0;" vertex="1">
+            <mxGeometry height="2" width="4" x="726" y="367" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="MongoDB 8.0" plantUmlId="n_20" plantUmlBaseStyle="shape=cylinder;fillColor=#F1F1F1;strokeColor=#181818;fontSize=14;whiteSpace=wrap;" plantUmlBaseValue="MongoDB 8.0&#xa;(Container: mongo, Port 27017)&#xa;[Volume: mongo-data]" id="hE9NuiYFFXBtDPR_XjU9-21">
+          <mxCell parent="hE9NuiYFFXBtDPR_XjU9-1" style="shape=cylinder;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;whiteSpace=wrap;container=0;" vertex="1">
+            <mxGeometry height="62" width="242" x="283" y="488" as="geometry" />
+          </mxCell>
+        </UserObject>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

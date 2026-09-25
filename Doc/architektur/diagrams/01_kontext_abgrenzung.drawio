@@ -1,0 +1,110 @@
+<mxfile host="Electron">
+  <diagram name="Page-1" id="d1YZdRz5T8FfGsy7mZyi">
+    <mxGraphModel dx="2233" dy="830" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <UserObject label="HSLU_WEBLAB Systemgrenze" plantUmlId="c_0" plantUmlBaseStyle="swimlane;collapsible=0;startSize=26;fillColor=none;strokeColor=#181818;fontStyle=1;" plantUmlBaseValue="HSLU_WEBLAB Systemgrenze" id="lTE3IQGDJDBx3V98frrI-2">
+          <mxCell parent="1" style="swimlane;collapsible=0;startSize=26;fillColor=none;strokeColor=#181818;fontStyle=1;container=0;" vertex="1">
+            <mxGeometry height="95" width="287" x="205.5" y="364" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="&#xa;Externe Einflüsse &amp; Quellen" plantUmlId="c_5" plantUmlBaseStyle="shape=cloud;fillColor=none;strokeColor=#181818;verticalAlign=top;align=center;spacingTop=18;fontSize=14;fontStyle=1;whiteSpace=wrap;" plantUmlBaseValue="Externe Einflüsse &amp; Quellen" id="lTE3IQGDJDBx3V98frrI-7">
+          <mxCell parent="1" style="shape=cloud;fillColor=none;strokeColor=#181818;verticalAlign=top;align=center;spacingTop=18;fontSize=14;fontStyle=1;whiteSpace=wrap;container=0;" vertex="1">
+            <mxGeometry height="168" width="590" x="-140" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="n_8" plantUmlBaseStyle="shape=umlActor;html=1;fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="lTE3IQGDJDBx3V98frrI-10">
+          <mxCell parent="1" style="shape=umlActor;html=1;fillColor=#d5e8d4;strokeColor=#82b366;container=0;" vertex="1">
+            <mxGeometry height="54" width="34.5" x="50" y="250" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Tourenleiter/in" plantUmlId="cap_9" plantUmlBaseStyle="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;fontSize=14;whiteSpace=wrap;" plantUmlBaseValue="Tourenleiter/in" id="lTE3IQGDJDBx3V98frrI-11">
+          <mxCell parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;fontSize=14;whiteSpace=wrap;container=0;" vertex="1">
+            <mxGeometry height="22" width="109" x="12.75" y="300" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="n_10" plantUmlBaseStyle="shape=umlActor;html=1;fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="lTE3IQGDJDBx3V98frrI-12">
+          <mxCell parent="1" style="shape=umlActor;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;container=0;" vertex="1">
+            <mxGeometry height="54" width="34.5" x="760" y="393" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Teilnehmende Person" plantUmlId="cap_11" plantUmlBaseStyle="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;fontSize=14;whiteSpace=wrap;" plantUmlBaseValue="Teilnehmende Person" id="lTE3IQGDJDBx3V98frrI-13">
+          <mxCell parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=top;fontSize=14;whiteSpace=wrap;container=0;" vertex="1">
+            <mxGeometry height="22" width="147" x="703" y="447" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="MongoDB Persistenz" plantUmlId="n_12" plantUmlBaseStyle="shape=cylinder;fillColor=#F1F1F1;strokeColor=#181818;fontSize=14;whiteSpace=wrap;" plantUmlBaseValue="MongoDB Persistenz" id="lTE3IQGDJDBx3V98frrI-14">
+          <mxCell parent="1" style="shape=cylinder;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;whiteSpace=wrap;container=0;" vertex="1">
+            <mxGeometry height="49" width="174" x="262" y="519" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Erstellt Touren, erfasst 3x3 Matrix,&#xa;verwaltet Rollen &amp;amp; sieht Notfallkontakte" plantUmlId="e_13" plantUmlBaseStyle="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;" plantUmlBaseValue="Erstellt Touren, erfasst 3x3 Matrix,&#xa;verwaltet Rollen &amp;amp; sieht Notfallkontakte" id="lTE3IQGDJDBx3V98frrI-15">
+          <mxCell edge="1" parent="1" style="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="lTE3IQGDJDBx3V98frrI-3">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="67.26" y="422.49" />
+              </Array>
+              <mxPoint x="67.26" y="330" as="sourcePoint" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Sucht Touren, tritt bei,&#xa;pflegt persönliches Profil &amp;amp; Notfallkontakt" plantUmlId="e_14" plantUmlBaseStyle="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;" plantUmlBaseValue="Sucht Touren, tritt bei,&#xa;pflegt persönliches Profil &amp;amp; Notfallkontakt" id="lTE3IQGDJDBx3V98frrI-16">
+          <mxCell edge="1" parent="1" source="lTE3IQGDJDBx3V98frrI-12" style="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;rounded=0;" target="lTE3IQGDJDBx3V98frrI-3">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Liest &amp;amp; speichert Touren,&#xa;Benutzerprofile &amp;amp; Notfallkontakte" plantUmlId="e_15" plantUmlBaseStyle="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;" plantUmlBaseValue="Liest &amp;amp; speichert Touren,&#xa;Benutzerprofile &amp;amp; Notfallkontakte" id="lTE3IQGDJDBx3V98frrI-17">
+          <mxCell edge="1" parent="1" source="lTE3IQGDJDBx3V98frrI-3" style="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;rounded=0;" target="lTE3IQGDJDBx3V98frrI-14">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Liefert Gefahrenstufe, Neuschnee,&lt;br&gt;Wind &amp;amp; Temperaturdaten (manuelle Erfassung" plantUmlId="e_16" plantUmlBaseStyle="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;dashed=1;dashPattern=2 2;" plantUmlBaseValue="Liefert Gefahrenstufe, Neuschnee,&#xa;Wind &amp;amp; Temperaturdaten (manuelle Erfassung)" id="lTE3IQGDJDBx3V98frrI-18">
+          <mxCell edge="1" parent="1" source="lTE3IQGDJDBx3V98frrI-8" style="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;dashed=1;dashPattern=2 2;rounded=0;" target="lTE3IQGDJDBx3V98frrI-10">
+            <mxGeometry relative="1" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Wird als Route / Track&#xa;in Tour hochgeladen" plantUmlId="e_17" plantUmlBaseStyle="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;dashed=1;dashPattern=2 2;" plantUmlBaseValue="Wird als Route / Track&#xa;in Tour hochgeladen" id="lTE3IQGDJDBx3V98frrI-19">
+          <mxCell edge="1" parent="1" source="lTE3IQGDJDBx3V98frrI-9" style="strokeColor=#181818;fontColor=#000000;fontSize=12;html=1;endArrow=classicThin;endFill=1;dashed=1;dashPattern=2 2;rounded=0;edgeStyle=orthogonalEdgeStyle;" target="lTE3IQGDJDBx3V98frrI-3">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="287.03" y="259.74" />
+                <mxPoint x="240" y="259.74" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Webapplikation&#xa;(Tourenverwaltung &amp; 3x3 Matrix)" plantUmlId="n_1" plantUmlBaseStyle="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#F1F1F1;strokeColor=#181818;fontSize=14;whiteSpace=wrap;" plantUmlBaseValue="Webapplikation&#xa;(Tourenverwaltung &amp; 3x3 Matrix)" id="lTE3IQGDJDBx3V98frrI-3">
+          <mxCell parent="1" style="rounded=1;absoluteArcSize=1;arcSize=6;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;whiteSpace=wrap;container=0;" vertex="1">
+            <mxGeometry height="49" width="257" x="220.5" y="398" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="ci_2" plantUmlBaseStyle="rounded=0;fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="lTE3IQGDJDBx3V98frrI-4">
+          <mxCell parent="1" style="rounded=0;fillColor=#F1F1F1;strokeColor=#181818;container=0;" vertex="1">
+            <mxGeometry height="10" width="15" x="457.5" y="403" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="ci_3" plantUmlBaseStyle="fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="lTE3IQGDJDBx3V98frrI-5">
+          <mxCell parent="1" style="fillColor=#F1F1F1;strokeColor=#181818;container=0;" vertex="1">
+            <mxGeometry height="2" width="4" x="455.5" y="405" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="" plantUmlId="ci_4" plantUmlBaseStyle="fillColor=#F1F1F1;strokeColor=#181818;" plantUmlBaseValue="" id="lTE3IQGDJDBx3V98frrI-6">
+          <mxCell parent="1" style="fillColor=#F1F1F1;strokeColor=#181818;container=0;" vertex="1">
+            <mxGeometry height="2" width="4" x="455.5" y="409" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="SLF Lawinenbulletin /&#xa;Wetterdienste" plantUmlId="n_6" plantUmlBaseStyle="shape=cube;size=10;fillColor=#F1F1F1;strokeColor=#181818;whiteSpace=wrap;" plantUmlBaseValue="SLF Lawinenbulletin /&#xa;Wetterdienste" id="lTE3IQGDJDBx3V98frrI-8">
+          <mxCell parent="1" style="shape=cube;size=10;fillColor=#e1d5e7;strokeColor=#9673a6;whiteSpace=wrap;container=0;" vertex="1">
+            <mxGeometry height="49" width="183" x="-22.5" y="74" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="GPX-Track Datei&#xa;(Lokales Dateisystem)" plantUmlId="n_7" plantUmlBaseStyle="shape=note;size=14;fillColor=#F1F1F1;strokeColor=#181818;whiteSpace=wrap;" plantUmlBaseValue="GPX-Track Datei&#xa;(Lokales Dateisystem)" id="lTE3IQGDJDBx3V98frrI-9">
+          <mxCell parent="1" style="shape=note;size=14;fillColor=#e1d5e7;strokeColor=#9673a6;whiteSpace=wrap;container=0;" vertex="1">
+            <mxGeometry height="46" width="172" x="201" y="75.5" as="geometry" />
+          </mxCell>
+        </UserObject>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -25,7 +25,7 @@ Notfallkontakte fehlen oder sind unauffindbar, und die 3x3-Planung kann nirgends
   [*Prio*], [*Qualitätsziel*], [*Bedeutung für die Applikation*],
   [1], [Datenschutz & Vertraulichkeit], [Notfallkontakte sind hochsensibel. Ausschliesslich autorisierte Tourenleiter der jeweiligen Tour dürfen sie einsehen (Principle of Least Privilege).],
   [2], [Schnelligkeit & Usability], [Schnelle Bedienung am Handy und Desktop. Die 3x3-Matrix ist in wenigen Minuten ausgefüllt, Notfallkontakte sind mit einem Klick sichtbar.],
-  [3], [Wartbarkeit & Testbarkeit], [Klare Entkopplung: Smart/Dumb-Muster im Frontend, modularer Monolith mit NestJS im Backend, abgesichert durch Unit- und Cypress-E2E-Tests.],
+  [3], [Wartbarkeit & Testbarkeit], [Klare Entkopplung: Smart/Dumb-Muster im Frontend, modularer Monolith mit NestJS im Backend, abgesichert durch Unit- und E2E-Tests.],
   [4], [Ein-Befehl-Start], [Vollständiger Start des Stacks via `docker compose up --build` ohne manuelle Vorabinstallation von Node oder Datenbanken.],
 )
 
@@ -44,7 +44,7 @@ Notfallkontakte fehlen oder sind unauffindbar, und die 3x3-Planung kann nirgends
 Das System fokussiert sich auf die Planung, Durchführung und rechtliche Absicherung von Touren. Externe Daten (SLF-Lawinenbulletin, Wetterdaten) werden vom Tourenleiter manuell in die 3x3-Matrix übertragen. GPX-Routentracks können als Datei hochgeladen werden.
 
 #figure(
-  image("diagrams/01_kontext_abgrenzung.svg", width: 90%),
+  image("diagrams/01_kontext_abgrenzung.png", width: 90%),
   caption: [Systemkontext: Benutzer, Schnittstellen und Umsysteme (PlantUML: 01_kontext_abgrenzung.puml)],
 )
 
@@ -91,25 +91,24 @@ Da wir im Modul WebLab freie Technologiewahl hatten, fasst die folgende Tabelle 
 Das System läuft vollständig isoliert in Docker Compose:
 
 #figure(
-  image("diagrams/02_bausteinsicht_level1.svg", width: 92%),
+  image("diagrams/02_bausteinsicht_level1.png", width: 92%),
   caption: [Bausteinsicht Level 1: System-Whitebox mit Containern und Ports (PlantUML: 02_bausteinsicht_level1.puml)],
 )
 
 #table(
   columns: (1.2fr, 1.2fr, 2.3fr),
   [*Container*], [*Technologie*], [*Verantwortung & Schnittstellen*],
-  [`HSLU_WEBLAB_frontend`], [nginx:alpine], [Haupteinstiegspunkt (Port 80). Liefert das Angular-Bundle aus und proxied `/api/*` an das Backend weiter.],
-  [`backend`], [NestJS 11, Node.js 24], [REST-API auf internem Port 4566. Verarbeitet Business-Logik, Validierung und Berechtigungsprüfungen.],
-  [`hslu_weblab_mongo`], [mongo:8], [MongoDB-Server auf Port 27017. Speichert Daten dauerhaft im Volume `mongo-data`.],
-  [`hslu_weblab_
-  mongo_express`], [mongo-express:1], [Web-Admin-Tool auf Port 8081 zur Datenbank-Inspektion während der Entwicklung.],
+  [`HSLU_WEBLAB_frontend`], [nginx:alpine], [Haupteinstiegspunkt, Liefert das Angular-Bundle aus und proxied `/api/*` an das Backend weiter.],
+  [`backend`], [NestJS 11, Node.js 24], [REST-API, Verarbeitet Business-Logik, Validierung und Berechtigungsprüfungen.],
+  [`mongo`], [mongo:8], [MongoDB-Server, Speichert Daten dauerhaft im Volume `mongo-data`.],
+  [`mongo_express`], [mongo-express:1], [Web-Admin-Tool, zur Datenbank-Inspektion während der Entwicklung.],
 )
 
 == Bausteinsicht Level 2: Frontend-Architektur
 Das Frontend ist nach Features und dem Smart/Dumb-Muster strukturiert:
 
 #figure(
-  image("diagrams/03_frontend_architektur.svg", width: 96%),
+  image("diagrams/03_frontend_architektur.png", width: 96%),
   caption: [Bausteinsicht Level 2: Frontend-Aufbau mit Smart Containern und Dumb Components (PlantUML: 03_frontend_architektur.puml)],
 )
 
@@ -128,7 +127,7 @@ Das Frontend ist nach Features und dem Smart/Dumb-Muster strukturiert:
 Das Backend ist als modularer Monolith organisiert:
 
 #figure(
-  image("diagrams/04_backend_architektur.svg", width: 92%),
+  image("diagrams/04_backend_architektur.png", width: 92%),
   caption: [Bausteinsicht Level 2: NestJS Modular Monolith Struktur (PlantUML: 04_backend_architektur.puml)],
 )
 
@@ -184,7 +183,7 @@ Ablauf für Beitritt und Berechtigungsprüfung im Notfall:
 = Deployment View
 
 #figure(
-  image("diagrams/08_verteilungssicht_deployment.svg", width: 92%),
+  image("diagrams/08_verteilungssicht_deployment.png", width: 92%),
   caption: [Verteilungssicht: Docker Compose Umgebung (PlantUML: 08_verteilungssicht_deployment.puml)],
 )
 
@@ -205,7 +204,7 @@ Ablauf für Beitritt und Berechtigungsprüfung im Notfall:
 
 == Datenmodell & Konsistenz
 #figure(
-  image("diagrams/09_datenmodell_persistenz.svg", width: 60%),
+  image("diagrams/09_datenmodell_persistenz.png", width: 85%),
   caption: [Datenmodell: Mongoose Schemas und Beziehungen (PlantUML: 09_datenmodell_persistenz.puml)],
 )
 
